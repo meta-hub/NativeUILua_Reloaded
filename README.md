@@ -1,20 +1,15 @@
 # NativeUI en LUA
+##### ⚠️Following a change and for more understanding I decided to remove the fork and to dedicate a repository to this magnificent project that will be named NativeUI Reloaded , previously based on [FrazzIe](https://github.com/FrazzIe) work . ⚠️
 
-⚠️ THIS VERSION IS NOT USABLE LIKE THE ORIGINAL CODE ⚠️
+Original code : [NativeUILua](https://github.com/FrazzIe/NativeUILua)
 
-Original code : https://github.com/FrazzIe/NativeUILua
-
-Original NativeUI by Guad : https://github.com/Guad/NativeUI
-
-### EmmyLUA
+> ### EmmyLUA
 
 JetBrain : https://github.com/EmmyLua/IntelliJ-EmmyLua
-
 Visual Studio code : https://github.com/EmmyLua/VSCode-EmmyLua
+![EmmyLua](https://image.noelshack.com/fichiers/2018/52/4/1545916389-emmylua-friendly.png)
 
-![EmmyLua](http://image.noelshack.com/fichiers/2018/52/4/1545916389-emmylua-friendly.png)
-
-⚠ This is an fork of the base code of NativeUILUA ⚠
+># About this project
 
 This version cotains in addition  :
 - Several bugs resolutions (As the UIMenuColouredItem).
