@@ -1,11 +1,9 @@
-
-# NativeUI en LUA
-##### ⚠️Following a change and for more understanding I decided to remove the fork and to dedicate a repository to this magnificent project that will be named NativeUI Reloaded , previously based on [FrazzIe](https://github.com/FrazzIe) work . ⚠️
+# NativeUILua-Reloaded
+#### ⚠️Following a change and for more understanding I decided to remove the fork and to dedicate a repository to this magnificent project that will be named NativeUI Reloaded , previously based on [FrazzIe](https://github.com/FrazzIe) work . ⚠️
 
 Original code : [NativeUILua](https://github.com/FrazzIe/NativeUILua)
 
 > ### EmmyLUA
-
 JetBrain : https://github.com/EmmyLua/IntelliJ-EmmyLua </br>
 Visual Studio code : https://github.com/EmmyLua/VSCode-EmmyLua</br>
 ![EmmyLua](https://image.noelshack.com/fichiers/2018/52/4/1545916389-emmylua-friendly.png)
@@ -54,5 +52,5 @@ For any suggest for adding features , do not hesitate to use this template:
 - Why you want you would add this features
 - Why do you wants to add this features.
 
-THANK YOU TO ALL WHO FOLLOW THE CHANGES OF THIS FORK!
+### THANK YOU TO ALL WHO FOLLOW THE CHANGES OF THIS FORK! 🖤
 
