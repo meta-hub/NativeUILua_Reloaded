@@ -23,7 +23,7 @@ This version cotains in addition  :
 - Adding possibility of badges and labels in sub-menu.
 - Possibility to change the color/opacity of the background and the progress bar.
 - Compatibility with the EmmyLUA plugin.
-- Automatic translation of registration buttons according to the language of your game.
+- Automatic translation of instructional buttons according to the language of your game.
 
 ✌ And other features to come ... ✌
 
