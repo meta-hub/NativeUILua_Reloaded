@@ -134,7 +134,7 @@ function UIMenu.New(Title, Subtitle, X, Y, TxtDictionary, TxtName, Heading, R, G
             ResetCursorOnOpen = true,
             MouseControlsEnabled = true,
             MouseEdgeEnabled = true,
-            ControlDisablingEnabled = true,
+            ControlDisablingEnabled = false, -- TODO Remove this (devmode)
             Audio = {
                 Library = "HUD_FRONTEND_DEFAULT_SOUNDSET",
                 UpDown = "NAV_UP_DOWN",
@@ -954,6 +954,14 @@ function UIMenu:ReleaseMenuFromItem(Item)
         self.Children[Item] = nil
         return true
     end
+end
+
+function UIMenu:ReloadDraw(_menuPooxl)
+    self:Clear()
+    Citizen.Wait(1)
+    self:ProcessControl()
+    self:ProcessMouse()
+    self:Draw()
 end
 
 ---Draw
