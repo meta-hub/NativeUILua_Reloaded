@@ -121,8 +121,8 @@ end
 ---@param Text string
 ---@param Check boolean
 ---@param Description string
-function NativeUI.CreateCheckboxItem(Text, Check, Description)
-    return UIMenuCheckboxItem.New(Text, Check, Description)
+function NativeUI.CreateCheckboxItem(Text, Check, Description, CheckboxStyle)
+    return UIMenuCheckboxItem.New(Text, Check, Description, CheckboxStyle)
 end
 
 ---CreateListItem

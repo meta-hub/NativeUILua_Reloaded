@@ -69,7 +69,6 @@ function UIMenu.New(Title, Subtitle, X, Y, TxtDictionary, TxtName, Heading, R, G
         Title = UIResText.New(Title, 215 + X, 20 + Y, 1.15, 255, 255, 255, 255, 1, 1, 0),
         Subtitle = { ExtraY = 0 },
         WidthOffset = 0,
-
         Position = { X = X, Y = Y },
         Pagination = { Min = 0, Max = 9, Total = 9 },
         PageCounter = { PreText = "" },
