@@ -8,7 +8,7 @@ mainMenu = NativeUI.CreateMenu("Native UI", "Menu interactions", nil, nil, nil, 
 _menuPool:Add(mainMenu)
 _menuPool:MouseControlsEnabled(false)
 _menuPool:ControlDisablingEnabled(false)
---_menuPool:WidthOffset(70)
+--_menuPool:WidthOffset(0)
 
 
 function AddMenuKetchup(menu)

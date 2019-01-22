@@ -232,7 +232,7 @@ end
 ---@param Offset number
 function UIMenu:SetMenuWidthOffset(Offset)
     if tonumber(Offset) then
-        self.WidthOffset = math.floor(tonumber(Offset))
+        self.WidthOffset = math.floor(tonumber(Offset) + tonumber(70))
         self.Logo:Size(431 + self.WidthOffset, 107)
         self.Title:Position(((self.WidthOffset + 431) / 2) + self.Position.X, 20 + self.Position.Y)
         if self.Subtitle.Rectangle ~= nil then
