@@ -3,8 +3,12 @@ dish = "Banana"
 quantity = 1
 _menuPool = NativeUI.CreatePool()
 
-mainMenu = NativeUI.CreateMenu("Native UI", "~b~NATIVEUI SHOWCASE", nil, nil, nil, nil, nil, 255, 255, 255, 210)
+mainMenu = NativeUI.CreateMenu("Native UI", "Menu interactions", nil, nil, nil, nil, nil, 255, 255, 255, 210)
+
 _menuPool:Add(mainMenu)
+_menuPool:MouseControlsEnabled(false)
+_menuPool:ControlDisablingEnabled(false)
+--_menuPool:WidthOffset(70)
 
 
 function AddMenuKetchup(menu)

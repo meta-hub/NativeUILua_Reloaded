@@ -34,7 +34,7 @@ client_scripts {
 
   "NativeUI.lua",
 
-  --"example/DefaultShowcase.lua",
-  "example/RealtimeUpdate.lua",
+  "example/DefaultShowcase.lua",
+  --"example/RealtimeUpdate.lua",
 
 }
