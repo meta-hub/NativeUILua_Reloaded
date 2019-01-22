@@ -1052,7 +1052,7 @@ function UIMenu:Draw()
     if #self.Items <= self.Pagination.Total + 1 then
         local ItemOffset = self.Subtitle.ExtraY - 37 + WindowHeight
         for index = 1, #self.Items do
-            Item = self.Items[index]
+            local Item = self.Items[index]
             Item:Position(ItemOffset)
             Item:Draw()
             ItemOffset = ItemOffset + self:CalculateItemHeightOffset(Item)
@@ -1061,7 +1061,7 @@ function UIMenu:Draw()
         local ItemOffset = self.Subtitle.ExtraY - 37 + WindowHeight
         for index = self.Pagination.Min + 1, self.Pagination.Max, 1 do
             if self.Items[index] then
-                Item = self.Items[index]
+                local Item = self.Items[index]
                 Item:Position(ItemOffset)
                 Item:Draw()
                 ItemOffset = ItemOffset + self:CalculateItemHeightOffset(Item)
