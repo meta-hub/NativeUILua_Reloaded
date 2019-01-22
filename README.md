@@ -22,7 +22,7 @@ This version cotains in addition  :
 - Modifications of possibility to change color/opacity of the banners of menu and sliders.
 - Adding possibility of badges and labels in sub-menu.
 - Possibility to change the color/opacity of the background and the progress bar.
-- Compatibility with the EmmyLUA plugin.
+- EmmyLUA Docs.
 - Automatic translation of instructional buttons according to the language of your game.
 
 ✌ And other features to come ... ✌
