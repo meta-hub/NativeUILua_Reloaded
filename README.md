@@ -24,6 +24,7 @@ This version cotains in addition  :
 - Possibility to change the color/opacity of the background and the progress bar.
 - EmmyLUA Docs.
 - Automatic translation of instructional buttons according to the language of your game.
+- Added a wrapper UIVisual (Popup, Popup Char, Text ect ...)
 
 ✌ And other features to come ... ✌
 

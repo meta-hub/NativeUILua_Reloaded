@@ -101,7 +101,7 @@ function UIVisual:Text(array)
     end
 end
 
-NativeUI.Visual.FloatingHelpText = function(array)
+function UIVisual:FloatingHelpText(array)
     BeginTextCommandDisplayHelp("STRING")
     if (array.message ~= nil) then
         AddTextComponentScaleform(array.message)
@@ -122,7 +122,7 @@ NativeUI.Visual.FloatingHelpText = function(array)
     end
 end
 
-NativeUI.Visual.ShowFreemodeMessage = function(array)
+function UIVisual:ShowFreemodeMessage(array)
     if (array.sound ~= nil) then
         if (array.sound.audio_name ~= nil) then
             if (array.sound.audio_ref ~= nil) then
