@@ -47,12 +47,6 @@ NB: Anyone discovering a bug on this version is asked to report the error via an
 ➡️ Sreenshot : Add some images or screenshot for help us for the resolutions of the problems.
 
 ```
-For any suggest for adding features , do not hesitate to use this template:
-
-- In the title of the issue specify : [Adding features request]
-- Describe the utility of the features.
-- Why you want you would add this features
-- Why do you wants to add this features.
 
 ### Thanks to all who follow this project ! 🖤
 
