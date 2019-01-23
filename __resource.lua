@@ -5,6 +5,7 @@ description 'NativeUILua-Reloaded is UI library for FiveM designed specifically 
 version '1.0.0'
 
 client_scripts {
+  "share/UIVisual.lua",
   "share/Utils.lua",
 
   "elements/UIResRectangle.lua",
@@ -34,7 +35,7 @@ client_scripts {
 
   "NativeUI.lua",
 
-  "example/DefaultShowcase.lua",
-  --"example/RealtimeUpdate.lua",
+  --"example/DefaultShowcase.lua",
+  "example/RealtimeUpdate.lua",
 
 }
