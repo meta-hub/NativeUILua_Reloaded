@@ -18,6 +18,7 @@ mainMenu:AddInstructionButton({
 
 function RealtimeUpdateUI(menu)
     for i = 1, quantity, 1 do
+        print(quantity)
         menu:AddItem(NativeUI.CreateItem("PageFiller - " .. i, "Sample description that takes more than one line. Moreso, it takes way more t"))
     end
 end
@@ -30,6 +31,7 @@ Citizen.CreateThread(function()
         Citizen.Wait(1)
         _menuPool:ProcessMenus()
         if IsControlJustPressed(0, 51) then
+
             mainMenu:Visible(not mainMenu:Visible())
         end
     end
@@ -38,21 +40,24 @@ end)
 
 Citizen.CreateThread(function()
     while true do
-        Citizen.Wait(0)
-        if IsControlJustReleased(1, 167) then
-            ShowNotification('RELOAD REALTIME UI')
-            --mainMenu:ReloadDraw(_menuPool)
-            _menuPool:TestReloadMenuPool()
+        Citizen.Wait(1)
+        if IsControlJustPressed(0, 167) then
+            UIVisual:Text({
+                message = "RELOAD REALTIME UI"
+            })
+
         end
     end
 end)
 
 Citizen.CreateThread(function()
     while true do
-        Citizen.Wait(0)
-        if IsControlJustReleased(1, 166) then
-            quantity = math.random(10, 150)
-            ShowNotification('EDIT ITEM COUNT ~r~'.. quantity)
+        Citizen.Wait(1)
+        if IsControlJustPressed(0, 166) then
+            quantity = math.random(10, 30)
+            UIVisual:Text({
+                message = 'EDIT ITEM COUNT ~r~'.. quantity
+            })
         end
     end
 end)

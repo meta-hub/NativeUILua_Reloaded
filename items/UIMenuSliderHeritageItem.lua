@@ -34,7 +34,6 @@ function UIMenuSliderHeritageItem.New(Text, Items, Index, Description, SliderCol
     local _UIMenuSliderHeritageItem = {
         Base = UIMenuItem.New(Text or "", Description or ""),
         Items = Items,
-        ShowDivider = 1,
         LeftArrow = Sprite.New("mpleaderboard", "leaderboard_female_icon", 0, 0, 40, 40, 0, 255, 255, 255, 255),
         RightArrow = Sprite.New("mpleaderboard", "leaderboard_male_icon", 0, 0, 40, 40, 0, 255, 255, 255, 255),
         Background = UIResRectangle.New(0, 0, 150, 10, _BackgroundSliderColors.R, _BackgroundSliderColors.G, _BackgroundSliderColors.B, _BackgroundSliderColors.A),
@@ -196,7 +195,6 @@ end
 ---Draw
 function UIMenuSliderHeritageItem:Draw()
     self.Base:Draw()
-
     if self:Enabled() then
         if self:Selected() then
             self.LeftArrow:Colour(0, 0, 0, 255)
@@ -209,22 +207,12 @@ function UIMenuSliderHeritageItem:Draw()
         self.LeftArrow:Colour(255, 255, 255, 255)
         self.RightArrow:Colour(255, 255, 255, 255)
     end
-
     local Offset = ((self.Background.Width - self.Slider.Width) / (#self.Items - 1)) * (self._Index - 1)
-
     self.Slider:Position(250 + self.Base._Offset.X + Offset + self.Base.ParentMenu.WidthOffset, self.Slider.Y)
-
     self.LeftArrow:Draw()
     self.RightArrow:Draw()
-
     self.Background:Draw()
     self.Slider:Draw()
-
-    if self.ShowDivider then
-        self.Divider:Draw()
-
-            self.Divider:Colour(255, 255, 255, 255)
-
-    end
-
+    self.Divider:Draw()
+    self.Divider:Colour(255, 255, 255, 255)
 end

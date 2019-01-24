@@ -145,6 +145,7 @@ end
 function NativeUI.CreateSliderItem(Text, Items, Index, Description, Divider, SliderColors, BackgroundSliderColors)
     return UIMenuSliderItem.New(Text, Items, Index, Description, Divider, SliderColors, BackgroundSliderColors)
 end
+
 ---CreateSliderHeritageItem
 ---@param Text string
 ---@param Items number

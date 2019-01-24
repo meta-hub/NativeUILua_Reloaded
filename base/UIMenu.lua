@@ -134,7 +134,7 @@ function UIMenu.New(Title, Subtitle, X, Y, TxtDictionary, TxtName, Heading, R, G
             ResetCursorOnOpen = true,
             MouseControlsEnabled = true,
             MouseEdgeEnabled = true,
-            ControlDisablingEnabled = false, -- TODO Remove this (devmode)
+            ControlDisablingEnabled = true, -- TODO Remove this (devmode)
             Audio = {
                 Library = "HUD_FRONTEND_DEFAULT_SOUNDSET",
                 UpDown = "NAV_UP_DOWN",
@@ -502,6 +502,7 @@ function UIMenu:MultilineFormat(str)
                 AggregatePixels = AggregatePixels + MeasureString(" ")
             end
         end
+
         return output
     end
 end
@@ -823,7 +824,6 @@ function UIMenu:GoLeft()
         Item:Index(Item._Index - 0.1)
         self.OnSliderChange(self, Item, Item:Index())
         Item.OnSliderChanged(self, Item, Item._Index)
-
         if not Item.Pressed then
             Item.Pressed = true
             Citizen.CreateThread(function()
@@ -835,6 +835,7 @@ function UIMenu:GoLeft()
                 Item.Pressed = false
             end)
         end
+
     end
 end
 
@@ -871,7 +872,6 @@ function UIMenu:GoRight()
         Item:Index(Item._Index + 0.1)
         self.OnSliderChange(self, Item, Item:Index())
         Item.OnSliderChanged(self, Item, Item._Index)
-
         if not Item.Pressed then
             Item.Pressed = true
             Citizen.CreateThread(function()
@@ -966,14 +966,6 @@ function UIMenu:ReleaseMenuFromItem(Item)
         self.Children[Item] = nil
         return true
     end
-end
-
-function UIMenu:ReloadDraw(_menuPooxl)
-    self:Clear()
-    Citizen.Wait(1)
-    self:ProcessControl()
-    self:ProcessMouse()
-    self:Draw()
 end
 
 ---Draw

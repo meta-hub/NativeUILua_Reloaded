@@ -33,8 +33,6 @@ function MenuPool:AddSubMenu(Menu, Text, Description, KeepPosition, KeepBanner)
                 SubMenu.Banner = Menu.Banner
             end
         end
-
-
         self:Add(SubMenu)
         Menu:BindMenuToItem(SubMenu, Item)
         return {
@@ -235,5 +233,12 @@ function MenuPool:TotalItemsPerPage(Value)
         for _, Menu in pairs(self.Menus) do
             Menu.Pagination.Total = Value - 1
         end
+    end
+end
+
+function MenuPool:TestRRload(Menu)
+    self:CloseAllMenus()
+    if Menu() == "UIMenu" then
+        Menu():Visible(true)
     end
 end

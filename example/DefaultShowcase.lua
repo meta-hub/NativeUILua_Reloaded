@@ -1,18 +1,17 @@
 ketchup = false
 dish = "Banana"
 quantity = 1
+LoremIpsum = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore\n et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea "
 _menuPool = NativeUI.CreatePool()
 
-mainMenu = NativeUI.CreateMenu("Native UI", "Menu interactions", nil, nil, nil, nil, nil, 255, 255, 255, 210)
+mainMenu = NativeUI.CreateMenu("Native UI", "Menu interactions", nil, nil, nil, nil, nil, 255, 255, 255, 255)
 
 _menuPool:Add(mainMenu)
-_menuPool:MouseControlsEnabled(false)
-_menuPool:ControlDisablingEnabled(false)
---_menuPool:WidthOffset(0)
-
+_menuPool:MouseControlsEnabled(true)
+_menuPool:ControlDisablingEnabled(true)
 
 function AddMenuKetchup(menu)
-    local newitem = NativeUI.CreateCheckboxItem("Add ketchup?", ketchup, "Do you wish to add ketchup?")
+    local newitem = NativeUI.CreateCheckboxItem("Add ketchup?", ketchup, LoremIpsum)
     menu:AddItem(newitem)
     menu.OnCheckboxChange = function(sender, item, checked_)
         if item == newitem then
@@ -101,6 +100,7 @@ AddMenuFoods(mainMenu)
 AddMenuFoodCount(mainMenu)
 AddMenuCook(mainMenu)
 AddMenuAnotherMenu(mainMenu)
+
 _menuPool:RefreshIndex()
 
 Citizen.CreateThread(function()
