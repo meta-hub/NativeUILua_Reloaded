@@ -1,6 +1,8 @@
 UIMenuSliderHeritageItem = setmetatable({}, UIMenuSliderHeritageItem)
 UIMenuSliderHeritageItem.__index = UIMenuSliderHeritageItem
-UIMenuSliderHeritageItem.__call = function() return "UIMenuItem", "UIMenuSliderHeritageItem" end
+UIMenuSliderHeritageItem.__call = function()
+    return "UIMenuItem", "UIMenuSliderHeritageItem"
+end
 
 ---New
 ---@param Text string
@@ -10,16 +12,20 @@ UIMenuSliderHeritageItem.__call = function() return "UIMenuItem", "UIMenuSliderH
 ---@param SliderColors table
 ---@param BackgroundSliderColors table
 function UIMenuSliderHeritageItem.New(Text, Items, Index, Description, SliderColors, BackgroundSliderColors)
-    if type(Items) ~= "table" then Items = {} end
-    if Index == 0 then Index = 1 end
-
-    if type(SliderColors) ~= "table" or  SliderColors == nil then
-        _SliderColors = { R = 57, G = 119, B = 200, A = 255 }
-    else
-       _SliderColors = SliderColors
+    if type(Items) ~= "table" then
+        Items = {}
+    end
+    if Index == 0 then
+        Index = 1
     end
 
-    if type(BackgroundSliderColors) ~= "table" or  BackgroundSliderColors == nil then
+    if type(SliderColors) ~= "table" or SliderColors == nil then
+        _SliderColors = { R = 57, G = 119, B = 200, A = 255 }
+    else
+        _SliderColors = SliderColors
+    end
+
+    if type(BackgroundSliderColors) ~= "table" or BackgroundSliderColors == nil then
         _BackgroundSliderColors = { R = 4, G = 32, B = 57, A = 255 }
     else
         _BackgroundSliderColors = BackgroundSliderColors
@@ -29,15 +35,17 @@ function UIMenuSliderHeritageItem.New(Text, Items, Index, Description, SliderCol
         Base = UIMenuItem.New(Text or "", Description or ""),
         Items = Items,
         ShowDivider = 1,
-        LeftArrow = Sprite.New("mpleaderboard", "leaderboard_male_icon", 0, 0, 30, 30, 0, 255, 255, 255, 255),
-        RightArrow = Sprite.New("mpleaderboard", "leaderboard_female_icon", 0, 0, 30, 30, 0, 255, 255, 255, 255),
+        LeftArrow = Sprite.New("mpleaderboard", "leaderboard_female_icon", 0, 0, 40, 40, 0, 255, 255, 255, 255),
+        RightArrow = Sprite.New("mpleaderboard", "leaderboard_male_icon", 0, 0, 40, 40, 0, 255, 255, 255, 255),
         Background = UIResRectangle.New(0, 0, 150, 10, _BackgroundSliderColors.R, _BackgroundSliderColors.G, _BackgroundSliderColors.B, _BackgroundSliderColors.A),
         Slider = UIResRectangle.New(0, 0, 75, 10, _SliderColors.R, _SliderColors.G, _SliderColors.B, _SliderColors.A),
         Divider = UIResRectangle.New(0, 0, 4, 20, 255, 255, 255, 255),
         _Index = tonumber(Index) or 1,
         Audio = { Slider = "CONTINUOUS_SLIDER", Library = "HUD_FRONTEND_DEFAULT_SOUNDSET", Id = nil },
-        OnSliderChanged = function(menu, item, newindex) end,
-        OnSliderSelected = function(menu, item, newindex) end,
+        OnSliderChanged = function(menu, item, newindex)
+        end,
+        OnSliderSelected = function(menu, item, newindex)
+        end,
     }
     return setmetatable(_UIMenuSliderHeritageItem, UIMenuSliderHeritageItem)
 end
@@ -59,8 +67,8 @@ function UIMenuSliderHeritageItem:Position(Y)
         self.Background:Position(250 + self.Base._Offset.X + self.Base.ParentMenu.WidthOffset, Y + 158.5 + self.Base._Offset.Y)
         self.Slider:Position(250 + self.Base._Offset.X + self.Base.ParentMenu.WidthOffset, Y + 158.5 + self.Base._Offset.Y)
         self.Divider:Position(323.5 + self.Base._Offset.X + self.Base.ParentMenu.WidthOffset, Y + 153 + self.Base._Offset.Y)
-        self.LeftArrow:Position(220 + self.Base._Offset.X + self.Base.ParentMenu.WidthOffset, 148.5 + Y + self.Base._Offset.Y)
-        self.RightArrow:Position(400 + self.Base._Offset.X + self.Base.ParentMenu.WidthOffset, 148.5 + Y + self.Base._Offset.Y)
+        self.LeftArrow:Position(217 + self.Base._Offset.X + self.Base.ParentMenu.WidthOffset, 143.5 + Y + self.Base._Offset.Y)
+        self.RightArrow:Position(395 + self.Base._Offset.X + self.Base.ParentMenu.WidthOffset, 143.5 + Y + self.Base._Offset.Y)
         self.Base:Position(Y)
     end
 end
@@ -161,7 +169,9 @@ end
 ---@param Index number
 function UIMenuSliderHeritageItem:IndexToItem(Index)
     if tonumber(Index) then
-        if tonumber(Index) == 0 then Index = 1 end
+        if tonumber(Index) == 0 then
+            Index = 1
+        end
         if self.Items[tonumber(Index)] then
             return self.Items[tonumber(Index)]
         end
@@ -212,11 +222,9 @@ function UIMenuSliderHeritageItem:Draw()
 
     if self.ShowDivider then
         self.Divider:Draw()
-        if self:Selected() then
-            self.Divider:Colour(0, 0, 0, 255)
-        else
+
             self.Divider:Colour(255, 255, 255, 255)
-        end
+
     end
 
 end
