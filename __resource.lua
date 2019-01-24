@@ -5,9 +5,9 @@ description 'NativeUILua-Reloaded is UI library for FiveM designed specifically 
 version '1.0.0'
 
 client_scripts {
-  "share/UIVisual.lua",
   "share/Utils.lua",
 
+  "elements/UIVisual.lua",
   "elements/UIResRectangle.lua",
   "elements/UIResText.lua",
   "elements/Sprite.lua",
@@ -27,6 +27,8 @@ client_scripts {
   "windows/UIMenuHeritageWindow.lua",
 
   "panels/UIMenuGridPanel.lua",
+  "panels/UIMenuHorizontalOneLineGridPanel.lua",
+  "panels/UIMenuVerticalOneLineGridPanel.lua",
   "panels/UIMenuColourPanel.lua",
   "panels/UIMenuPercentagePanel.lua",
 
@@ -36,6 +38,7 @@ client_scripts {
   "NativeUI.lua",
 
   --"example/DefaultShowcase.lua",
-  "example/RealtimeUpdate.lua",
+  --"example/RealtimeUpdate.lua",
+  "example/HeritageShowcase.lua",
 
 }

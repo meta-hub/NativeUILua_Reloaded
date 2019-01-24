@@ -182,6 +182,20 @@ function NativeUI.CreateGridPanel(TopText, LeftText, RightText, BottomText)
     return UIMenuGridPanel.New(TopText, LeftText, RightText, BottomText)
 end
 
+---CreateHorizontalGridPanel
+---@param LeftText string
+---@param RightText string
+function NativeUI.CreateHorizontalGridPanel(LeftText, RightText)
+    return UIMenuHorizontalOneLineGridPanel.New(LeftText, RightText)
+end
+
+---CreateVerticalGridPanel
+---@param TopText string
+---@param BottomText string
+function NativeUI.CreateVerticalGridPanel(TopText, BottomText)
+    return UIMenuVerticalOneLineGridPanel.New(TopText, BottomText)
+end
+
 ---CreateColourPanel
 ---@param Title string
 ---@param Colours table
