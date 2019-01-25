@@ -54,8 +54,10 @@ end
 function UIMenuProgressItem:Position(Y)
 	if tonumber(Y) then
 		self.Base:Position(Y)
-		self.Background:Position(8 + self.Base._Offset.X + self.Base.ParentMenu.WidthOffset, 177 + Y + self.Base._Offset.Y)
-		self.Bar:Position(11.75 + self.Base._Offset.X + self.Base.ParentMenu.WidthOffset, 180.75 + Y + self.Base._Offset.Y)
+		self.Data.Max = 407.5 + self.Base.ParentMenu.WidthOffset
+		self.Background:Size(415 + self.Base.ParentMenu.WidthOffset, 20)
+		self.Background:Position(8 + self.Base._Offset.X , 177 + Y + self.Base._Offset.Y)
+		self.Bar:Position(11.75 + self.Base._Offset.X, 180.75 + Y + self.Base._Offset.Y)
 	end
 end
 
