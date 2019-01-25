@@ -25,6 +25,7 @@ function UIMenuProgressItem.New(Text, Items, Index, Description, Counter)
             Max = 407.5,
             Index = tonumber(Index) or 1,
         },
+        Audio = { Slider = "CONTINUOUS_SLIDER", Library = "HUD_FRONTEND_DEFAULT_SOUNDSET", Id = nil },
         Background = UIResRectangle.New(0, 0, 415, 20, 0, 0, 0, 255),
         Bar = UIResRectangle.New(0, 0, 407.5, 12.5),
         OnProgressChanged = function(menu, item, newindex)

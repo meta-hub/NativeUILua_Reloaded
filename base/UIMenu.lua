@@ -1204,6 +1204,17 @@ function UIMenu:ProcessMouse()
                                     Item:CalculateProgress(math.round(GetControlNormal(0, 239) * 1920) - SafeZone.X)
                                     self.OnProgressChange(self, Item, Item.Data.Index)
                                     Item.OnProgressChanged(self, Item, Item.Data.Index)
+                                    if not Item.Pressed then
+                                        Item.Pressed = true
+                                        Citizen.CreateThread(function()
+                                            Item.Audio.Id = GetSoundId()
+                                            PlaySoundFrontend(Item.Audio.Id, Item.Audio.Slider, Item.Audio.Library, 1)
+                                            Citizen.Wait(100)
+                                            StopSound(Item.Audio.Id)
+                                            ReleaseSoundId(Item.Audio.Id)
+                                            Item.Pressed = false
+                                        end)
+                                    end
                                 else
                                     self:SelectItem()
                                 end
@@ -1248,6 +1259,17 @@ function UIMenu:ProcessMouse()
                                         Item:CalculateProgress(math.round(GetControlNormal(0, 239) * 1920) - SafeZone.X)
                                         self.OnProgressChange(self, Item, Item.Data.Index)
                                         Item.OnProgressChanged(self, Item, Item.Data.Index)
+                                        if not Item.Pressed then
+                                            Item.Pressed = true
+                                            Citizen.CreateThread(function()
+                                                Item.Audio.Id = GetSoundId()
+                                                PlaySoundFrontend(Item.Audio.Id, Item.Audio.Slider, Item.Audio.Library, 1)
+                                                Citizen.Wait(100)
+                                                StopSound(Item.Audio.Id)
+                                                ReleaseSoundId(Item.Audio.Id)
+                                                Item.Pressed = false
+                                            end)
+                                        end
                                     else
                                         self:SelectItem()
                                     end
