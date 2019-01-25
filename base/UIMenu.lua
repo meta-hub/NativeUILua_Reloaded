@@ -71,7 +71,10 @@ function UIMenu.New(Title, Subtitle, X, Y, TxtDictionary, TxtName, Heading, R, G
         WidthOffset = 0,
         Position = { X = X, Y = Y },
         Pagination = { Min = 0, Max = 9, Total = 9 },
-        PageCounter = { PreText = "" },
+        PageCounter = {
+            isCustom = false,
+            PreText = "",
+        },
         Extra = {},
         Description = {},
         Items = {},
@@ -968,6 +971,15 @@ function UIMenu:ReleaseMenuFromItem(Item)
     end
 end
 
+---PageCounterName
+---@param text string
+function UIMenu:PageCounterName(String)
+    self.PageCounter.isCustom = true
+    self.PageCounter.PreText = String
+    self.PageCounter.Text:Text(self.PageCounter.PreText)
+    self.PageCounter.Text:Draw()
+end
+
 ---Draw
 function UIMenu:Draw()
     if not self._Visible then
@@ -1076,19 +1088,26 @@ function UIMenu:Draw()
         self.Extra.Down:Draw()
         self.ArrowSprite:Draw()
 
+        if self.PageCounter.isCustom ~= true then
+            if self.PageCounter.Text ~= nil then
+                local Caption = self.PageCounter.PreText .. CurrentSelection .. " / " .. #self.Items
+                self.PageCounter.Text:Text(Caption)
+                self.PageCounter.Text:Draw()
+            end
+        end
+    end
+
+    if self.PageCounter.isCustom ~= false then
         if self.PageCounter.Text ~= nil then
-            local Caption = self.PageCounter.PreText .. CurrentSelection .. " / " .. #self.Items
-            self.PageCounter.Text:Text(Caption)
+            self.PageCounter.Text:Text(self.PageCounter.PreText)
             self.PageCounter.Text:Draw()
         end
-
     end
 
     if self.Settings.ScaleWithSafezone then
         ScreenDrawPositionEnd()
 
     end
-
 end
 
 ---ProcessMouse

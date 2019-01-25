@@ -6,7 +6,7 @@
 
 _menuPool = NativeUI.CreatePool()
 
-mainMenu = NativeUI.CreateMenu("Character Creator", "~b~NEW CHARACTER", nil, nil, nil, nil, nil, 255, 255, 255, 255)
+mainMenu = NativeUI.CreateMenu("NativeUILua", "~b~NATIVEUI SHOWCASE", nil, nil, nil, nil, nil, 255, 255, 255, 255)
 
 _menuPool:Add(mainMenu)
 
@@ -17,6 +17,13 @@ function OpenMainHeritageUI(menu)
         amount[i] = i
     end
 
+    menu:PageCounterName("~r~NATIVEUILUA")
+    local submenu = _menuPool:AddSubMenu(menu, "Another Menu")
+    for i = 1, 20, 1 do
+
+        submenu.SubMenu:AddItem(NativeUI.CreateItem("PageFiller", "Sample description that takes more than one line. Moreso, it takes way more than two lines since it's so long. Wow, check out this length!"))
+    end
+    --[[
     local CreateSliderHeritageItem = NativeUI.CreateSliderHeritageItem("Resemblance", amount, 5, "")
     menu:AddItem(CreateSliderHeritageItem)
 
@@ -25,6 +32,8 @@ function OpenMainHeritageUI(menu)
             message = newindex
         })
     end
+    ]]
+
 
 end
 
