@@ -1,6 +1,10 @@
 # Compiled Lua sources
 luac.out
 
+# Ignore folder
+.idea/
+.test/
+
 # luarocks build files
 *.src.rock
 *.zip
