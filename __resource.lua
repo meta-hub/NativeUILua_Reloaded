@@ -5,38 +5,49 @@ description 'NativeUILua-Reloaded is UI library for FiveM designed specifically 
 version '1.0.0'
 
 client_scripts {
-  "share/Utils.lua",
+  "Wrapper/Utility.lua",
 
-  "elements/UIVisual.lua",
-  "elements/UIResRectangle.lua",
-  "elements/UIResText.lua",
-  "elements/Sprite.lua",
-  "elements/StringMeasurer.lua",
-  "elements/Badge.lua",
-  "elements/Colours.lua",
-  "elements/ColoursPanel.lua",
+  "UIElements/UIVisual.lua",
+  "UIElements/UIResRectangle.lua",
+  "UIElements/UIResText.lua",
+  "UIElements/Sprite.lua",
+}
 
-  "items/UIMenuItem.lua",
-  "items/UIMenuCheckboxItem.lua",
-  "items/UIMenuListItem.lua",
-  "items/UIMenuSliderItem.lua",
-  "items/UIMenuSliderHeritageItem.lua",
-  "items/UIMenuColouredItem.lua",
-  "items/UIMenuprogressItem.lua",
+client_scripts {
+  "UIMenu/elements/Badge.lua",
+  "UIMenu/elements/Colours.lua",
+  "UIMenu/elements/ColoursPanel.lua",
+  "UIMenu/elements/StringMeasurer.lua",
 
-  "windows/UIMenuHeritageWindow.lua",
+  "UIMenu/items/UIMenuItem.lua",
+  "UIMenu/items/UIMenuCheckboxItem.lua",
+  "UIMenu/items/UIMenuListItem.lua",
+  "UIMenu/items/UIMenuSliderItem.lua",
+  "UIMenu/items/UIMenuSliderHeritageItem.lua",
+  "UIMenu/items/UIMenuColouredItem.lua",
+  "UIMenu/items/UIMenuprogressItem.lua",
 
-  "panels/UIMenuGridPanel.lua",
-  "panels/UIMenuHorizontalOneLineGridPanel.lua",
-  "panels/UIMenuVerticalOneLineGridPanel.lua",
-  "panels/UIMenuColourPanel.lua",
-  "panels/UIMenuPercentagePanel.lua",
+  "UIMenu/windows/UIMenuHeritageWindow.lua",
 
-  "base/UIMenu.lua",
-  "base/MenuPool.lua",
+  "UIMenu/panels/UIMenuGridPanel.lua",
+  "UIMenu/panels/UIMenuHorizontalOneLineGridPanel.lua",
+  "UIMenu/panels/UIMenuVerticalOneLineGridPanel.lua",
+  "UIMenu/panels/UIMenuColourPanel.lua",
+  "UIMenu/panels/UIMenuPercentagePanel.lua",
 
+  "UIMenu/UIMenu.lua",
+  "UIMenu/MenuPool.lua",
+}
+
+client_scripts {
+  'UITimerBar/TimerBarPool.lua',
+  'UITimerBar/items/UITimerBarProgressItem.lua',
+}
+
+client_scripts {
   "NativeUI.lua",
+}
 
+client_scripts {
   ".test/ExampleMenu.lua"
-
 }

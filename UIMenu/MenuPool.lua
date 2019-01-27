@@ -235,10 +235,3 @@ function MenuPool:TotalItemsPerPage(Value)
         end
     end
 end
-
-function MenuPool:TestRRload(Menu)
-    self:CloseAllMenus()
-    if Menu() == "UIMenu" then
-        Menu():Visible(true)
-    end
-end
