@@ -40,8 +40,8 @@ client_scripts {
 }
 
 client_scripts {
-  'UITimerBar/TimerBarPool.lua',
-  'UITimerBar/items/UITimerBarProgressItem.lua',
+  'UITimerBar/UITimerBarPool.lua',
+  'UITimerBar/UITimerBar.lua',
 }
 
 client_scripts {
