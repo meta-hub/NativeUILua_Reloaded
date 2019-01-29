@@ -43,19 +43,21 @@ function UITimerBar.New(TxtDictionary, TxtName, X, Y, Heading, R, G, B, A)
         B = 255
     end
     if A ~= nil then
-        A = tonumber(A) or 255
+        A = tonumber(A) or 150
     else
-        A = 255
+        A = 150
     end
     local _UITimerBar = {
-        Background = Sprite.New(TxtDictionary, TxtName, 0 + X, 0 + Y, 431, 107, Heading, R, G, B, A),
-        ParentTimerBar = nil,
-        Settings = {},
+        Background = Sprite.New(TxtDictionary, TxtName, 0, 0, 250, 45, Heading, R, G, B, A),
+        Position = { X = 1630, Y = 1050 },
     }
     return setmetatable(_UITimerBar, UITimerBar)
 end
 
-function UITimerBar:Draw()
+function UITimerBar:Draw(Interval)
 
+    self.Background:Position(self.Position.X, self.Position.Y - Interval)
+
+    self.Background:Draw()
 end
 

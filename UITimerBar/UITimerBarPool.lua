@@ -3,23 +3,25 @@
 --- Created by Dylan Malandain.
 --- DateTime: 26/01/2019 17:36
 ---
--- TODO Realiser le systeme de POOL + Draw du UITimerBarPool + D'autre utilitaire
 TimerBarPool = setmetatable({}, TimerBarPool)
 TimerBarPool.__index = TimerBarPool
 
 function TimerBarPool.New()
     local _TimerBarPool = {
         TimerBars = {},
+        _Limite = 20
     }
     return setmetatable(_TimerBarPool, TimerBarPool)
 end
 
 function TimerBarPool:Add(TimerBar)
-    if TimerBar() == "TimerBarProgressItem" then
+    if TimerBar() == "UITimerBar" then
         table.insert(self.TimerBars, TimerBar)
     end
 end
 
-function TimerBarPool:ProcessTimerBar()
-    self:Draw()
+function TimerBarPool:Draw()
+    for _, TimerBar in pairs(self.TimerBars) do
+        TimerBar:Draw(50 * _)
+    end
 end

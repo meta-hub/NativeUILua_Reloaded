@@ -42,6 +42,8 @@ client_scripts {
 client_scripts {
   'UITimerBar/UITimerBarPool.lua',
   'UITimerBar/UITimerBar.lua',
+
+    --'UITimerBar/items/UITimerBarProgressItem.lua',
 }
 
 client_scripts {
