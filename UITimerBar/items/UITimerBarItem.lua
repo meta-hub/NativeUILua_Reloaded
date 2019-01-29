@@ -84,7 +84,7 @@ end
 ---@param B number
 ---@param A number
 function UITimerBarItem:SetTextTimerBarColor(R, G, B, A)
-    self.Text:Colour(R, G, B, A)
+    self.TextTimerBar:Colour(R, G, B, A)
 end
 
 ---SetTextColor
