@@ -137,7 +137,7 @@ function UIMenu.New(Title, Subtitle, X, Y, TxtDictionary, TxtName, Heading, R, G
             ResetCursorOnOpen = true,
             MouseControlsEnabled = true,
             MouseEdgeEnabled = true,
-            ControlDisablingEnabled = true, -- TODO Remove this (devmode)
+            ControlDisablingEnabled = false,
             Audio = {
                 Library = "HUD_FRONTEND_DEFAULT_SOUNDSET",
                 UpDown = "NAV_UP_DOWN",

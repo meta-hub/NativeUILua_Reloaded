@@ -48,8 +48,11 @@ function UITimerBar.New(TxtDictionary, TxtName, X, Y, Heading, R, G, B, A)
         A = 150
     end
     local _UITimerBar = {
-        Background = Sprite.New(TxtDictionary, TxtName, 0, 0, 250, 45, Heading, R, G, B, A),
-        Position = { X = 1630, Y = 1050 },
+        Background = Sprite.New(TxtDictionary, TxtName, 0, 0, 350, 45, Heading, R, G, B, A),
+        Text = UIResText.New("HUNGRY", 0, 0, 0.35, 255, 255, 255, 255, 0, "Right"),
+        BackgroundProgressBar = UIResRectangle.New(0, 0, 210, 20, 255, 0, 0, 100),
+        ProgressBar = UIResRectangle.New(0, 0, 415, 20, 255, 0, 0, 255),
+        Position = { X = 1550, Y = 1050 },
     }
     return setmetatable(_UITimerBar, UITimerBar)
 end
@@ -57,7 +60,14 @@ end
 function UITimerBar:Draw(Interval)
 
     self.Background:Position(self.Position.X, self.Position.Y - Interval)
+    self.Text:Position(self.Position.X + 100.0, self.Position.Y - Interval + 10.0)
+
+    self.BackgroundProgressBar:Position(self.Position.X + 120.0, self.Position.Y - Interval + 12.0)
+
+
 
     self.Background:Draw()
+    self.Text:Draw()
+    self.BackgroundProgressBar:Draw()
 end
 
