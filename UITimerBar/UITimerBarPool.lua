@@ -9,13 +9,12 @@ TimerBarPool.__index = TimerBarPool
 function TimerBarPool.New()
     local _TimerBarPool = {
         TimerBars = {},
-        _Limite = 20
     }
     return setmetatable(_TimerBarPool, TimerBarPool)
 end
 
 function TimerBarPool:Add(TimerBar)
-    if TimerBar() == "UITimerBar" then
+    if TimerBar() == "UITimerBarProgressItem" or "UITimerBarItem" then
         table.insert(self.TimerBars, TimerBar)
     end
 end
