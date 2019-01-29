@@ -3,28 +3,26 @@
 --- Created by Dylan Malandain.
 --- DateTime: 26/01/2019 17:36
 ---
-TimerBarPool = setmetatable({}, TimerBarPool)
-TimerBarPool.__index = TimerBarPool
+UITimerBarPool = setmetatable({}, UITimerBarPool)
+UITimerBarPool.__index = UITimerBarPool
 
 ---New
 ---@return table
-function TimerBarPool.New()
-    local _TimerBarPool = {
+function UITimerBarPool.New()
+    local _UITimerBarPool = {
         TimerBars = {},
     }
-    return setmetatable(_TimerBarPool, TimerBarPool)
+    return setmetatable(_UITimerBarPool, UITimerBarPool)
 end
 
----Add
----@param TimerBar table
-function TimerBarPool:Add(TimerBar)
+function UITimerBarPool:Add(TimerBar)
     if TimerBar() == "UITimerBarProgressItem" or "UITimerBarItem" then
         table.insert(self.TimerBars, TimerBar)
     end
 end
 
 ---Draw
-function TimerBarPool:Draw()
+function UITimerBarPool:Draw()
     for _, TimerBar in pairs(self.TimerBars) do
         TimerBar:Draw(50 * _)
     end

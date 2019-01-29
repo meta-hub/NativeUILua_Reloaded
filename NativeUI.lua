@@ -207,3 +207,8 @@ end
 function NativeUI.CreateTimerBar(Text, TxtDictionary, TxtName, X, Y, Heading, R, G, B, A)
     return UITimerBarItem.New(Text, TxtDictionary, TxtName, X, Y, Heading, R, G, B, A)
 end
+
+---TimerBarPool
+function NativeUI.TimerBarPool()
+    return UITimerBarPool.New()
+end
