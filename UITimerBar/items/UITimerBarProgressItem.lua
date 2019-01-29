@@ -67,17 +67,24 @@ function UITimerBarProgressItem.New(Text, TxtDictionary, TxtName, X, Y, Heading,
     return setmetatable(_UITimerBarProgressItem, UITimerBarProgressItem)
 end
 
+---SetTextColor
+---@param R number
+---@param G number
+---@param B number
+---@param A number
 function UITimerBarProgressItem:SetTextColor(R, G, B, A)
     self.Text:Colour(R, G, B, A)
 end
 
 ---GetPercentage
+---@return number
 function UITimerBarProgressItem:GetPercentage()
     return self.ProgressBar.Width * 1 / 2.1
 end
 
 ---SetPercentage
 ---@param Number number
+---@return number
 function UITimerBarProgressItem:SetPercentage(Number)
     if (Number <= 100) then
         self.ProgressBar.Width = Number * 2.1
@@ -86,6 +93,8 @@ function UITimerBarProgressItem:SetPercentage(Number)
     end
 end
 
+---Draw
+---@param Interval number
 function UITimerBarProgressItem:Draw(Interval)
     self.Background:Position(self.Position.X, self.Position.Y - Interval)
     self.Text:Position(self.Position.X + 100.0, self.Position.Y - Interval + 12.0)

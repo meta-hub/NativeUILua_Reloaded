@@ -9,6 +9,17 @@ UITimerBarItem.__call = function()
     return "UITimerBarItem"
 end
 
+---New
+---@param Text string
+---@param TxtDictionary string
+---@param TxtName string
+---@param X number
+---@param Y number
+---@param Heading number
+---@param R number
+---@param G number
+---@param B number
+---@param A number
 function UITimerBarItem.New(Text, TxtDictionary, TxtName, X, Y, Heading, R, G, B, A)
     local X, Y = tonumber(X) or 0, tonumber(Y) or 0
     if TxtDictionary ~= nil then
@@ -55,22 +66,38 @@ function UITimerBarItem.New(Text, TxtDictionary, TxtName, X, Y, Heading, R, G, B
     return setmetatable(_UITimerBarItem, UITimerBarItem)
 end
 
+---SetTextTimerBar
+---@param Text string
 function UITimerBarItem:SetTextTimerBar(Text)
     self.TextTimerBar:Text(Text)
 end
 
+---SetText
+---@param Text string
 function UITimerBarItem:SetText(Text)
     self.Text:Text(Text)
 end
 
+---SetTextTimerBarColor
+---@param R number
+---@param G number
+---@param B number
+---@param A number
 function UITimerBarItem:SetTextTimerBarColor(R, G, B, A)
     self.Text:Colour(R, G, B, A)
 end
 
+---SetTextColor
+---@param R number
+---@param G number
+---@param B number
+---@param A number
 function UITimerBarItem:SetTextColor(R, G, B, A)
     self.Text:Colour(R, G, B, A)
 end
 
+---Draw
+---@param Interval number
 function UITimerBarItem:Draw(Interval)
     self.Background:Position(self.Position.X, self.Position.Y - Interval)
     self.Text:Position(self.Position.X + 100.0, self.Position.Y - Interval + 12.0)
