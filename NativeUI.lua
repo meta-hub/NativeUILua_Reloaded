@@ -177,3 +177,33 @@ end
 function NativeUI.CreateText(Text, X, Y, Scale, R, G, B, A, Font, Alignment, DropShadow, Outline, WordWrap)
     return UIResText.New(Text, X, Y, Scale, R, G, B, A, Font, Alignment, DropShadow, Outline, WordWrap)
 end
+
+---CreateTimerBarProgress
+---@param Text string
+---@param TxtDictionary string
+---@param TxtName string
+---@param X number
+---@param Y number
+---@param Heading number
+---@param R number
+---@param G number
+---@param B number
+---@param A number
+function NativeUI.CreateTimerBarProgress(Text, TxtDictionary, TxtName, X, Y, Heading, R, G, B, A)
+    return UITimerBarProgressItem.New(Text, TxtDictionary, TxtName, X, Y, Heading, R, G, B, A)
+end
+
+---CreateTimerBar
+---@param Text string
+---@param TxtDictionary string
+---@param TxtName string
+---@param X number
+---@param Y number
+---@param Heading number
+---@param R number
+---@param G number
+---@param B number
+---@param A number
+function NativeUI.CreateTimerBar(Text, TxtDictionary, TxtName, X, Y, Heading, R, G, B, A)
+    return UITimerBarItem.New(Text, TxtDictionary, TxtName, X, Y, Heading, R, G, B, A)
+end
