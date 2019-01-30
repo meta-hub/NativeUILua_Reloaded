@@ -51,5 +51,5 @@ client_scripts {
 }
 
 client_scripts {
-    ".test/ExampleMenu.lua"
+    ".test/ExampleMenu.lua",
 }
