@@ -53,16 +53,16 @@ function UITimerBarProgressItem.New(Text, TxtDictionary, TxtName, X, Y, Heading,
         B = 255
     end
     if A ~= nil then
-        A = tonumber(A) or 150
+        A = tonumber(A) or 200
     else
-        A = 150
+        A = 200
     end
     local _UITimerBarProgressItem = {
-        Background = Sprite.New(TxtDictionary, TxtName, 0, 0, 350, 45, Heading, R, G, B, A),
-        Text = UIResText.New(Text or "N/A", 0, 0, 0.40, 255, 255, 255, 255, 0, "Right"),
-        BackgroundProgressBar = UIResRectangle.New(0, 0, 210, 20, 255, 0, 0, 100),
-        ProgressBar = UIResRectangle.New(0, 0, 0, 20, 255, 0, 0, 255),
-        Position = { X = 1550, Y = 1050 },
+        Background = Sprite.New(TxtDictionary, TxtName, 0, 0, 350, 35, Heading, R, G, B, A),
+        Text = UIResText.New(Text or "N/A", 0, 0, 0.35, 255, 255, 255, 255, 0, "Right"),
+        BackgroundProgressBar = UIResRectangle.New(0, 0, 150, 17, 255, 0, 0, 100),
+        ProgressBar = UIResRectangle.New(0, 0, 0, 17, 255, 0, 0, 255),
+        Position = { X = 1540, Y = 1060 },
     }
     return setmetatable(_UITimerBarProgressItem, UITimerBarProgressItem)
 end
@@ -79,7 +79,7 @@ end
 ---GetPercentage
 ---@return number
 function UITimerBarProgressItem:GetPercentage()
-    return self.ProgressBar.Width * 1 / 2.1
+    return self.ProgressBar.Width * 1 / 1.5
 end
 
 ---SetPercentage
@@ -87,7 +87,7 @@ end
 ---@return number
 function UITimerBarProgressItem:SetPercentage(Number)
     if (Number <= 100) then
-        self.ProgressBar.Width = Number * 2.1
+        self.ProgressBar.Width = Number * 1.5
     else
         self.ProgressBar.Width = 210
     end
@@ -97,10 +97,11 @@ end
 ---@param Interval number
 function UITimerBarProgressItem:Draw(Interval)
     self.Background:Position(self.Position.X, self.Position.Y - Interval)
-    self.Text:Position(self.Position.X + 100.0, self.Position.Y - Interval + 12.0)
 
-    self.BackgroundProgressBar:Position(self.Position.X + 120.0, self.Position.Y - Interval + 12.0)
-    self.ProgressBar:Position(self.Position.X + 120.0, self.Position.Y - Interval + 12.0)
+    self.Text:Position(self.Position.X + 170.0, self.Position.Y - Interval + 7.0)
+
+    self.BackgroundProgressBar:Position(self.Position.X + 190.0, self.Position.Y - Interval + 10.0)
+    self.ProgressBar:Position(self.Position.X + 190.0, self.Position.Y - Interval + 10.0)
 
     self.Background:Draw()
     self.Text:Draw()

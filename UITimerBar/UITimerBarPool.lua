@@ -24,6 +24,6 @@ end
 ---Draw
 function UITimerBarPool:Draw()
     for _, TimerBar in pairs(self.TimerBars) do
-        TimerBar:Draw(50 * _)
+        TimerBar:Draw(38 * _)
     end
 end

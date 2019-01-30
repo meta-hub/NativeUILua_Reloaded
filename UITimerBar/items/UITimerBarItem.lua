@@ -53,15 +53,15 @@ function UITimerBarItem.New(Text, TxtDictionary, TxtName, X, Y, Heading, R, G, B
         B = 255
     end
     if A ~= nil then
-        A = tonumber(A) or 150
+        A = tonumber(A) or 200
     else
-        A = 150
+        A = 200
     end
     local _UITimerBarItem = {
-        Background = Sprite.New(TxtDictionary, TxtName, 0, 0, 350, 45, Heading, R, G, B, A),
-        Text = UIResText.New(Text or "N/A", 0, 0, 0.40, 255, 255, 255, 255, 0, "Right"),
-        TextTimerBar = UIResText.New("N/A", 0, 0, 0.40, 255, 255, 255, 255, 0, "Right"),
-        Position = { X = 1550, Y = 1050 },
+        Background = Sprite.New(TxtDictionary, TxtName, 0, 0, 350, 35, Heading, R, G, B, A),
+        Text = UIResText.New(Text or "N/A", 0, 0, 0.35, 255, 255, 255, 255, 0, "Right"),
+        TextTimerBar = UIResText.New("N/A", 0, 0, 0.45, 255, 255, 255, 255, 0, "Right"),
+        Position = { X = 1540, Y = 1060 },
     }
     return setmetatable(_UITimerBarItem, UITimerBarItem)
 end
@@ -100,9 +100,9 @@ end
 ---@param Interval number
 function UITimerBarItem:Draw(Interval)
     self.Background:Position(self.Position.X, self.Position.Y - Interval)
-    self.Text:Position(self.Position.X + 100.0, self.Position.Y - Interval + 12.0)
+    self.Text:Position(self.Position.X + 170.0, self.Position.Y - Interval + 7.0)
 
-    self.TextTimerBar:Position(self.Position.X + 330.0, self.Position.Y - Interval + 7.0)
+    self.TextTimerBar:Position(self.Position.X + 340.0, self.Position.Y - Interval)
 
     self.Background:Draw()
     self.TextTimerBar:Draw()
