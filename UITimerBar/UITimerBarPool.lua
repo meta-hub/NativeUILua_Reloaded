@@ -18,7 +18,13 @@ end
 function UITimerBarPool:Add(TimerBar)
     if TimerBar() == "UITimerBarProgressItem" or "UITimerBarItem" then
         table.insert(self.TimerBars, TimerBar)
+        return #self.TimerBars
     end
+end
+
+function UITimerBarPool:Remove(id)
+    table.remove(self.TimerBars, id)
+    return self.TimerBars
 end
 
 ---Draw
@@ -27,3 +33,4 @@ function UITimerBarPool:Draw()
         TimerBar:Draw(38 * _)
     end
 end
+

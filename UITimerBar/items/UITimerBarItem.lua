@@ -66,6 +66,7 @@ function UITimerBarItem.New(Text, TxtDictionary, TxtName, X, Y, Heading, R, G, B
     return setmetatable(_UITimerBarItem, UITimerBarItem)
 end
 
+
 ---SetTextTimerBar
 ---@param Text string
 function UITimerBarItem:SetTextTimerBar(Text)
@@ -99,6 +100,7 @@ end
 ---Draw
 ---@param Interval number
 function UITimerBarItem:Draw(Interval)
+
     self.Background:Position(self.Position.X, self.Position.Y - Interval)
     self.Text:Position(self.Position.X + 170.0, self.Position.Y - Interval + 7.0)
 
@@ -107,4 +109,5 @@ function UITimerBarItem:Draw(Interval)
     self.Background:Draw()
     self.TextTimerBar:Draw()
     self.Text:Draw()
+
 end
