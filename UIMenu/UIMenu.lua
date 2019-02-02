@@ -70,7 +70,7 @@ function UIMenu.New(Title, Subtitle, X, Y, TxtDictionary, TxtName, Heading, R, G
         Subtitle = { ExtraY = 0 },
         WidthOffset = 0,
         Position = { X = X, Y = Y },
-        Pagination = { Min = 0, Max = 9, Total = 9 },
+        Pagination = { Min = 0, Max = 10, Total = 10 },
         PageCounter = {
             isCustom = false,
             PreText = "",
