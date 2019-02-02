@@ -446,6 +446,11 @@ function UIMenu:AddItem(Item)
         self:CurrentSelection(SelectedItem)
     end
 end
+---GetItemAt
+---@param Index table
+function UIMenu:GetItemAt(index)
+    return self.Items[index]
+end
 
 ---RemoveItemAt
 ---@param Index table
