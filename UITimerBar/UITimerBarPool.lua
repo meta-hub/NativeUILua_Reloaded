@@ -32,5 +32,10 @@ function UITimerBarPool:Draw()
     for _, TimerBar in pairs(self.TimerBars) do
         TimerBar:Draw(38 * _)
     end
+    if (#self.TimerBars > 0) then
+        for i = 6, 9, 1 do
+            HideHudComponentThisFrame(i)
+        end
+    end
 end
 
