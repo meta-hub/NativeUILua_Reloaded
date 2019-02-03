@@ -137,6 +137,11 @@ function NativeUI.CreatePercentagePanel(MinText, MaxText)
     return UIMenuPercentagePanel.New(MinText, MaxText)
 end
 
+---CreateStatisticsPanel
+function NativeUI.CreateStatisticsPanel()
+    return UIMenuStatisticsPanel.New()
+end
+
 ---CreateSprite
 ---@param TxtDictionary string
 ---@param TxtName string
