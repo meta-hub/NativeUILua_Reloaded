@@ -11,3 +11,5 @@ Original code / concept
 
 ### Thanks to all who follow this project ! 🖤
 
+Alternative NativeUILua-Reload-Shared  is not updated regularly (https://github.com/iTexZoz/NativeUILua-Reloaded-Shared)
+
