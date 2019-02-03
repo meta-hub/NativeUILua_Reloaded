@@ -89,7 +89,7 @@ function UITimerBarProgressItem:SetPercentage(Number)
     if (Number <= 100) then
         self.ProgressBar.Width = Number * 1.5
     else
-        self.ProgressBar.Width = 210
+        self.ProgressBar.Width = 100 * 1.5
     end
 end
 
