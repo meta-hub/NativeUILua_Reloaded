@@ -32,6 +32,6 @@ NativeUI: ![NativeUI](https://cdn.discordapp.com/attachments/517337306911473665/
 
 MenuAPI: ![MenuAPI](https://cdn.discordapp.com/attachments/517337306911473665/541984613124407297/unknown.png)
 
-MenuAPI: ![NativeUILua-Reloaded](https://cdn.discordapp.com/attachments/517337306911473665/541981429027045407/unknown.png)
+NativeUILua-Reloaded: ![NativeUILua-Reloaded](https://cdn.discordapp.com/attachments/517337306911473665/541981429027045407/unknown.png)
 
 ### Thanks to all who follow this project ! 🖤
