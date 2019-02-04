@@ -26,12 +26,6 @@ function UIMenuColourPanel.New(Title, Colours)
         EnableArrow = true,
         LeftArrow = Sprite.New("commonmenu", "arrowleft", 0, 0, 30, 30),
         RightArrow = Sprite.New("commonmenu", "arrowright", 0, 0, 30, 30),
-        --[[
-        ScaleformMovie = {
-            ColourSwitcher02 = RequestScaleformMovie("COLOUR_SWITCHER_02"),
-            ColourSwitcher01 = RequestScaleformMovie("COLOUR_SWITCHER_01")
-        },
-        ]]
         SelectedRectangle = UIResRectangle.New(0, 0, 44.5, 8),
         Text = UIResText.New(Title .. " [1 / " .. #Colours .. "]" or "Title" .. " [1 / " .. #Colours .. "]", 0, 0, 0.35, 255, 255, 255, 255, 0, "Centre"),
         ParentItem = nil,
