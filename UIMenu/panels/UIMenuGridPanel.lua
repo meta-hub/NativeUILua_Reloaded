@@ -10,7 +10,7 @@ end
 ---@param RightText string
 ---@param BottomText string
 function UIMenuGridPanel.New(TopText, LeftText, RightText, BottomText)
-    _UIMenuGridPanel = {
+    local _UIMenuGridPanel = {
         Data = {
             Enabled = true,
         },

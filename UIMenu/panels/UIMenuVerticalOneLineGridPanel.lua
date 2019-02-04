@@ -8,7 +8,7 @@ end
 ---@param TopText string
 ---@param BottomText string
 function UIMenuVerticalOneLineGridPanel.New(TopText, BottomText)
-    _UIMenuVerticalOneLineGridPanel = {
+    local _UIMenuVerticalOneLineGridPanel = {
         Data = {
             Enabled = true,
         },

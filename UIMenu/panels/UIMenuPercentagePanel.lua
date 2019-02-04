@@ -8,7 +8,7 @@ end
 ---@param MinText number
 ---@param MaxText number
 function UIMenuPercentagePanel.New(MinText, MaxText)
-    _UIMenuPercentagePanel = {
+    local _UIMenuPercentagePanel = {
         Data = {
             Enabled = true,
         },

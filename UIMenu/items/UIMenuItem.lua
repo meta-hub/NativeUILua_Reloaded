@@ -8,7 +8,7 @@ end
 ---@param Text string
 ---@param Description string
 function UIMenuItem.New(Text, Description)
-    _UIMenuItem = {
+    local _UIMenuItem = {
         Rectangle = UIResRectangle.New(0, 0, 431, 38, 255, 255, 255, 20),
         Text = UIResText.New(tostring(Text) or "", 8, 0, 0.33, 245, 245, 245, 255, 0),
         _Description = tostring(Description) or "";

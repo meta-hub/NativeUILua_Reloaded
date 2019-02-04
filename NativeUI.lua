@@ -1,8 +1,7 @@
-print("NativeUILua-Reloaded - 1.0.5")
 print("Github download : https://github.com/iTexZoz/NativeUILua-Reloaded/releases")
 print("[Feature Suggestions] and [Frequently asked question] : https://github.com/iTexZoz/NativeUILua-Reloaded/issues/9")
-print("NativeUILua-Reloaded WIKI : https://github.com/iTexZoz/NativeUILua-Reloaded/wiki")
-print("Does not hesitate to contribute to the project.")
+print("NativeUILua-Reloaded wiki : https://github.com/iTexZoz/NativeUILua-Reloaded/wiki")
+
 
 NativeUI = {}
 

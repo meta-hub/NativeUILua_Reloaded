@@ -11,7 +11,7 @@ end
 
 ---New
 function UIMenuStatisticsPanel.New()
-    _UIMenuStatisticsPanel = {
+    local _UIMenuStatisticsPanel = {
         Background = UIResRectangle.New(0, 0, 431, 47, 0, 0, 0, 170),
         Divider = true,
         ParentItem = nil,

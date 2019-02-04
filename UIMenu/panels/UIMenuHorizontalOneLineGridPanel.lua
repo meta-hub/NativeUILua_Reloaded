@@ -8,7 +8,7 @@ end
 ---@param LeftText string
 ---@param RightText string
 function UIMenuHorizontalOneLineGridPanel.New(LeftText, RightText)
-    _UIMenuHorizontalOneLineGridPanel = {
+    local _UIMenuHorizontalOneLineGridPanel = {
         Data = {
             Enabled = true,
         },

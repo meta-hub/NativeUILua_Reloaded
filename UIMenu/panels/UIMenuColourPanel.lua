@@ -8,7 +8,7 @@ end
 ---@param Title string
 ---@param Colours number
 function UIMenuColourPanel.New(Title, Colours)
-    _UIMenuColourPanel = {
+    local _UIMenuColourPanel = {
         Data = {
             Pagination = {
                 Min = 1,

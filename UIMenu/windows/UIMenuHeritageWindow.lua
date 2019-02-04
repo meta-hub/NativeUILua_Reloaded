@@ -20,7 +20,7 @@ function UIMenuHeritageWindow.New(Mum, Dad)
     if not (Dad >= 0 and Dad <= 23) then
         Dad = 0
     end
-    _UIMenuHeritageWindow = {
+    local _UIMenuHeritageWindow = {
         Background = Sprite.New("pause_menu_pages_char_mom_dad", "mumdadbg", 0, 0, 431, 228), -- Background is required, must be a sprite or a rectangle.
         MumSprite = Sprite.New("char_creator_portraits", ((Mum < 21) and "female_" .. Mum or "special_female_" .. (tonumber(string.sub(Mum, 2, 2)) - 1)), 0, 0, 228, 228),
         DadSprite = Sprite.New("char_creator_portraits", ((Dad < 21) and "male_" .. Dad or "special_male_" .. (tonumber(string.sub(Dad, 2, 2)) - 1)), 0, 0, 228, 228),
