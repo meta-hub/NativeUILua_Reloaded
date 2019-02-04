@@ -23,10 +23,17 @@ function UIMenuColourPanel.New(Title, Colours)
         },
         Background = Sprite.New("commonmenu", "gradient_bgd", 0, 0, 431, 112),
         Bar = {},
+        EnableArrow = true,
         LeftArrow = Sprite.New("commonmenu", "arrowleft", 0, 0, 30, 30),
         RightArrow = Sprite.New("commonmenu", "arrowright", 0, 0, 30, 30),
+        --[[
+        ScaleformMovie = {
+            ColourSwitcher02 = RequestScaleformMovie("COLOUR_SWITCHER_02"),
+            ColourSwitcher01 = RequestScaleformMovie("COLOUR_SWITCHER_01")
+        },
+        ]]
         SelectedRectangle = UIResRectangle.New(0, 0, 44.5, 8),
-        Text = UIResText.New(Title .. " (1 of " .. #Colours .. ")" or "Title" .. " (1 of " .. #Colours .. ")", 0, 0, 0.35, 255, 255, 255, 255, 0, "Centre"),
+        Text = UIResText.New(Title .. " [1 / " .. #Colours .. "]" or "Title" .. " [1 / " .. #Colours .. "]", 0, 0, 0.35, 255, 255, 255, 255, 0, "Centre"),
         ParentItem = nil,
     }
 
@@ -79,8 +86,10 @@ function UIMenuColourPanel:Position(Y)
             self.Bar[Index]:Position(15 + (44.5 * (Index - 1)) + ParentOffsetX + (ParentOffsetWidth / 2), 55 + Y)
         end
         self.SelectedRectangle:Position(15 + (44.5 * ((self:CurrentSelection() - self.Data.Pagination.Min) - 1)) + ParentOffsetX + (ParentOffsetWidth / 2), 47 + Y)
-        self.LeftArrow:Position(7.5 + ParentOffsetX + (ParentOffsetWidth / 2), 15 + Y)
-        self.RightArrow:Position(393.5 + ParentOffsetX + (ParentOffsetWidth / 2), 15 + Y)
+        if self.EnableArrow ~= false then
+            self.LeftArrow:Position(7.5 + ParentOffsetX + (ParentOffsetWidth / 2), 15 + Y)
+            self.RightArrow:Position(393.5 + ParentOffsetX + (ParentOffsetWidth / 2), 15 + Y)
+        end
         self.Text:Position(215.5 + ParentOffsetX + (ParentOffsetWidth / 2), 15 + Y)
     end
 end
@@ -160,7 +169,7 @@ function UIMenuColourPanel:UpdateSelection(PreventUpdate)
     for Index = 1, 9 do
         self.Bar[Index]:Colour(table.unpack(self.Data.Items[self.Data.Pagination.Min + Index]))
     end
-    self.Text:Text(self.Data.Title .. " (" .. CurrentSelection .. " of " .. #self.Data.Items .. ")")
+    self.Text:Text(self.Data.Title .. " [" .. CurrentSelection .. " / " .. #self.Data.Items .. "]")
 end
 
 ---Functions
@@ -169,56 +178,25 @@ function UIMenuColourPanel:Functions()
     if self.ParentItem:SetParentMenu().Settings.ScaleWithSafezone then
         SafeZone = GetSafeZoneBounds()
     end
-    if IsMouseInBounds(self.LeftArrow.X + SafeZone.X, self.LeftArrow.Y + SafeZone.Y, self.LeftArrow.Width, self.LeftArrow.Height) then
-        if IsDisabledControlJustPressed(0, 24) then
-            if #self.Data.Items > self.Data.Pagination.Total + 1 then
-                if self:CurrentSelection() <= self.Data.Pagination.Min + 1 then
-                    if self:CurrentSelection() == 1 then
-                        self.Data.Pagination.Min = #self.Data.Items - (self.Data.Pagination.Total + 1)
-                        self.Data.Pagination.Max = #self.Data.Items
-                        self.Data.Index = 1000 - (1000 % #self.Data.Items)
-                        self.Data.Index = self.Data.Index + (#self.Data.Items - 1)
-                        self:UpdateSelection()
-                    else
-                        self.Data.Pagination.Min = self.Data.Pagination.Min - 1
-                        self.Data.Pagination.Max = self.Data.Pagination.Max - 1
-                        self.Data.Index = self.Data.Index - 1
-                        self:UpdateSelection()
-                    end
-                else
-                    self.Data.Index = self.Data.Index - 1
-                    self:UpdateSelection()
-                end
-            else
-                self.Data.Index = self.Data.Index - 1
-                self:UpdateSelection()
-            end
-        end
+    --@Key Process
+
+    if IsDisabledControlJustPressed(0, 24) or IsDisabledControlJustPressed(0, 174) then
+        self:GoLeft()
     end
 
+    if IsDisabledControlJustPressed(0, 24) or IsDisabledControlJustPressed(0, 175) then
+        self:GoRight()
+    end
+
+    --@Mouse Process
+    if IsMouseInBounds(self.LeftArrow.X + SafeZone.X, self.LeftArrow.Y + SafeZone.Y, self.LeftArrow.Width, self.LeftArrow.Height) then
+        if IsDisabledControlJustPressed(0, 24) then
+            self:GoLeft()
+        end
+    end
     if IsMouseInBounds(self.RightArrow.X + SafeZone.X, self.RightArrow.Y + SafeZone.Y, self.RightArrow.Width, self.RightArrow.Height) then
         if IsDisabledControlJustPressed(0, 24) then
-            if #self.Data.Items > self.Data.Pagination.Total + 1 then
-                if self:CurrentSelection() >= self.Data.Pagination.Max then
-                    if self:CurrentSelection() == #self.Data.Items then
-                        self.Data.Pagination.Min = 0
-                        self.Data.Pagination.Max = self.Data.Pagination.Total + 1
-                        self.Data.Index = 1000 - (1000 % #self.Data.Items)
-                        self:UpdateSelection()
-                    else
-                        self.Data.Pagination.Max = self.Data.Pagination.Max + 1
-                        self.Data.Pagination.Min = self.Data.Pagination.Max - (self.Data.Pagination.Total + 1)
-                        self.Data.Index = self.Data.Index + 1
-                        self:UpdateSelection()
-                    end
-                else
-                    self.Data.Index = self.Data.Index + 1
-                    self:UpdateSelection()
-                end
-            else
-                self.Data.Index = self.Data.Index + 1
-                self:UpdateSelection()
-            end
+            self:GoRight()
         end
     end
 
@@ -231,14 +209,65 @@ function UIMenuColourPanel:Functions()
     end
 end
 
+function UIMenuColourPanel:GoLeft()
+    if #self.Data.Items > self.Data.Pagination.Total + 1 then
+        if self:CurrentSelection() <= self.Data.Pagination.Min + 1 then
+            if self:CurrentSelection() == 1 then
+                self.Data.Pagination.Min = #self.Data.Items - (self.Data.Pagination.Total + 1)
+                self.Data.Pagination.Max = #self.Data.Items
+                self.Data.Index = 1000 - (1000 % #self.Data.Items)
+                self.Data.Index = self.Data.Index + (#self.Data.Items - 1)
+                self:UpdateSelection()
+            else
+                self.Data.Pagination.Min = self.Data.Pagination.Min - 1
+                self.Data.Pagination.Max = self.Data.Pagination.Max - 1
+                self.Data.Index = self.Data.Index - 1
+                self:UpdateSelection()
+            end
+        else
+            self.Data.Index = self.Data.Index - 1
+            self:UpdateSelection()
+        end
+    else
+        self.Data.Index = self.Data.Index - 1
+        self:UpdateSelection()
+    end
+end
+
+function UIMenuColourPanel:GoRight()
+    if #self.Data.Items > self.Data.Pagination.Total + 1 then
+        if self:CurrentSelection() >= self.Data.Pagination.Max then
+            if self:CurrentSelection() == #self.Data.Items then
+                self.Data.Pagination.Min = 0
+                self.Data.Pagination.Max = self.Data.Pagination.Total + 1
+                self.Data.Index = 1000 - (1000 % #self.Data.Items)
+                self:UpdateSelection()
+            else
+                self.Data.Pagination.Max = self.Data.Pagination.Max + 1
+                self.Data.Pagination.Min = self.Data.Pagination.Max - (self.Data.Pagination.Total + 1)
+                self.Data.Index = self.Data.Index + 1
+                self:UpdateSelection()
+            end
+        else
+            self.Data.Index = self.Data.Index + 1
+            self:UpdateSelection()
+        end
+    else
+        self.Data.Index = self.Data.Index + 1
+        self:UpdateSelection()
+    end
+end
+
 ---Draw
 function UIMenuColourPanel:Draw()
     if self.Data.Enabled then
         self.Background:Size(431 + self.ParentItem:SetParentMenu().WidthOffset, 112)
 
         self.Background:Draw()
-        self.LeftArrow:Draw()
-        self.RightArrow:Draw()
+        if self.EnableArrow ~= false then
+            self.LeftArrow:Draw()
+            self.RightArrow:Draw()
+        end
         self.Text:Draw()
         self.SelectedRectangle:Draw()
         for Index = 1, #self.Bar do
