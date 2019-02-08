@@ -34,6 +34,7 @@ end
 function UIMenuColouredItem:SetParentMenu(Menu)
     if Menu() == "UIMenu" then
         self.Base.ParentMenu = Menu
+        self.ParentMenu = Menu
     else
         return self.Base.ParentMenu
     end
@@ -152,6 +153,7 @@ end
 
 ---Draw
 function UIMenuColouredItem:Draw()
+    self.Rectangle:Size(431 + self.ParentMenu.WidthOffset, self.Rectangle.Height)
     self.Rectangle:Draw()
     self.Base:Draw()
 end
