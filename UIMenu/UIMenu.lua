@@ -437,24 +437,20 @@ end
 ---AddItem
 ---@param Item table
 function UIMenu:AddItem(Item)
-    if Item() == "UIMenuItem" then
-        local SelectedItem = self:CurrentSelection()
-        Item:SetParentMenu(self)
-
-        Item:Offset(self.Position.X, self.Position.Y)
-        Item:Position((#self.Items * 25) - 37 + self.Subtitle.ExtraY)
-        table.insert(self.Items, Item)
-        self:RecalculateDescriptionPosition()
-        self:CurrentSelection(SelectedItem)
-    end
-end
-
----ArrayAddItem
----@param Item table
-function UIMenu:ArrayAddItem(Item)
-    if type(Item) == "table" then
         Items = Item
-        for i = 1, #Items, 1 do
+        if #Items == 0 then
+
+            if Item() == "UIMenuItem" then
+                local SelectedItem = self:CurrentSelection()
+                Item:SetParentMenu(self)
+                Item:Offset(self.Position.X, self.Position.Y)
+                Item:Position((#self.Items * 25) - 37 + self.Subtitle.ExtraY)
+                table.insert(self.Items, Item)
+                self:RecalculateDescriptionPosition()
+                self:CurrentSelection(SelectedItem)
+            end
+        end
+        for i = 1, #Items,1 do
             Item = Items[i]
             if Item() == "UIMenuItem" then
                 local SelectedItem = self:CurrentSelection()
@@ -466,8 +462,9 @@ function UIMenu:ArrayAddItem(Item)
                 self:CurrentSelection(SelectedItem)
             end
         end
-    end
 end
+
+
 
 ---GetItemAt
 ---@param Index table
