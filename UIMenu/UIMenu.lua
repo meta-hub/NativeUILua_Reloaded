@@ -210,7 +210,7 @@ function UIMenu.New(Title, Subtitle, X, Y, TxtDictionary, TxtName, Heading, R, G
     _UIMenu.Background = Sprite.New("commonmenu", "gradient_bgd", _UIMenu.Position.X, 144 + _UIMenu.Position.Y - 37 + _UIMenu.Subtitle.ExtraY, 290, 25)
 
     if _UIMenu.BetterSize == true then
-        _UIMenu.WidthOffset = math.floor(tonumber(70))
+        _UIMenu.WidthOffset = math.floor(tonumber(69))
         _UIMenu.Logo:Size(431 + _UIMenu.WidthOffset, 107)
         _UIMenu.Title:Position(((_UIMenu.WidthOffset + 431) / 2) + _UIMenu.Position.X, 20 + _UIMenu.Position.Y)
         if _UIMenu.Subtitle.Rectangle ~= nil then
