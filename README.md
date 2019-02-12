@@ -1,13 +1,13 @@
 # NativeUILua-Reloaded
 
-## - Warning, NativeUI-Shared.lua will not be kept update, I invite the community to update it with the changes. 
-
-### - ⚠️ Following a change and for more understanding I decided to remove the fork and to dedicate a repository to this magnificent project that will be named NativeUI Reloaded , previously based on [FrazzIe](https://github.com/FrazzIe) work.
-
 ![OpenIssue](https://img.shields.io/github/issues/iTexZoz/NativeUILua-Reloaded.svg?style=flat)
 ![LastReleases](https://img.shields.io/github/release/iTexZoz/NativeUILua-Reloaded.svg?label=Last%20releases&style=flat)
 ![License](https://img.shields.io/github/license/iTexZoz/NativeUILua-Reloaded.svg?style=flat)
 ![TotalReleaseDownload](https://img.shields.io/github/downloads/iTexZoz/NativeUILua-Reloaded/total.svg?style=flat)
+
+## - Warning, NativeUI-Shared.lua will not be kept update, I invite the community to update it with the changes. 
+
+### - ⚠️ Following a change and for more understanding I decided to remove the fork and to dedicate a repository to this magnificent project that will be named NativeUI Reloaded , previously based on [FrazzIe](https://github.com/FrazzIe) work.
 
 Original code / concept
  
@@ -18,4 +18,4 @@ Original code / concept
  | NativeUI                     	| Guard                       	| Continued            	| https://github.com/Guad/NativeUI       	| C#       	|
 
 
-### Thanks to all who follow this project ! 🖤
+### Thank you for contributing to the progress and well-being of the project 🖤
