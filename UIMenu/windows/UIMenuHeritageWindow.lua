@@ -1,5 +1,11 @@
+---@type table
 UIMenuHeritageWindow = setmetatable({}, UIMenuHeritageWindow)
+
+---@type table
 UIMenuHeritageWindow.__index = UIMenuHeritageWindow
+
+---@type table
+---@return string
 UIMenuHeritageWindow.__call = function()
     return "UIMenuWindow", "UIMenuHeritageWindow"
 end
@@ -7,6 +13,8 @@ end
 ---New
 ---@param Mum number
 ---@param Dad number
+---@return table
+---@public
 function UIMenuHeritageWindow.New(Mum, Dad)
     if not tonumber(Mum) then
         Mum = 0
@@ -26,14 +34,16 @@ function UIMenuHeritageWindow.New(Mum, Dad)
         DadSprite = Sprite.New("char_creator_portraits", ((Dad < 21) and "male_" .. Dad or "special_male_" .. (tonumber(string.sub(Dad, 2, 2)) - 1)), 0, 0, 228, 228),
         Mum = Mum,
         Dad = Dad,
-        _Offset = { X = 0, Y = 0 }, -- required
-        ParentMenu = nil, -- required
+        _Offset = { X = 0, Y = 0 },
+        ParentMenu = nil,
     }
     return setmetatable(_UIMenuHeritageWindow, UIMenuHeritageWindow)
 end
 
 ---SetParentMenu
 ---@param Menu table
+---@return table
+---@public
 function UIMenuHeritageWindow:SetParentMenu(Menu)
     -- required
     if Menu() == "UIMenu" then
@@ -46,8 +56,9 @@ end
 ---Offset
 ---@param X number
 ---@param Y number
+---@return table
+---@public
 function UIMenuHeritageWindow:Offset(X, Y)
-    -- required
     if tonumber(X) or tonumber(Y) then
         if tonumber(X) then
             self._Offset.X = tonumber(X)
@@ -62,6 +73,8 @@ end
 
 ---Position
 ---@param Y number
+---@return nil
+---@public
 function UIMenuHeritageWindow:Position(Y)
     if tonumber(Y) then
         self.Background:Position(self._Offset.X, 144 + Y + self._Offset.Y)
@@ -71,6 +84,8 @@ function UIMenuHeritageWindow:Position(Y)
 end
 
 ---@param Dad number
+---@return nil
+---@public
 function UIMenuHeritageWindow:Index(Mum, Dad)
     if not tonumber(Mum) then
         Mum = self.Mum
@@ -84,15 +99,15 @@ function UIMenuHeritageWindow:Index(Mum, Dad)
     if not (Dad >= 0 and Dad <= 23) then
         Dad = self.Dad
     end
-
     self.Mum = Mum
     self.Dad = Dad
-
     self.MumSprite.TxtName = ((self.Mum < 21) and "female_" .. self.Mum or "special_female_" .. (tonumber(string.sub(Mum, 2, 2)) - 1))
     self.DadSprite.TxtName = ((self.Dad < 21) and "male_" .. self.Dad or "special_male_" .. (tonumber(string.sub(Dad, 2, 2)) - 1))
 end
 
 ---Draw
+---@return nil
+---@public
 function UIMenuHeritageWindow:Draw()
     self.Background:Size(431 + self.ParentMenu.WidthOffset, 228)
     self.Background:Draw()

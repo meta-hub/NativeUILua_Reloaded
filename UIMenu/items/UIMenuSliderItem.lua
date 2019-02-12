@@ -1,5 +1,11 @@
+---@type table
 UIMenuSliderItem = setmetatable({}, UIMenuSliderItem)
+
+---@type table
 UIMenuSliderItem.__index = UIMenuSliderItem
+
+---@type table
+---@return string
 UIMenuSliderItem.__call = function()
     return "UIMenuItem", "UIMenuSliderItem"
 end
@@ -12,6 +18,8 @@ end
 ---@param Divider boolean
 ---@param SliderColors table
 ---@param BackgroundSliderColors table
+---@return table
+---@public
 function UIMenuSliderItem.New(Text, Items, Index, Description, Divider, SliderColors, BackgroundSliderColors)
     if type(Items) ~= "table" then
         Items = {}
@@ -49,6 +57,8 @@ end
 
 ---SetParentMenu
 ---@param Menu table
+---@return table
+---@public
 function UIMenuSliderItem:SetParentMenu(Menu)
     if Menu() == "UIMenu" then
         self.Base.ParentMenu = Menu
@@ -59,6 +69,8 @@ end
 
 ---Position
 ---@param Y number
+---@return nil
+---@public
 function UIMenuSliderItem:Position(Y)
     if tonumber(Y) then
         self.Background:Position(250 + self.Base._Offset.X + self.Base.ParentMenu.WidthOffset, Y + 158.5 + self.Base._Offset.Y)
@@ -72,6 +84,8 @@ end
 
 ---Selected
 ---@param bool table
+---@return boolean
+---@public
 function UIMenuSliderItem:Selected(bool)
     if bool ~= nil then
 
@@ -81,6 +95,10 @@ function UIMenuSliderItem:Selected(bool)
     end
 end
 
+---Hovered
+---@param bool boolean
+---@return boolean
+---@public
 function UIMenuSliderItem:Hovered(bool)
     if bool ~= nil then
         self.Base._Hovered = tobool(bool)
@@ -89,6 +107,10 @@ function UIMenuSliderItem:Hovered(bool)
     end
 end
 
+---Enabled
+---@param bool boolean
+---@return boolean
+---@public
 function UIMenuSliderItem:Enabled(bool)
     if bool ~= nil then
         self.Base._Enabled = tobool(bool)
@@ -97,6 +119,10 @@ function UIMenuSliderItem:Enabled(bool)
     end
 end
 
+---Description
+---@param str string
+---@return string
+---@public
 function UIMenuSliderItem:Description(str)
     if tostring(str) and str ~= nil then
         self.Base._Description = tostring(str)
@@ -105,6 +131,11 @@ function UIMenuSliderItem:Description(str)
     end
 end
 
+---Offset
+---@param X number
+---@param Y number
+---@return table
+---@public
 function UIMenuSliderItem:Offset(X, Y)
     if tonumber(X) or tonumber(Y) then
         if tonumber(X) then
@@ -118,6 +149,10 @@ function UIMenuSliderItem:Offset(X, Y)
     end
 end
 
+---Text
+---@param Text string
+---@return string
+---@public
 function UIMenuSliderItem:Text(Text)
     if tostring(Text) and Text ~= nil then
         self.Base.Text:Text(tostring(Text))
@@ -126,6 +161,10 @@ function UIMenuSliderItem:Text(Text)
     end
 end
 
+---Index
+---@param Index number
+---@return number
+---@public
 function UIMenuSliderItem:Index(Index)
     if tonumber(Index) then
         if tonumber(Index) > #self.Items then
@@ -140,6 +179,10 @@ function UIMenuSliderItem:Index(Index)
     end
 end
 
+---ItemToIndex
+---@param Item number
+---@return number
+---@public
 function UIMenuSliderItem:ItemToIndex(Item)
     for i = 1, #self.Items do
         if type(Item) == type(self.Items[i]) and Item == self.Items[i] then
@@ -148,6 +191,10 @@ function UIMenuSliderItem:ItemToIndex(Item)
     end
 end
 
+---IndexToItem
+---@param Index number
+---@return table
+---@public
 function UIMenuSliderItem:IndexToItem(Index)
     if tonumber(Index) then
         if tonumber(Index) == 0 then
@@ -159,18 +206,30 @@ function UIMenuSliderItem:IndexToItem(Index)
     end
 end
 
+---SetLeftBadge
+---@return function
+---@public
 function UIMenuSliderItem:SetLeftBadge()
     error("This item does not support badges")
 end
 
+---SetRightBadge
+---@return function
+---@public
 function UIMenuSliderItem:SetRightBadge()
     error("This item does not support badges")
 end
 
+---RightLabel
+---@return function
+---@public
 function UIMenuSliderItem:RightLabel()
     error("This item does not support a right label")
 end
 
+---Draw
+---@return nil
+---@public
 function UIMenuSliderItem:Draw()
     self.Base:Draw()
 

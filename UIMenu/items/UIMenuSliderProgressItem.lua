@@ -1,7 +1,11 @@
+---@type table
 UIMenuSliderProgressItem = setmetatable({}, UIMenuSliderProgressItem)
 
+---@type table
 UIMenuSliderProgressItem.__index = UIMenuSliderProgressItem
 
+---@type table
+---@return string
 UIMenuSliderProgressItem.__call = function()
     return "UIMenuItem", "UIMenuSliderProgressItem"
 end
@@ -14,6 +18,7 @@ end
 ---@param SliderColors thread
 ---@param BackgroundSliderColors thread
 ---@return table
+---@public
 function UIMenuSliderProgressItem.New(Text, Items, Index, Description, SliderColors, BackgroundSliderColors)
     if type(Items) ~= "table" then
         Items = {}
@@ -55,6 +60,7 @@ end
 ---SetParentMenu
 ---@param Menu table
 ---@return table
+---@public
 function UIMenuSliderProgressItem:SetParentMenu(Menu)
     if Menu() == "UIMenu" then
         self.Base.ParentMenu = Menu
@@ -66,6 +72,7 @@ end
 ---Position
 ---@param Y number
 ---@return table
+---@public
 function UIMenuSliderProgressItem:Position(Y)
     if tonumber(Y) then
         self.Background:Position(250 + self.Base._Offset.X + self.Base.ParentMenu.WidthOffset, Y + 158.5 + self.Base._Offset.Y)
@@ -80,6 +87,7 @@ end
 ---Selected
 ---@param bool table
 ---@return table
+---@public
 function UIMenuSliderProgressItem:Selected(bool)
     if bool ~= nil then
 
@@ -92,6 +100,7 @@ end
 ---Hovered
 ---@param bool boolean
 ---@return boolean
+---@public
 function UIMenuSliderProgressItem:Hovered(bool)
     if bool ~= nil then
         self.Base._Hovered = tobool(bool)

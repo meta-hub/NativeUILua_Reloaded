@@ -1,3 +1,4 @@
+---@type table
 BadgeStyle = {
     None = 0,
     BronzeMedal = 1,
@@ -24,6 +25,7 @@ BadgeStyle = {
     Tick = 22
 }
 
+---@type table
 BadgeTexture = {
     [0] = function()
         return ""
@@ -159,6 +161,7 @@ BadgeTexture = {
     end,
 }
 
+---@type table
 BadgeDictionary = {
     [0] = function(Selected)
         if Selected then
@@ -176,6 +179,7 @@ BadgeDictionary = {
     end,
 }
 
+---@type table
 BadgeColour = {
     [5] = function(Selected)
         if Selected then
@@ -203,6 +207,7 @@ BadgeColour = {
 ---GetBadgeTexture
 ---@param Badge number
 ---@param Selected table
+---@return string
 function GetBadgeTexture(Badge, Selected)
     if BadgeTexture[Badge] then
         return BadgeTexture[Badge](Selected)
@@ -214,6 +219,7 @@ end
 ---GetBadgeDictionary
 ---@param Badge number
 ---@param Selected table
+---@return string
 function GetBadgeDictionary(Badge, Selected)
     if BadgeDictionary[Badge] then
         return BadgeDictionary[Badge](Selected)
@@ -225,6 +231,7 @@ end
 ---GetBadgeColour
 ---@param Badge number
 ---@param Selected table
+---@return number
 function GetBadgeColour(Badge, Selected)
     if BadgeColour[Badge] then
         return BadgeColour[Badge](Selected)

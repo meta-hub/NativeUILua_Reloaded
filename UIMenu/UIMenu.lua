@@ -1,5 +1,11 @@
+---@type table
 UIMenu = setmetatable({}, UIMenu)
+
+---@type table
 UIMenu.__index = UIMenu
+
+---@type table
+---@return string
 UIMenu.__call = function()
     return "UIMenu"
 end
@@ -16,6 +22,8 @@ end
 ---@param G number
 ---@param B number
 ---@param A number
+---@return table
+---@public
 function UIMenu.New(Title, Subtitle, X, Y, TxtDictionary, TxtName, Heading, R, G, B, A)
     local X, Y = tonumber(X) or 0, tonumber(Y) or 0
     if Title ~= nil then
@@ -235,6 +243,8 @@ end
 
 ---SetMenuWidthOffset
 ---@param Offset number
+---@return number
+---@public
 function UIMenu:SetMenuWidthOffset(Offset)
     if tonumber(Offset) then
         self.WidthOffset = math.floor(tonumber(Offset) + tonumber(70))
@@ -252,13 +262,14 @@ end
 
 ---DisEnableControls
 ---@param bool boolean
+---@return nil
+---@public
 function UIMenu:DisEnableControls(bool)
     if bool then
         EnableAllControlActions(2)
     else
         DisableAllControlActions(2)
     end
-
     if bool then
         return
     else
@@ -276,6 +287,8 @@ end
 
 ---InstructionalButtons
 ---@param bool boolean
+---@return nil
+---@public
 function UIMenu:InstructionalButtons(bool)
     if bool ~= nil then
         self.Settings.InstrucitonalButtons = tobool(bool)
@@ -285,6 +298,8 @@ end
 ---SetBannerSprite
 ---@param Sprite string
 ---@param IncludeChildren boolean
+---@return nil
+---@public
 function UIMenu:SetBannerSprite(Sprite, IncludeChildren)
     if Sprite() == "Sprite" then
         self.Logo = Sprite
@@ -305,6 +320,8 @@ end
 ---SetBannerRectangle
 ---@param Rectangle string
 ---@param IncludeChildren boolean
+---@return nil
+---@public
 function UIMenu:SetBannerRectangle(Rectangle, IncludeChildren)
     if Rectangle() == "Rectangle" then
         self.Banner = Rectangle
@@ -324,6 +341,8 @@ end
 
 ---CurrentSelection
 ---@param value number
+---@return number
+---@public
 function UIMenu:CurrentSelection(value)
     if tonumber(value) then
         if #self.Items == 0 then
@@ -352,6 +371,8 @@ function UIMenu:CurrentSelection(value)
 end
 
 ---CalculateWindowHeight
+---@return number
+---@public
 function UIMenu:CalculateWindowHeight()
     local Height = 0
     for i = 1, #self.Windows do
@@ -362,6 +383,8 @@ end
 
 ---CalculateItemHeightOffset
 ---@param Item table
+---@return number
+---@public
 function UIMenu:CalculateItemHeightOffset(Item)
     if Item.Base then
         return Item.Base.Rectangle.Height
@@ -371,6 +394,8 @@ function UIMenu:CalculateItemHeightOffset(Item)
 end
 
 ---CalculateItemHeight
+---@return number
+---@public
 function UIMenu:CalculateItemHeight()
     local ItemOffset = 0 + self.Subtitle.ExtraY - 37
     for i = self.Pagination.Min + 1, self.Pagination.Max do
@@ -384,15 +409,15 @@ function UIMenu:CalculateItemHeight()
 end
 
 ---RecalculateDescriptionPosition
+---@return nil
+---@public
 function UIMenu:RecalculateDescriptionPosition()
     local WindowHeight = self:CalculateWindowHeight()
     self.Description.Bar:Position(self.Position.X, 149 + self.Position.Y + WindowHeight)
     self.Description.Rectangle:Position(self.Position.X, 149 + self.Position.Y + WindowHeight)
     self.Description.Text:Position(self.Position.X + 8, 155 + self.Position.Y + WindowHeight)
-
     self.Description.Bar:Size(431 + self.WidthOffset, 4)
     self.Description.Rectangle:Size(431 + self.WidthOffset, 30)
-
     self.Description.Bar:Position(self.Position.X, self:CalculateItemHeight() + ((#self.Items > (self.Pagination.Total + 1)) and 37 or 0) + self.Description.Bar:Position().Y)
     self.Description.Rectangle:Position(self.Position.X, self:CalculateItemHeight() + ((#self.Items > (self.Pagination.Total + 1)) and 37 or 0) + self.Description.Rectangle:Position().Y)
     self.Description.Text:Position(self.Position.X + 8, self:CalculateItemHeight() + ((#self.Items > (self.Pagination.Total + 1)) and 37 or 0) + self.Description.Text:Position().Y)
@@ -400,18 +425,20 @@ end
 
 ---CaclulatePanelPosition
 ---@param HasDescription boolean
+---@return number
+---@public
 function UIMenu:CaclulatePanelPosition(HasDescription)
     local Height = self:CalculateWindowHeight() + 149 + self.Position.Y
-
     if HasDescription then
         Height = Height + self.Description.Rectangle:Size().Height + 5
     end
-
     return self:CalculateItemHeight() + ((#self.Items > (self.Pagination.Total + 1)) and 37 or 0) + Height
 end
 
 ---AddWindow
 ---@param Window table
+---@return nil
+---@public
 function UIMenu:AddWindow(Window)
     if Window() == "UIMenuWindow" then
         Window:SetParentMenu(self)
@@ -424,6 +451,8 @@ end
 
 ---RemoveWindowAt
 ---@param Index table
+---@return nil
+---@public
 function UIMenu:RemoveWindowAt(Index)
     if tonumber(Index) then
         if self.Windows[Index] then
@@ -436,10 +465,11 @@ end
 
 ---AddItem
 ---@param Item table
+---@return nil
+---@public
 function UIMenu:AddItem(Item)
     Items = Item
     if #Items == 0 then
-
         if Item() == "UIMenuItem" then
             local SelectedItem = self:CurrentSelection()
             Item:SetParentMenu(self)
@@ -466,12 +496,16 @@ end
 
 ---GetItemAt
 ---@param Index table
+---@return table
+---@public
 function UIMenu:GetItemAt(index)
     return self.Items[index]
 end
 
 ---RemoveItemAt
 ---@param Index table
+---@return nil
+---@public
 function UIMenu:RemoveItemAt(Index)
     if tonumber(Index) then
         if self.Items[Index] then
@@ -488,6 +522,8 @@ function UIMenu:RemoveItemAt(Index)
 end
 
 ---RefreshIndex
+---@return nil
+---@public
 function UIMenu:RefreshIndex()
     if #self.Items == 0 then
         self.ActiveItem = 1000
@@ -503,6 +539,8 @@ function UIMenu:RefreshIndex()
 end
 
 ---Clear
+---@return nil
+---@public
 function UIMenu:Clear()
     self.Items = {}
     self.ReDraw = true
@@ -511,6 +549,8 @@ end
 
 ---MultilineFormat
 ---@param str string
+---@return string
+---@public
 function UIMenu:MultilineFormat(str)
     if tostring(str) then
         local PixelPerLine = 425 + self.WidthOffset
@@ -534,6 +574,8 @@ function UIMenu:MultilineFormat(str)
 end
 
 ---DrawCalculations
+---@return nil
+---@public
 function UIMenu:DrawCalculations()
     local WindowHeight = self:CalculateWindowHeight()
     if self.Settings.MultilineFormats then
@@ -583,6 +625,8 @@ end
 
 ---Visible
 ---@param bool boolean
+---@return boolean
+---@public
 function UIMenu:Visible(bool)
     if bool ~= nil then
         self._Visible = tobool(bool)
@@ -603,24 +647,22 @@ function UIMenu:Visible(bool)
 end
 
 ---ProcessControl
+---@return nil
+---@public
 function UIMenu:ProcessControl()
     if not self._Visible then
         return
     end
-
     if self.JustOpened then
         self.JustOpened = false
         return
     end
-
     if self.Controls.Back.Enabled and (IsDisabledControlJustReleased(0, 177) or IsDisabledControlJustReleased(1, 177) or IsDisabledControlJustReleased(2, 177) or IsDisabledControlJustReleased(0, 199) or IsDisabledControlJustReleased(1, 199) or IsDisabledControlJustReleased(2, 199)) then
         self:GoBack()
     end
-
     if #self.Items == 0 then
         return
     end
-
     if not self.UpPressed then
         if self.Controls.Up.Enabled and (IsDisabledControlJustPressed(0, 172) or IsDisabledControlJustPressed(1, 172) or IsDisabledControlJustPressed(2, 172) or IsDisabledControlJustPressed(0, 241) or IsDisabledControlJustPressed(1, 241) or IsDisabledControlJustPressed(2, 241) or IsDisabledControlJustPressed(2, 241)) then
             Citizen.CreateThread(function()
@@ -645,7 +687,6 @@ function UIMenu:ProcessControl()
             end)
         end
     end
-
     if not self.DownPressed then
         if self.Controls.Down.Enabled and (IsDisabledControlJustPressed(0, 173) or IsDisabledControlJustPressed(1, 173) or IsDisabledControlJustPressed(2, 173) or IsDisabledControlJustPressed(0, 242) or IsDisabledControlJustPressed(1, 242) or IsDisabledControlJustPressed(2, 242)) then
             Citizen.CreateThread(function()
@@ -670,7 +711,6 @@ function UIMenu:ProcessControl()
             end)
         end
     end
-
     if not self.LeftPressed then
         if self.Controls.Left.Enabled and (IsDisabledControlPressed(0, 174) or IsDisabledControlPressed(1, 174) or IsDisabledControlPressed(2, 174)) then
             local type, subtype = self.Items[self:CurrentSelection()]()
@@ -697,7 +737,6 @@ function UIMenu:ProcessControl()
             end)
         end
     end
-
     if not self.RightPressed then
         if self.Controls.Right.Enabled and (IsDisabledControlPressed(0, 175) or IsDisabledControlPressed(1, 175) or IsDisabledControlPressed(2, 175)) then
             Citizen.CreateThread(function()
@@ -724,13 +763,14 @@ function UIMenu:ProcessControl()
             end)
         end
     end
-
     if self.Controls.Select.Enabled and (IsDisabledControlJustPressed(0, 201) or IsDisabledControlJustPressed(1, 201) or IsDisabledControlJustPressed(2, 201)) then
         self:SelectItem()
     end
 end
 
 ---GoUpOverflow
+---@return nil
+---@public
 function UIMenu:GoUpOverflow()
     if #self.Items <= self.Pagination.Total + 1 then
         return
@@ -761,6 +801,8 @@ function UIMenu:GoUpOverflow()
 end
 
 ---GoUp
+---@return nil
+---@public
 function UIMenu:GoUp()
     if #self.Items > self.Pagination.Total + 1 then
         return
@@ -774,6 +816,8 @@ function UIMenu:GoUp()
 end
 
 ---GoDownOverflow
+---@return nil
+---@public
 function UIMenu:GoDownOverflow()
     if #self.Items <= self.Pagination.Total + 1 then
         return
@@ -804,6 +848,8 @@ function UIMenu:GoDownOverflow()
 end
 
 ---GoDown
+---@return nil
+---@public
 function UIMenu:GoDown()
     if #self.Items > self.Pagination.Total + 1 then
         return
@@ -817,6 +863,9 @@ function UIMenu:GoDown()
     self.ReDraw = true
 end
 
+---GoLeft
+---@return number
+---@public
 function UIMenu:GoLeft()
     local type, subtype = self.Items[self:CurrentSelection()]()
     if subtype ~= "UIMenuListItem" and
@@ -877,6 +926,8 @@ function UIMenu:GoLeft()
 end
 
 ---GoRight
+---@return nil
+---@public
 function UIMenu:GoRight()
     local type, subtype = self.Items[self:CurrentSelection()]()
     if subtype ~= "UIMenuListItem" and
@@ -934,6 +985,8 @@ function UIMenu:GoRight()
 end
 
 ---SelectItem
+---@return nil
+---@public
 function UIMenu:SelectItem()
     if not self.Items[self:CurrentSelection()]:Enabled() then
         PlaySoundFrontend(-1, self.Settings.Audio.Error, self.Settings.Audio.Library, true)
@@ -980,6 +1033,8 @@ function UIMenu:SelectItem()
 end
 
 ---GoBack
+---@return nil
+---@public
 function UIMenu:GoBack()
     PlaySoundFrontend(-1, self.Settings.Audio.Back, self.Settings.Audio.Library, true)
     self:Visible(false)
@@ -997,6 +1052,8 @@ end
 ---BindMenuToItem
 ---@param Menu table
 ---@param Item table
+---@return nil
+---@public
 function UIMenu:BindMenuToItem(Menu, Item)
     if Menu() == "UIMenu" and Item() == "UIMenuItem" then
         Menu.ParentMenu = self
@@ -1007,6 +1064,8 @@ end
 
 ---ReleaseMenuFromItem
 ---@param Item table
+---@return boolean
+---@public
 function UIMenu:ReleaseMenuFromItem(Item)
     if Item() == "UIMenuItem" then
         if not self.Children[Item] then
@@ -1021,6 +1080,8 @@ end
 
 ---PageCounterName
 ---@param text string
+---@return nil
+---@public
 function UIMenu:PageCounterName(String)
     self.PageCounter.isCustom = true
     self.PageCounter.PreText = String
@@ -1029,47 +1090,39 @@ function UIMenu:PageCounterName(String)
 end
 
 ---Draw
+---@return nil
+---@public
 function UIMenu:Draw()
     if not self._Visible then
         return
     end
-
     HideHudComponentThisFrame(19)
-
     if self.Settings.ControlDisablingEnabled then
         self:DisEnableControls(false)
     end
-
     if self.Settings.InstructionalButtons then
         DrawScaleformMovieFullscreen(self.InstructionalScaleform, 255, 255, 255, 255, 0)
     end
-
     if self.Settings.ScaleWithSafezone then
         ScreenDrawPositionBegin(76, 84)
         ScreenDrawPositionRatio(0, 0, 0, 0)
     end
-
     if self.ReDraw then
         self:DrawCalculations()
     end
-
     if self.Logo then
         self.Logo:Draw()
     elseif self.Banner then
         self.Banner:Draw()
     end
-
     self.Title:Draw()
-
     if self.Subtitle.Rectangle then
         self.Subtitle.Rectangle:Draw()
         self.Subtitle.Text:Draw()
     end
-
     if #self.Items ~= 0 or #self.Windows ~= 0 then
         self.Background:Draw()
     end
-
     if #self.Windows ~= 0 then
         local WindowOffset = 0
         for index = 1, #self.Windows do
@@ -1081,7 +1134,6 @@ function UIMenu:Draw()
             Window:Draw()
         end
     end
-
     if #self.Items == 0 then
         if self.Settings.ScaleWithSafezone then
             ScreenDrawPositionEnd()
@@ -1159,6 +1211,8 @@ function UIMenu:Draw()
 end
 
 ---ProcessMouse
+---@return nil
+---@public
 function UIMenu:ProcessMouse()
     if not self._Visible or self.JustOpened or #self.Items == 0 or tobool(Controller()) or not self.Settings.MouseControlsEnabled then
         EnableControlAction(0, 2, true)
@@ -1428,6 +1482,8 @@ end
 
 ---AddInstructionButton
 ---@param button table
+---@return nil
+---@public
 function UIMenu:AddInstructionButton(button)
     if type(button) == "table" and #button == 2 then
         table.insert(self.InstructionalButtons, button)
@@ -1436,6 +1492,8 @@ end
 
 ---RemoveInstructionButton
 ---@param button table
+---@return nil
+---@public
 function UIMenu:RemoveInstructionButton(button)
     if type(button) == "table" then
         for i = 1, #self.InstructionalButtons do
@@ -1457,6 +1515,8 @@ end
 ---@param Inputgroup number
 ---@param Control number
 ---@param Controller table
+---@return nil
+---@public
 function UIMenu:AddEnabledControl(Inputgroup, Control, Controller)
     if tonumber(Inputgroup) and tonumber(Control) then
         table.insert(self.Settings.EnabledControls[(Controller and "Controller" or "Keyboard")], { Inputgroup, Control })
@@ -1467,6 +1527,8 @@ end
 ---@param Inputgroup number
 ---@param Control number
 ---@param Controller table
+---@return nil
+---@public
 function UIMenu:RemoveEnabledControl(Inputgroup, Control, Controller)
     local Type = (Controller and "Controller" or "Keyboard")
     for Index = 1, #self.Settings.EnabledControls[Type] do
@@ -1477,6 +1539,9 @@ function UIMenu:RemoveEnabledControl(Inputgroup, Control, Controller)
     end
 end
 
+---UpdateScaleform
+---@return nil
+---@public
 function UIMenu:UpdateScaleform()
     if not self._Visible or not self.Settings.InstructionalButtons then
         return

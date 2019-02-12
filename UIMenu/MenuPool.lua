@@ -1,7 +1,12 @@
+---@type table
 MenuPool = setmetatable({}, MenuPool)
+
+---@type table
 MenuPool.__index = MenuPool
 
 ---New
+---@return table
+---@public
 function MenuPool.New()
     local _MenuPool = {
         Menus = {}
@@ -15,6 +20,8 @@ end
 ---@param Description string
 ---@param KeepPosition boolean
 ---@param KeepBanner boolean
+---@return table
+---@public
 function MenuPool:AddSubMenu(Menu, Text, Description, KeepPosition, KeepBanner)
     if Menu() == "UIMenu" then
         local Item = UIMenuItem.New(tostring(Text), Description or "")
@@ -44,6 +51,8 @@ end
 
 ---Add
 ---@param Menu table
+---@return nil
+---@public
 function MenuPool:Add(Menu)
     if Menu() == "UIMenu" then
         table.insert(self.Menus, Menu)
@@ -52,6 +61,8 @@ end
 
 ---MouseEdgeEnabled
 ---@param bool boolean
+---@return nil
+---@public
 function MenuPool:MouseEdgeEnabled(bool)
     if bool ~= nil then
         for _, Menu in pairs(self.Menus) do
@@ -62,6 +73,8 @@ end
 
 ---ControlDisablingEnabled
 ---@param bool boolean
+---@return nil
+---@public
 function MenuPool:ControlDisablingEnabled(bool)
     if bool ~= nil then
         for _, Menu in pairs(self.Menus) do
@@ -72,6 +85,8 @@ end
 
 ---ResetCursorOnOpen
 ---@param bool boolean
+---@return nil
+---@public
 function MenuPool:ResetCursorOnOpen(bool)
     if bool ~= nil then
         for _, Menu in pairs(self.Menus) do
@@ -82,6 +97,8 @@ end
 
 ---MultilineFormats
 ---@param bool boolean
+---@return nil
+---@public
 function MenuPool:MultilineFormats(bool)
     if bool ~= nil then
         for _, Menu in pairs(self.Menus) do
@@ -93,6 +110,8 @@ end
 ---Audio
 ---@param Attribute number
 ---@param Setting table
+---@return nil
+---@public
 function MenuPool:Audio(Attribute, Setting)
     if Attribute ~= nil and Setting ~= nil then
         for _, Menu in pairs(self.Menus) do
@@ -105,6 +124,8 @@ end
 
 ---WidthOffset
 ---@param offset number
+---@return nil
+---@public
 function MenuPool:WidthOffset(offset)
     if tonumber(offset) then
         for _, Menu in pairs(self.Menus) do
@@ -115,6 +136,8 @@ end
 
 ---CounterPreText
 ---@param str string
+---@return nil
+---@public
 function MenuPool:CounterPreText(str)
     if str ~= nil then
         for _, Menu in pairs(self.Menus) do
@@ -125,6 +148,8 @@ end
 
 ---DisableInstructionalButtons
 ---@param bool boolean
+---@return nil
+---@public
 function MenuPool:DisableInstructionalButtons(bool)
     if bool ~= nil then
         for _, Menu in pairs(self.Menus) do
@@ -135,6 +160,8 @@ end
 
 ---MouseControlsEnabled
 ---@param bool boolean
+---@return nil
+---@public
 function MenuPool:MouseControlsEnabled(bool)
     if bool ~= nil then
         for _, Menu in pairs(self.Menus) do
@@ -144,6 +171,8 @@ function MenuPool:MouseControlsEnabled(bool)
 end
 
 ---RefreshIndex
+---@return nil
+---@public
 function MenuPool:RefreshIndex()
     for _, Menu in pairs(self.Menus) do
         Menu:RefreshIndex()
@@ -151,6 +180,8 @@ function MenuPool:RefreshIndex()
 end
 
 ---ProcessMenus
+---@return nil
+---@public
 function MenuPool:ProcessMenus()
     self:ProcessControl()
     self:ProcessMouse()
@@ -158,6 +189,8 @@ function MenuPool:ProcessMenus()
 end
 
 ---ProcessControl
+---@return nil
+---@public
 function MenuPool:ProcessControl()
     for _, Menu in pairs(self.Menus) do
         if Menu:Visible() then
@@ -167,6 +200,8 @@ function MenuPool:ProcessControl()
 end
 
 ---ProcessMouse
+---@return nil
+---@public
 function MenuPool:ProcessMouse()
     for _, Menu in pairs(self.Menus) do
         if Menu:Visible() then
@@ -176,6 +211,8 @@ function MenuPool:ProcessMouse()
 end
 
 ---Draw
+---@return nil
+---@public
 function MenuPool:Draw()
     for _, Menu in pairs(self.Menus) do
         if Menu:Visible() then
@@ -185,6 +222,8 @@ function MenuPool:Draw()
 end
 
 ---IsAnyMenuOpen
+---@return boolean
+---@public
 function MenuPool:IsAnyMenuOpen()
     local open = false
     for _, Menu in pairs(self.Menus) do
@@ -197,6 +236,8 @@ function MenuPool:IsAnyMenuOpen()
 end
 
 ---CloseAllMenus
+---@return nil
+---@public
 function MenuPool:CloseAllMenus()
     for _, Menu in pairs(self.Menus) do
         if Menu:Visible() then
@@ -208,6 +249,8 @@ end
 
 ---SetBannerSprite
 ---@param Sprite table
+---@return nil
+---@public
 function MenuPool:SetBannerSprite(Sprite)
     if Sprite() == "Sprite" then
         for _, Menu in pairs(self.Menus) do
@@ -218,6 +261,8 @@ end
 
 ---SetBannerRectangle
 ---@param Rectangle table
+---@return nil
+---@public
 function MenuPool:SetBannerRectangle(Rectangle)
     if Rectangle() == "Rectangle" then
         for _, Menu in pairs(self.Menus) do
@@ -228,6 +273,8 @@ end
 
 ---TotalItemsPerPage
 ---@param Value table
+---@return nil
+---@public
 function MenuPool:TotalItemsPerPage(Value)
     if tonumber(Value) then
         for _, Menu in pairs(self.Menus) do

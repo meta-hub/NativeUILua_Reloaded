@@ -1,5 +1,11 @@
+---@type table
 UIMenuItem = setmetatable({}, UIMenuItem)
+
+---@type table
 UIMenuItem.__index = UIMenuItem
+
+---@type table
+---@return string
 UIMenuItem.__call = function()
     return "UIMenuItem", "UIMenuItem"
 end
@@ -7,6 +13,8 @@ end
 ---New
 ---@param Text string
 ---@param Description string
+---@return table
+---@public
 function UIMenuItem.New(Text, Description)
     local _UIMenuItem = {
         Rectangle = UIResRectangle.New(0, 0, 431, 38, 255, 255, 255, 20),
@@ -36,6 +44,8 @@ end
 
 ---SetParentMenu
 ---@param Menu table
+---@return table
+---@public
 function UIMenuItem:SetParentMenu(Menu)
     if Menu ~= nil and Menu() == "UIMenu" then
         self.ParentMenu = Menu
@@ -46,6 +56,8 @@ end
 
 ---Selected
 ---@param bool boolean
+---@return boolean
+---@public
 function UIMenuItem:Selected(bool)
     if bool ~= nil then
         self._Selected = tobool(bool)
@@ -56,6 +68,8 @@ end
 
 ---Hovered
 ---@param bool boolean
+---@return boolean
+---@public
 function UIMenuItem:Hovered(bool)
     if bool ~= nil then
         self._Hovered = tobool(bool)
@@ -66,6 +80,8 @@ end
 
 ---Enabled
 ---@param bool boolean
+---@return boolean
+---@public
 function UIMenuItem:Enabled(bool)
     if bool ~= nil then
         self._Enabled = tobool(bool)
@@ -76,6 +92,8 @@ end
 
 ---Description
 ---@param str string
+---@return string
+---@public
 function UIMenuItem:Description(str)
     if tostring(str) and str ~= nil then
         self._Description = tostring(str)
@@ -87,6 +105,8 @@ end
 ---Offset
 ---@param X number
 ---@param Y number
+---@return thread
+---@public
 function UIMenuItem:Offset(X, Y)
     if tonumber(X) or tonumber(Y) then
         if tonumber(X) then
@@ -102,6 +122,8 @@ end
 
 ---Position
 ---@param Y number
+---@return nil
+---@public
 function UIMenuItem:Position(Y)
     if tonumber(Y) then
         self.Rectangle:Position(self._Offset.X, Y + 144 + self._Offset.Y)
@@ -117,6 +139,8 @@ end
 ---@param Text string
 ---@param MainColour table
 ---@param HighlightColour table
+---@return table
+---@public
 function UIMenuItem:RightLabel(Text, MainColour, HighlightColour)
     if MainColour ~= nil then
         labelMainColour = MainColour
@@ -145,6 +169,8 @@ end
 
 ---SetLeftBadge
 ---@param Badge number
+---@return nil
+---@public
 function UIMenuItem:SetLeftBadge(Badge)
     if tonumber(Badge) then
         self.LeftBadge.Badge = tonumber(Badge)
@@ -153,6 +179,8 @@ end
 
 ---SetRightBadge
 ---@param Badge number
+---@return nil
+---@public
 function UIMenuItem:SetRightBadge(Badge)
     if tonumber(Badge) then
         self.RightBadge.Badge = tonumber(Badge)
@@ -161,6 +189,8 @@ end
 
 ---Text
 ---@param Text string
+---@return string
+---@public
 function UIMenuItem:Text(Text)
     if tostring(Text) and Text ~= nil then
         self.Text:Text(tostring(Text))
@@ -171,6 +201,8 @@ end
 
 ---AddPanel
 ---@param Panel table
+---@return nil
+---@public
 function UIMenuItem:AddPanel(Panel)
     if Panel() == "UIMenuPanel" then
         table.insert(self.Panels, Panel)
@@ -180,6 +212,8 @@ end
 
 ---RemovePanelAt
 ---@param Index table
+---@return nil
+---@public
 function UIMenuItem:RemovePanelAt(Index)
     if tonumber(Index) then
         if self.Panels[Index] then
@@ -190,6 +224,8 @@ end
 
 ---FindPanelIndex
 ---@param Panel table
+---@return number
+---@public
 function UIMenuItem:FindPanelIndex(Panel)
     if Panel() == "UIMenuPanel" then
         for Index = 1, #self.Panels do
@@ -201,6 +237,9 @@ function UIMenuItem:FindPanelIndex(Panel)
     return nil
 end
 
+---FindPanelItem
+---@return number
+---@public
 function UIMenuItem:FindPanelItem()
     for Index = #self.Items, 1, -1 do
         if self.Items[Index].Panel then
@@ -210,6 +249,9 @@ function UIMenuItem:FindPanelItem()
     return nil
 end
 
+---Draw
+---@return nil
+---@public
 function UIMenuItem:Draw()
     self.Rectangle:Size(431 + self.ParentMenu.WidthOffset, self.Rectangle.Height)
     self.SelectedSprite:Size(431 + self.ParentMenu.WidthOffset, self.SelectedSprite.Height)

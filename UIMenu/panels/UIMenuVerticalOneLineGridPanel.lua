@@ -1,5 +1,11 @@
+---@type table
 UIMenuVerticalOneLineGridPanel = setmetatable({}, UIMenuVerticalOneLineGridPanel)
+
+---@type table
 UIMenuVerticalOneLineGridPanel.__index = UIMenuVerticalOneLineGridPanel
+
+---@type table
+---@return string
 UIMenuVerticalOneLineGridPanel.__call = function()
     return "UIMenuPanel", "UIMenuVerticalOneLineGridPanel"
 end
@@ -7,6 +13,8 @@ end
 ---New
 ---@param TopText string
 ---@param BottomText string
+---@return table
+---@public
 function UIMenuVerticalOneLineGridPanel.New(TopText, BottomText)
     local _UIMenuVerticalOneLineGridPanel = {
         Data = {
@@ -27,8 +35,9 @@ end
 
 ---SetParentItem
 ---@param Item table
+---@return table
+---@public
 function UIMenuVerticalOneLineGridPanel:SetParentItem(Item)
-    -- required
     if Item() == "UIMenuItem" then
         self.ParentItem = Item
     else
@@ -38,6 +47,8 @@ end
 
 ---Enabled
 ---@param Enabled boolean
+---@return boolean
+---@public
 function UIMenuVerticalOneLineGridPanel:Enabled(Enabled)
     if type(Enabled) == "boolean" then
         self.Data.Enabled = Enabled
@@ -49,6 +60,8 @@ end
 ---CirclePosition
 ---@param X number
 ---@param Y number
+---@return table
+---@public
 function UIMenuVerticalOneLineGridPanel:CirclePosition(X, Y)
     if tonumber(X) and tonumber(Y) then
         self.Circle.X = (self.Grid.X + 20) + ((self.Grid.Width - 40) * ((X >= 0.0 and X <= 1.0) and X or 0.0)) - (self.Circle.Width / 2)
@@ -60,15 +73,15 @@ end
 
 ---Position
 ---@param Y number
+---@return nil
+---@public
 function UIMenuVerticalOneLineGridPanel:Position(Y)
     if tonumber(Y) then
         local ParentOffsetX, ParentOffsetWidth = self.ParentItem:Offset().X, self.ParentItem:SetParentMenu().WidthOffset
-
         self.Background:Position(ParentOffsetX, Y)
         self.Grid:Position(ParentOffsetX + 115.5 + (ParentOffsetWidth / 2), 37.5 + Y)
         self.Text.Top:Position(ParentOffsetX + 215.5 + (ParentOffsetWidth / 2), 5 + Y)
         self.Text.Bottom:Position(ParentOffsetX + 215.5 + (ParentOffsetWidth / 2), 240 + Y)
-
         if not self.CircleLocked then
             self.CircleLocked = true
             self:CirclePosition(0.5, 0.5)
@@ -79,6 +92,8 @@ end
 ---UpdateParent
 ---@param X number
 ---@param Y number
+---@return nil
+---@public
 function UIMenuVerticalOneLineGridPanel:UpdateParent(Y)
     local _, ParentType = self.ParentItem()
     self.Data.Value = { Y = Y }
@@ -110,6 +125,8 @@ function UIMenuVerticalOneLineGridPanel:UpdateParent(Y)
 end
 
 ---Functions
+---@return nil
+---@public
 function UIMenuVerticalOneLineGridPanel:Functions()
     local SafeZone = { X = 0, Y = 0 }
     if self.ParentItem:SetParentMenu().Settings.ScaleWithSafezone then
@@ -148,6 +165,8 @@ function UIMenuVerticalOneLineGridPanel:Functions()
 end
 
 ---Draw
+---@return nil
+---@public
 function UIMenuVerticalOneLineGridPanel:Draw()
     if self.Data.Enabled then
         self.Background:Size(431 + self.ParentItem:SetParentMenu().WidthOffset, 275)

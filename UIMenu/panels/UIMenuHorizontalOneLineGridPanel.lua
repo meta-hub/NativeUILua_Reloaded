@@ -1,5 +1,11 @@
+---@type table
 UIMenuHorizontalOneLineGridPanel = setmetatable({}, UIMenuHorizontalOneLineGridPanel)
+
+---@type table
 UIMenuHorizontalOneLineGridPanel.__index = UIMenuHorizontalOneLineGridPanel
+
+---@type table
+---@return string
 UIMenuHorizontalOneLineGridPanel.__call = function()
     return "UIMenuPanel", "UIMenuHorizontalOneLineGridPanel"
 end
@@ -7,6 +13,8 @@ end
 ---New
 ---@param LeftText string
 ---@param RightText string
+---@return table
+---@public
 function UIMenuHorizontalOneLineGridPanel.New(LeftText, RightText)
     local _UIMenuHorizontalOneLineGridPanel = {
         Data = {
@@ -27,6 +35,8 @@ end
 
 ---SetParentItem
 ---@param Item table
+---@return table
+---@public
 function UIMenuHorizontalOneLineGridPanel:SetParentItem(Item)
     -- required
     if Item() == "UIMenuItem" then
@@ -38,6 +48,8 @@ end
 
 ---Enabled
 ---@param Enabled boolean
+---@return boolean
+---@public
 function UIMenuHorizontalOneLineGridPanel:Enabled(Enabled)
     if type(Enabled) == "boolean" then
         self.Data.Enabled = Enabled
@@ -49,6 +61,8 @@ end
 ---CirclePosition
 ---@param X number
 ---@param Y number
+---@return table
+---@public
 function UIMenuHorizontalOneLineGridPanel:CirclePosition(X, Y)
     if tonumber(X) and tonumber(Y) then
         self.Circle.X = (self.Grid.X + 20) + ((self.Grid.Width - 40) * ((X >= 0.0 and X <= 1.0) and X or 0.0)) - (self.Circle.Width / 2)
@@ -60,6 +74,8 @@ end
 
 ---Position
 ---@param Y number
+---@return nil
+---@public
 function UIMenuHorizontalOneLineGridPanel:Position(Y)
     if tonumber(Y) then
         local ParentOffsetX, ParentOffsetWidth = self.ParentItem:Offset().X, self.ParentItem:SetParentMenu().WidthOffset
@@ -77,6 +93,8 @@ end
 ---UpdateParent
 ---@param X number
 ---@param Y number
+---@return nil
+---@public
 function UIMenuHorizontalOneLineGridPanel:UpdateParent(X)
     local _, ParentType = self.ParentItem()
     self.Data.Value = { X = X }
@@ -108,6 +126,8 @@ function UIMenuHorizontalOneLineGridPanel:UpdateParent(X)
 end
 
 ---Functions
+---@return nil
+---@public
 function UIMenuHorizontalOneLineGridPanel:Functions()
     local SafeZone = { X = 0, Y = 0 }
     if self.ParentItem:SetParentMenu().Settings.ScaleWithSafezone then
@@ -143,7 +163,10 @@ function UIMenuHorizontalOneLineGridPanel:Functions()
         end
     end
 end
+
 ---Draw
+---@return nil
+---@public
 function UIMenuHorizontalOneLineGridPanel:Draw()
     if self.Data.Enabled then
         self.Background:Size(431 + self.ParentItem:SetParentMenu().WidthOffset, 275)

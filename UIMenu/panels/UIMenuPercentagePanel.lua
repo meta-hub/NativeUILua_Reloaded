@@ -1,5 +1,11 @@
+---@type table
 UIMenuPercentagePanel = setmetatable({}, UIMenuPercentagePanel)
+
+---@type table
 UIMenuPercentagePanel.__index = UIMenuPercentagePanel
+
+---@type table
+---@return string
 UIMenuPercentagePanel.__call = function()
     return "UIMenuPanel", "UIMenuPercentagePanel"
 end
@@ -7,6 +13,8 @@ end
 ---New
 ---@param MinText number
 ---@param MaxText number
+---@return table
+---@public
 function UIMenuPercentagePanel.New(MinText, MaxText)
     local _UIMenuPercentagePanel = {
         Data = {
@@ -29,6 +37,8 @@ end
 
 ---SetParentItem
 ---@param Item table
+---@return table
+---@public
 function UIMenuPercentagePanel:SetParentItem(Item)
     if Item() == "UIMenuItem" then
         self.ParentItem = Item
@@ -39,6 +49,8 @@ end
 
 ---Enabled
 ---@param Enabled boolean
+---@return boolean
+---@public
 function UIMenuPercentagePanel:Enabled(Enabled)
     if type(Enabled) == "boolean" then
         self.Data.Enabled = Enabled
@@ -49,8 +61,9 @@ end
 
 ---Position
 ---@param Y number
+---@return nil
+---@public
 function UIMenuPercentagePanel:Position(Y)
-    -- required
     if tonumber(Y) then
         local ParentOffsetX, ParentOffsetWidth = self.ParentItem:Offset().X, self.ParentItem:SetParentMenu().WidthOffset
         self.Background:Position(ParentOffsetX, Y)
@@ -64,6 +77,8 @@ end
 
 ---Percentage
 ---@param Value number
+---@return number
+---@public
 function UIMenuPercentagePanel:Percentage(Value)
     if tonumber(Value) then
         local Percent = ((Value < 0.0) and 0.0) or ((Value > 1.0) and 1.0 or Value)
@@ -81,6 +96,8 @@ end
 
 ---UpdateParent
 ---@param Percentage number
+---@return nil
+---@public
 function UIMenuPercentagePanel:UpdateParent(Percentage)
     local _, ParentType = self.ParentItem()
     if ParentType == "UIMenuListItem" then
@@ -111,6 +128,8 @@ function UIMenuPercentagePanel:UpdateParent(Percentage)
 end
 
 ---Functions
+---@return nil
+---@public
 function UIMenuPercentagePanel:Functions()
     local SafeZone = { X = 0, Y = 0 }
     if self.ParentItem:SetParentMenu().Settings.ScaleWithSafezone then
@@ -145,6 +164,8 @@ function UIMenuPercentagePanel:Functions()
 end
 
 ---Draw
+---@return nil
+---@public
 function UIMenuPercentagePanel:Draw()
     if self.Data.Enabled then
         self.Background:Size(431 + self.ParentItem:SetParentMenu().WidthOffset, 76)

@@ -1,5 +1,11 @@
+---@type table
 UIResText = setmetatable({}, UIResText)
+
+---@type table
 UIResText.__index = UIResText
+
+---@type table
+---@return string
 UIResText.__call = function()
     return "Text"
 end
@@ -114,6 +120,8 @@ end
 ---@param DropShadow number
 ---@param Outline number
 ---@param WordWrap number
+---@return table
+---@public
 function UIResText.New(Text, X, Y, Scale, R, G, B, A, Font, Alignment, DropShadow, Outline, WordWrap)
     local _UIResText = {
         _Text = tostring(Text) or "",
@@ -133,6 +141,8 @@ end
 ---Position
 ---@param X number
 ---@param Y number
+---@return table
+---@public
 function UIResText:Position(X, Y)
     if tonumber(X) and tonumber(Y) then
         self.X = tonumber(X)
@@ -147,6 +157,8 @@ end
 ---@param G number
 ---@param B number
 ---@param A number
+---@return table
+---@public
 function UIResText:Colour(R, G, B, A)
     if tonumber(R) and tonumber(G) and tonumber(B) and tonumber(A) then
         self._Colour.R = tonumber(R)
@@ -160,6 +172,8 @@ end
 
 ---Text
 ---@param Text string
+---@return string
+---@public
 function UIResText:Text(Text)
     if tostring(Text) and Text ~= nil then
         self._Text = tostring(Text)
@@ -169,6 +183,8 @@ function UIResText:Text(Text)
 end
 
 ---Draw
+---@return nil
+---@public
 function UIResText:Draw()
     local Position = self:Position()
     Position.X, Position.Y = FormatXWYH(Position.X, Position.Y)

@@ -1,5 +1,11 @@
+---@type table
 UIMenuColourPanel = setmetatable({}, UIMenuColourPanel)
+
+---@type table
 UIMenuColourPanel.__index = UIMenuColourPanel
+
+---@type table
+---@return string
 UIMenuColourPanel.__call = function()
     return "UIMenuPanel", "UIMenuColourPanel"
 end
@@ -7,6 +13,8 @@ end
 ---New
 ---@param Title string
 ---@param Colours number
+---@return table
+---@public
 function UIMenuColourPanel.New(Title, Colours)
     local _UIMenuColourPanel = {
         Data = {
@@ -49,6 +57,8 @@ end
 
 ---SetParentItem
 ---@param Item table
+---@return table
+---@public
 function UIMenuColourPanel:SetParentItem(Item)
     -- required
     if Item() == "UIMenuItem" then
@@ -60,6 +70,8 @@ end
 
 ---Enabled
 ---@param Enabled boolean
+---@return boolean
+---@public
 function UIMenuColourPanel:Enabled(Enabled)
     if type(Enabled) == "boolean" then
         self.Data.Enabled = Enabled
@@ -70,11 +82,11 @@ end
 
 ---Position
 ---@param Y number
+---@return nil
+---@public
 function UIMenuColourPanel:Position(Y)
-    -- required
     if tonumber(Y) then
         local ParentOffsetX, ParentOffsetWidth = self.ParentItem:Offset().X, self.ParentItem:SetParentMenu().WidthOffset
-
         self.Background:Position(ParentOffsetX, Y)
         for Index = 1, #self.Bar do
             self.Bar[Index]:Position(15 + (44.5 * (Index - 1)) + ParentOffsetX + (ParentOffsetWidth / 2), 55 + Y)
@@ -91,6 +103,8 @@ end
 ---CurrentSelection
 ---@param value number
 ---@param PreventUpdate table
+---@return number
+---@public
 function UIMenuColourPanel:CurrentSelection(value, PreventUpdate)
     if tonumber(value) then
         if #self.Data.Items == 0 then
@@ -123,6 +137,8 @@ end
 
 ---UpdateParent
 ---@param Colour table
+---@return nil
+---@public
 function UIMenuColourPanel:UpdateParent(Colour)
     local _, ParentType = self.ParentItem()
     if ParentType == "UIMenuListItem" then
@@ -154,6 +170,8 @@ end
 
 ---UpdateSelection
 ---@param PreventUpdate table
+---@return nil
+---@public
 function UIMenuColourPanel:UpdateSelection(PreventUpdate)
     local CurrentSelection = self:CurrentSelection()
     if not PreventUpdate then
@@ -167,17 +185,18 @@ function UIMenuColourPanel:UpdateSelection(PreventUpdate)
 end
 
 ---Functions
+---@return nil
+---@public
 function UIMenuColourPanel:Functions()
     local SafeZone = { X = 0, Y = 0 }
     if self.ParentItem:SetParentMenu().Settings.ScaleWithSafezone then
         SafeZone = GetSafeZoneBounds()
     end
-    --@Key Process
 
+    --@Key Process
     if IsDisabledControlJustPressed(0, 24) or IsDisabledControlJustPressed(0, 174) then
         self:GoLeft()
     end
-
     if IsDisabledControlJustPressed(0, 24) or IsDisabledControlJustPressed(0, 175) then
         self:GoRight()
     end
@@ -203,6 +222,9 @@ function UIMenuColourPanel:Functions()
     end
 end
 
+---GoLeft
+---@return nil
+---@private
 function UIMenuColourPanel:GoLeft()
     if #self.Data.Items > self.Data.Pagination.Total + 1 then
         if self:CurrentSelection() <= self.Data.Pagination.Min + 1 then
@@ -228,6 +250,9 @@ function UIMenuColourPanel:GoLeft()
     end
 end
 
+---GoRight
+---@return nil
+---@private
 function UIMenuColourPanel:GoRight()
     if #self.Data.Items > self.Data.Pagination.Total + 1 then
         if self:CurrentSelection() >= self.Data.Pagination.Max then
@@ -253,10 +278,11 @@ function UIMenuColourPanel:GoRight()
 end
 
 ---Draw
+---@return nil
+---@public
 function UIMenuColourPanel:Draw()
     if self.Data.Enabled then
         self.Background:Size(431 + self.ParentItem:SetParentMenu().WidthOffset, 112)
-
         self.Background:Draw()
         if self.EnableArrow ~= false then
             self.LeftArrow:Draw()

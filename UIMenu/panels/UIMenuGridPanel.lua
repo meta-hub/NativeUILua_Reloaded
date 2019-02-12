@@ -1,5 +1,11 @@
+---@type table
 UIMenuGridPanel = setmetatable({}, UIMenuGridPanel)
+
+---@type table
 UIMenuGridPanel.__index = UIMenuGridPanel
+
+---@type table
+---@return string
 UIMenuGridPanel.__call = function()
     return "UIMenuPanel", "UIMenuGridPanel"
 end
@@ -9,6 +15,8 @@ end
 ---@param LeftText string
 ---@param RightText string
 ---@param BottomText string
+---@return table
+---@public
 function UIMenuGridPanel.New(TopText, LeftText, RightText, BottomText)
     local _UIMenuGridPanel = {
         Data = {
@@ -31,6 +39,8 @@ end
 
 ---SetParentItem
 ---@param Item table
+---@return table
+---@public
 function UIMenuGridPanel:SetParentItem(Item)
     -- required
     if Item() == "UIMenuItem" then
@@ -42,6 +52,8 @@ end
 
 ---Enabled
 ---@param Enabled boolean
+---@return boolean
+---@public
 function UIMenuGridPanel:Enabled(Enabled)
     if type(Enabled) == "boolean" then
         self.Data.Enabled = Enabled
@@ -53,6 +65,8 @@ end
 ---CirclePosition
 ---@param X number
 ---@param Y number
+---@return table
+---@public
 function UIMenuGridPanel:CirclePosition(X, Y)
     if tonumber(X) and tonumber(Y) then
         self.Circle.X = (self.Grid.X + 20) + ((self.Grid.Width - 40) * ((X >= 0.0 and X <= 1.0) and X or 0.0)) - (self.Circle.Width / 2)
@@ -64,17 +78,17 @@ end
 
 ---Position
 ---@param Y number
+---@return nil
+---@public
 function UIMenuGridPanel:Position(Y)
     if tonumber(Y) then
         local ParentOffsetX, ParentOffsetWidth = self.ParentItem:Offset().X, self.ParentItem:SetParentMenu().WidthOffset
-
         self.Background:Position(ParentOffsetX, Y)
         self.Grid:Position(ParentOffsetX + 115.5 + (ParentOffsetWidth / 2), 37.5 + Y)
         self.Text.Top:Position(ParentOffsetX + 215.5 + (ParentOffsetWidth / 2), 5 + Y)
         self.Text.Left:Position(ParentOffsetX + 57.75 + (ParentOffsetWidth / 2), 120 + Y)
         self.Text.Right:Position(ParentOffsetX + 373.25 + (ParentOffsetWidth / 2), 120 + Y)
         self.Text.Bottom:Position(ParentOffsetX + 215.5 + (ParentOffsetWidth / 2), 240 + Y)
-
         if not self.CircleLocked then
             self.CircleLocked = true
             self:CirclePosition(0.5, 0.5)
@@ -85,6 +99,8 @@ end
 ---UpdateParent
 ---@param X number
 ---@param Y number
+---@return nil
+---@public
 function UIMenuGridPanel:UpdateParent(X, Y)
     local _, ParentType = self.ParentItem()
     self.Data.Value = { X = X, Y = Y }
@@ -116,12 +132,13 @@ function UIMenuGridPanel:UpdateParent(X, Y)
 end
 
 ---Functions
+---@return nil
+---@public
 function UIMenuGridPanel:Functions()
     local SafeZone = { X = 0, Y = 0 }
     if self.ParentItem:SetParentMenu().Settings.ScaleWithSafezone then
         SafeZone = GetSafeZoneBounds()
     end
-
     if IsMouseInBounds(self.Grid.X + 20 + SafeZone.X, self.Grid.Y + 20 + SafeZone.Y, self.Grid.Width - 40, self.Grid.Height - 40) then
         if IsDisabledControlJustPressed(0, 24) then
             if not self.Pressed then
@@ -153,6 +170,8 @@ function UIMenuGridPanel:Functions()
 end
 
 ---Draw
+---@return nil
+---@public
 function UIMenuGridPanel:Draw()
     if self.Data.Enabled then
         self.Background:Size(431 + self.ParentItem:SetParentMenu().WidthOffset, 275)

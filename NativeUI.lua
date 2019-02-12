@@ -7,6 +7,7 @@ NativeUI = {}
 
 ---CreatePool
 ---@return table
+---@public
 function NativeUI.CreatePool()
     return MenuPool.New()
 end
@@ -24,6 +25,7 @@ end
 ---@param B number
 ---@param A number
 ---@return table
+---@public
 function NativeUI.CreateMenu(Title, Subtitle, X, Y, TxtDictionary, TxtName, Heading, R, G, B, A)
     return UIMenu.New(Title, Subtitle, X, Y, TxtDictionary, TxtName, Heading, R, G, B, A)
 end
@@ -32,6 +34,7 @@ end
 ---@param Text string
 ---@param Description string
 ---@return table
+---@public
 function NativeUI.CreateItem(Text, Description)
     return UIMenuItem.New(Text, Description)
 end
@@ -42,6 +45,7 @@ end
 ---@param MainColour table
 ---@param HighlightColour table
 ---@return table
+---@public
 function NativeUI.CreateColouredItem(Text, Description, MainColour, HighlightColour)
     return UIMenuColouredItem.New(Text, Description, MainColour, HighlightColour)
 end
@@ -51,6 +55,7 @@ end
 ---@param Check boolean
 ---@param Description string
 ---@return table
+---@public
 function NativeUI.CreateCheckboxItem(Text, Check, Description, CheckboxStyle)
     return UIMenuCheckboxItem.New(Text, Check, Description, CheckboxStyle)
 end
@@ -61,6 +66,7 @@ end
 ---@param Index table
 ---@param Description string
 ---@return table
+---@public
 function NativeUI.CreateListItem(Text, Items, Index, Description)
     return UIMenuListItem.New(Text, Items, Index, Description)
 end
@@ -74,6 +80,7 @@ end
 ---@param SliderColors table
 ---@param BackgroundSliderColors table
 ---@return table
+---@public
 function NativeUI.CreateSliderItem(Text, Items, Index, Description, Divider, SliderColors, BackgroundSliderColors)
     return UIMenuSliderItem.New(Text, Items, Index, Description, Divider, SliderColors, BackgroundSliderColors)
 end
@@ -86,6 +93,7 @@ end
 ---@param SliderColors table
 ---@param BackgroundSliderColors table
 ---@return table
+---@public
 function NativeUI.CreateSliderHeritageItem(Text, Items, Index, Description, SliderColors, BackgroundSliderColors)
     return UIMenuSliderHeritageItem.New(Text, Items, Index, Description, SliderColors, BackgroundSliderColors)
 end
@@ -98,6 +106,7 @@ end
 ---@param SliderColors table
 ---@param BackgroundSliderColors table
 ---@return table
+---@public
 function NativeUI.CreateSliderProgressItem(Text, Items, Index, Description, SliderColors, BackgroundSliderColors)
     return UIMenuSliderProgressItem.New(Text, Items, Index, Description, SliderColors, BackgroundSliderColors)
 end
@@ -109,6 +118,7 @@ end
 ---@param Description number
 ---@param Counter boolean
 ---@return table
+---@public
 function NativeUI.CreateProgressItem(Text, Items, Index, Description, Counter)
     return UIMenuProgressItem.New(Text, Items, Index, Description, Counter)
 end
@@ -117,6 +127,7 @@ end
 ---@param Mum number
 ---@param Dad number
 ---@return table
+---@public
 function NativeUI.CreateHeritageWindow(Mum, Dad)
     return UIMenuHeritageWindow.New(Mum, Dad)
 end
@@ -127,6 +138,7 @@ end
 ---@param RightText string
 ---@param BottomText string
 ---@return table
+---@public
 function NativeUI.CreateGridPanel(TopText, LeftText, RightText, BottomText)
     return UIMenuGridPanel.New(TopText, LeftText, RightText, BottomText)
 end
@@ -135,6 +147,7 @@ end
 ---@param LeftText string
 ---@param RightText string
 ---@return table
+---@public
 function NativeUI.CreateHorizontalGridPanel(LeftText, RightText)
     return UIMenuHorizontalOneLineGridPanel.New(LeftText, RightText)
 end
@@ -143,6 +156,7 @@ end
 ---@param TopText string
 ---@param BottomText string
 ---@return table
+---@public
 function NativeUI.CreateVerticalGridPanel(TopText, BottomText)
     return UIMenuVerticalOneLineGridPanel.New(TopText, BottomText)
 end
@@ -151,6 +165,7 @@ end
 ---@param Title string
 ---@param Colours table
 ---@return table
+---@public
 function NativeUI.CreateColourPanel(Title, Colours)
     return UIMenuColourPanel.New(Title, Colours)
 end
@@ -159,12 +174,14 @@ end
 ---@param MinText string
 ---@param MaxText string
 ---@return table
+---@public
 function NativeUI.CreatePercentagePanel(MinText, MaxText)
     return UIMenuPercentagePanel.New(MinText, MaxText)
 end
 
 ---CreateStatisticsPanel
 ---@return table
+---@public
 function NativeUI.CreateStatisticsPanel()
     return UIMenuStatisticsPanel.New()
 end
@@ -182,6 +199,7 @@ end
 ---@param B number
 ---@param A number
 ---@return table
+---@public
 function NativeUI.CreateSprite(TxtDictionary, TxtName, X, Y, Width, Height, Heading, R, G, B, A)
     return Sprite.New(TxtDictionary, TxtName, X, Y, Width, Height, Heading, R, G, B, A)
 end
@@ -196,6 +214,7 @@ end
 ---@param B number
 ---@param A number
 ---@return table
+---@public
 function NativeUI.CreateRectangle(X, Y, Width, Height, R, G, B, A)
     return UIResRectangle.New(X, Y, Width, Height, R, G, B, A)
 end
@@ -215,6 +234,7 @@ end
 ---@param Outline number
 ---@param WordWrap number
 ---@return table
+---@public
 function NativeUI.CreateText(Text, X, Y, Scale, R, G, B, A, Font, Alignment, DropShadow, Outline, WordWrap)
     return UIResText.New(Text, X, Y, Scale, R, G, B, A, Font, Alignment, DropShadow, Outline, WordWrap)
 end
@@ -231,6 +251,7 @@ end
 ---@param B number
 ---@param A number
 ---@return table
+---@public
 function NativeUI.CreateTimerBarProgress(Text, TxtDictionary, TxtName, X, Y, Heading, R, G, B, A)
     return UITimerBarProgressItem.New(Text, TxtDictionary, TxtName, X, Y, Heading, R, G, B, A)
 end
@@ -247,12 +268,14 @@ end
 ---@param B number
 ---@param A number
 ---@return table
+---@public
 function NativeUI.CreateTimerBar(Text, TxtDictionary, TxtName, X, Y, Heading, R, G, B, A)
     return UITimerBarItem.New(Text, TxtDictionary, TxtName, X, Y, Heading, R, G, B, A)
 end
 
 ---TimerBarPool
 ---@return table
+---@public
 function NativeUI.TimerBarPool()
     return UITimerBarPool.New()
 end

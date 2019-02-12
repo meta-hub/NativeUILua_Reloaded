@@ -1,5 +1,11 @@
+---@type table
 UIMenuSliderHeritageItem = setmetatable({}, UIMenuSliderHeritageItem)
+
+---@type table
 UIMenuSliderHeritageItem.__index = UIMenuSliderHeritageItem
+
+---@type table
+---@return string
 UIMenuSliderHeritageItem.__call = function()
     return "UIMenuItem", "UIMenuSliderHeritageItem"
 end
@@ -11,6 +17,8 @@ end
 ---@param Description string
 ---@param SliderColors table
 ---@param BackgroundSliderColors table
+---@return table
+---@public
 function UIMenuSliderHeritageItem.New(Text, Items, Index, Description, SliderColors, BackgroundSliderColors)
     if type(Items) ~= "table" then
         Items = {}
@@ -51,6 +59,8 @@ end
 
 ---SetParentMenu
 ---@param Menu table
+---@return table
+---@public
 function UIMenuSliderHeritageItem:SetParentMenu(Menu)
     if Menu() == "UIMenu" then
         self.Base.ParentMenu = Menu
@@ -61,6 +71,8 @@ end
 
 ---Position
 ---@param Y number
+---@return nil
+---@public
 function UIMenuSliderHeritageItem:Position(Y)
     if tonumber(Y) then
         self.Background:Position(250 + self.Base._Offset.X + self.Base.ParentMenu.WidthOffset, Y + 158.5 + self.Base._Offset.Y)
@@ -74,6 +86,8 @@ end
 
 ---Selected
 ---@param bool boolean
+---@return boolean
+---@public
 function UIMenuSliderHeritageItem:Selected(bool)
     if bool ~= nil then
         self.Base._Selected = tobool(bool)
@@ -84,6 +98,8 @@ end
 
 ---Hovered
 ---@param bool boolean
+---@return boolean
+---@public
 function UIMenuSliderHeritageItem:Hovered(bool)
     if bool ~= nil then
         self.Base._Hovered = tobool(bool)
@@ -94,6 +110,8 @@ end
 
 ---Enabled
 ---@param bool boolean
+---@return boolean
+---@public
 function UIMenuSliderHeritageItem:Enabled(bool)
     if bool ~= nil then
         self.Base._Enabled = tobool(bool)
@@ -104,6 +122,8 @@ end
 
 ---Description
 ---@param str string
+---@return string
+---@public
 function UIMenuSliderHeritageItem:Description(str)
     if tostring(str) and str ~= nil then
         self.Base._Description = tostring(str)
@@ -115,6 +135,8 @@ end
 ---Offset
 ---@param X number
 ---@param Y number
+---@return table
+---@public
 function UIMenuSliderHeritageItem:Offset(X, Y)
     if tonumber(X) or tonumber(Y) then
         if tonumber(X) then
@@ -130,6 +152,8 @@ end
 
 ---Text
 ---@param Text string
+---@return string
+---@public
 function UIMenuSliderHeritageItem:Text(Text)
     if tostring(Text) and Text ~= nil then
         self.Base.Text:Text(tostring(Text))
@@ -140,6 +164,8 @@ end
 
 ---Index
 ---@param Index number
+---@return number
+---@public
 function UIMenuSliderHeritageItem:Index(Index)
     if tonumber(Index) then
         if tonumber(Index) > #self.Items then
@@ -156,6 +182,8 @@ end
 
 ---ItemToIndex
 ---@param Item table
+---@return table
+---@public
 function UIMenuSliderHeritageItem:ItemToIndex(Item)
     for i = 1, #self.Items do
         if type(Item) == type(self.Items[i]) and Item == self.Items[i] then
@@ -166,6 +194,8 @@ end
 
 ---IndexToItem
 ---@param Index number
+---@return table
+---@public
 function UIMenuSliderHeritageItem:IndexToItem(Index)
     if tonumber(Index) then
         if tonumber(Index) == 0 then
@@ -178,21 +208,29 @@ function UIMenuSliderHeritageItem:IndexToItem(Index)
 end
 
 ---SetLeftBadge
+---@return function
+---@public
 function UIMenuSliderHeritageItem:SetLeftBadge()
     error("This item does not support badges")
 end
 
 ---SetRightBadge
+---@return function
+---@public
 function UIMenuSliderHeritageItem:SetRightBadge()
     error("This item does not support badges")
 end
 
 ---RightLabel
+---@return function
+---@public
 function UIMenuSliderHeritageItem:RightLabel()
     error("This item does not support a right label")
 end
 
 ---Draw
+---@return nil
+---@public
 function UIMenuSliderHeritageItem:Draw()
     self.Base:Draw()
     if self:Enabled() then

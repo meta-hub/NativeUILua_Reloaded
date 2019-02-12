@@ -1,5 +1,11 @@
+---@type table
 UIResRectangle = setmetatable({}, UIResRectangle)
+
+---@type table
 UIResRectangle.__index = UIResRectangle
+
+---@type table
+---@return string
 UIResRectangle.__call = function()
     return "Rectangle"
 end
@@ -13,6 +19,8 @@ end
 ---@param G number
 ---@param B number
 ---@param A number
+---@return table
+---@public
 function UIResRectangle.New(X, Y, Width, Height, R, G, B, A)
     local _UIResRectangle = {
         X = tonumber(X) or 0,
@@ -27,6 +35,8 @@ end
 ---Position
 ---@param X number
 ---@param Y number
+---@return table
+---@public
 function UIResRectangle:Position(X, Y)
     if tonumber(X) and tonumber(Y) then
         self.X = tonumber(X)
@@ -39,6 +49,8 @@ end
 ---Size
 ---@param Width number
 ---@param Height number
+---@return table
+---@public
 function UIResRectangle:Size(Width, Height)
     if tonumber(Width) and tonumber(Height) then
         self.Width = tonumber(Width)
@@ -53,6 +65,8 @@ end
 ---@param G number
 ---@param B number
 ---@param A number
+---@return table
+---@public
 function UIResRectangle:Colour(R, G, B, A)
     if tonumber(R) or tonumber(G) or tonumber(B) or tonumber(A) then
         self._Colour.R = tonumber(R) or 255
@@ -65,6 +79,8 @@ function UIResRectangle:Colour(R, G, B, A)
 end
 
 ---Draw
+---@return table
+---@public
 function UIResRectangle:Draw()
     local Position = self:Position()
     local Size = self:Size()

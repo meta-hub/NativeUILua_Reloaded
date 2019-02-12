@@ -1,3 +1,4 @@
+---@type table
 CharacterMap = {
     [' '] = 6,
     ['!'] = 6,
@@ -96,6 +97,7 @@ CharacterMap = {
 
 ---MeasureString
 ---@param str string
+---@return string
 function MeasureString(str)
     local output = 0
     for i = 1, GetCharacterCount(str), 1 do

@@ -1,5 +1,7 @@
+---@type table
 ColoursPanel = {}
 
+---@type table
 ColoursPanel.HairCut = {
     { 22, 19, 19 }, -- 0
     { 30, 28, 25 }, -- 1

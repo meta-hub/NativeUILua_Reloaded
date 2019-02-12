@@ -8,6 +8,7 @@ UITimerBarPool.__index = UITimerBarPool
 
 ---New
 ---@return table
+---@public
 function UITimerBarPool.New()
     local _UITimerBarPool = {
         TimerBars = {},
@@ -15,6 +16,10 @@ function UITimerBarPool.New()
     return setmetatable(_UITimerBarPool, UITimerBarPool)
 end
 
+---Add
+---@param TimerBar table
+---@return table
+---@public
 function UITimerBarPool:Add(TimerBar)
     if TimerBar() == "UITimerBarProgressItem" or "UITimerBarItem" then
         table.insert(self.TimerBars, TimerBar)
@@ -22,12 +27,18 @@ function UITimerBarPool:Add(TimerBar)
     end
 end
 
+---Remove
+---@param id number
+---@return number
+---@public
 function UITimerBarPool:Remove(id)
     table.remove(self.TimerBars, id)
     return self.TimerBars
 end
 
 ---Draw
+---@return nil
+---@public
 function UITimerBarPool:Draw()
     for _, TimerBar in pairs(self.TimerBars) do
         TimerBar:Draw(38 * _)

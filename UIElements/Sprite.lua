@@ -1,5 +1,11 @@
+---@type table
 Sprite = setmetatable({}, Sprite)
+
+---@type table
 Sprite.__index = Sprite
+
+---@type table
+---@return string
 Sprite.__call = function()
     return "Sprite"
 end
@@ -16,6 +22,8 @@ end
 ---@param G number
 ---@param B number
 ---@param A number
+---@return table
+---@public
 function Sprite.New(TxtDictionary, TxtName, X, Y, Width, Height, Heading, R, G, B, A)
     local _Sprite = {
         TxtDictionary = tostring(TxtDictionary),
@@ -33,6 +41,8 @@ end
 ---Position
 ---@param X number
 ---@param Y number
+---@return table
+---@public
 function Sprite:Position(X, Y)
     if tonumber(X) and tonumber(Y) then
         self.X = tonumber(X)
@@ -45,6 +55,8 @@ end
 ---Size
 ---@param Width number
 ---@param Height number
+---@return table
+---@public
 function Sprite:Size(Width, Height)
     if tonumber(Width) and tonumber(Width) then
         self.Width = tonumber(Width)
@@ -59,6 +71,8 @@ end
 ---@param G number
 ---@param B number
 ---@param A number
+---@return table
+---@public
 function Sprite:Colour(R, G, B, A)
     if tonumber(R) or tonumber(G) or tonumber(B) or tonumber(A) then
         self._Colour.R = tonumber(R) or 255
@@ -71,6 +85,8 @@ function Sprite:Colour(R, G, B, A)
 end
 
 ---Draw
+---@return nil
+---@public
 function Sprite:Draw()
     if not HasStreamedTextureDictLoaded(self.TxtDictionary) then
         RequestStreamedTextureDict(self.TxtDictionary, true)

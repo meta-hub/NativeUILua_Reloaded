@@ -1,15 +1,339 @@
-print("NativeUILua-Reloaded - 1.0.5")
-print("Github download : https://github.com/iTexZoz/NativeUILua-Reloaded/releases")
-print("[Feature Suggestions] and [Frequently asked question] : https://github.com/iTexZoz/NativeUILua-Reloaded/issues/9")
-print("NativeUILua-Reloaded WIKI : https://github.com/iTexZoz/NativeUILua-Reloaded/wiki")
-print("Does not hesitate to contribute to the project.")
-
+---[[[
+--[[
+Wrapper/Utility.llua
+]]--
 
 --[[
 Sprite.lua
 ]]--
+
+--[[
+UIResRectangle.lua
+]]--
+
+--[[
+UIResText.lua
+]]--
+
+--[[
+UIVisual.lua
+]]--
+
+--[[
+UIMenu/elements/Badge.lua
+]]--
+
+--[[
+UIMenu/elements/Colours.lua
+]]--
+
+--[[
+UIMenu/elements/ColoursPanel.lua
+]]--
+
+--[[
+UIMenu/elements/StringMeasurer.lua
+]]--
+
+--[[
+UIMenu/items/UIMenuCheckboxItem.lua
+]]--
+
+--[[
+UIMenu/items/UIMenuColouredItem.lua
+]]--
+
+--[[
+UIMenu/items/UIMenuItem.lua
+]]--
+
+--[[
+UIMenu/items/UIMenuListItem.lua
+]]--
+
+--[[
+UIMenu/items/UIMenuProgressItem.lua
+]]--
+
+--[[
+UIMenu/items/UIMenuSliderHeritageItem.lua
+]]--
+
+--[[
+UIMenu/items/UIMenuSliderItem.lua
+]]--
+
+--[[
+UIMenu/panels/UIMenuColourPanel.lua
+]]--
+
+--[[
+UIMenu/panels/UIMenuGridPanel.lua
+]]--
+
+--[[
+UIMenu/panels/UIMenuHorizontalOneLineGridPanel.lua
+]]--
+
+--[[
+UIMenu/panels/UIMenuPercentagePanel.lua
+]]--
+
+--[[
+UIMenu/panels/UIMenuStatisticsPanel.lua
+]]--
+
+--[[
+UIMenu/panels/UIMenuVerticalOneLineGridPanel.lua
+]]--
+
+--[[
+UIMenu/windows/UIMenuHeritageWindow.lua
+]]--
+
+--[[
+UIMenu/MenuPool.lua
+]]--
+
+--[[
+UIMenu/UIMenu.lua
+]]--
+
+--[[
+UITimerBar/items/UITimerBarItem.lua
+]]--
+
+--[[
+UITimerBar/items/UITimerBarProgressItem.lua
+]]--
+
+--[[
+UITimerBar/items/UITimerBarPool.lua
+]]--
+
+--[[
+NativeUI.Lua
+]]--
+------------------------------------------------------------
+------------------------------------------------------------
+------------------------------------------------------------
+--[[
+Wrapper/Utility.llua
+]]--
+---GetResolution
+---@return table
+function GetResolution()
+    local W, H = GetActiveScreenResolution()
+    if (W / H) > 3.5 then
+        return GetScreenResolution()
+    else
+        return W, H
+    end
+end
+
+---FormatXWYH
+---@param Value number
+---@param Value2 number
+---@return table
+function FormatXWYH(Value, Value2)
+    return Value / 1920, Value2 / 1080
+end
+
+---round
+---@param num number
+---@param numDecimalPlaces number
+---@return number
+function math.round(num, numDecimalPlaces)
+    return tonumber(string.format("%." .. (numDecimalPlaces or 0) .. "f", num))
+end
+
+---tobool
+---@param input boolean
+---@return boolean
+function tobool(input)
+    if input == "true" or tonumber(input) == 1 or input == true then
+        return true
+    else
+        return false
+    end
+end
+
+---split
+---@param inputstr string
+---@param sep string
+---@return string
+function string.split(inputstr, sep)
+    if sep == nil then
+        sep = "%s"
+    end
+    local t = {};
+    i = 1
+    for str in string.gmatch(inputstr, "([^" .. sep .. "]+)") do
+        t[i] = str
+        i = i + 1
+    end
+    return t
+end
+
+---starts
+---@param String string
+---@param Start string
+---@return string
+function string.starts(String, Start)
+    return string.sub(String, 1, string.len(Start)) == Start
+end
+
+---IsMouseInBounds
+---@param X number
+---@param Y number
+---@param Width number
+---@param Height number
+---@return number
+function IsMouseInBounds(X, Y, Width, Height)
+    local MX, MY = math.round(GetControlNormal(0, 239) * 1920), math.round(GetControlNormal(0, 240) * 1080)
+    MX, MY = FormatXWYH(MX, MY)
+    X, Y = FormatXWYH(X, Y)
+    Width, Height = FormatXWYH(Width, Height)
+    return (MX >= X and MX <= X + Width) and (MY > Y and MY < Y + Height)
+end
+
+---TableDump
+---@param o table
+---@return string
+function TableDump(o)
+    if type(o) == 'table' then
+        local s = '{ '
+        for k, v in pairs(o) do
+            if type(k) ~= 'number' then
+                k = '"' .. k .. '"'
+            end
+            s = s .. '[' .. k .. '] = ' .. TableDump(v) .. ','
+        end
+        return s .. '} '
+    else
+        return print(tostring(o))
+    end
+end
+
+---GetSafeZoneBounds
+---@return table
+function GetSafeZoneBounds()
+    local SafeSize = GetSafeZoneSize()
+    SafeSize = math.round(SafeSize, 2)
+    SafeSize = (SafeSize * 100) - 90
+    SafeSize = 10 - SafeSize
+
+    local W, H = 1920, 1080
+
+    return { X = math.round(SafeSize * ((W / H) * 5.4)), Y = math.round(SafeSize * 5.4) }
+end
+
+---Controller
+---@return nil
+function Controller()
+    return not IsInputDisabled(2)
+end
+
+---RenderText
+---@param Text string
+---@param X number
+---@param Y number
+---@param Font number
+---@param Scale number
+---@param R number
+---@param G number
+---@param B number
+---@param A number
+---@param Alignment number
+---@param DropShadow number
+---@param Outline number
+---@param WordWrap number
+---@return nil
+function RenderText(Text, X, Y, Font, Scale, R, G, B, A, Alignment, DropShadow, Outline, WordWrap)
+    Text = tostring(Text)
+    X, Y = FormatXWYH(X, Y)
+    SetTextFont(Font or 0)
+    SetTextScale(1.0, Scale or 0)
+    SetTextColour(R or 255, G or 255, B or 255, A or 255)
+
+    if DropShadow then
+        SetTextDropShadow()
+    end
+    if Outline then
+        SetTextOutline()
+    end
+
+    if Alignment ~= nil then
+        if Alignment == 1 or Alignment == "Center" or Alignment == "Centre" then
+            SetTextCentre(true)
+        elseif Alignment == 2 or Alignment == "Right" then
+            SetTextRightJustify(true)
+            SetTextWrap(0, X)
+        end
+    end
+
+    if tonumber(WordWrap) then
+        if tonumber(WordWrap) ~= 0 then
+            WordWrap, _ = FormatXWYH(WordWrap, 0)
+            SetTextWrap(WordWrap, X - WordWrap)
+        end
+    end
+
+    BeginTextCommandDisplayText("STRING")
+    AddLongString(Text)
+    EndTextCommandDisplayText(X, Y)
+end
+
+---DrawRectangle
+---@param X number
+---@param Y number
+---@param Width number
+---@param Height number
+---@param R number
+---@param G number
+---@param B number
+---@param A number
+---@return nil
+function DrawRectangle(X, Y, Width, Height, R, G, B, A)
+    X, Y, Width, Height = X or 0, Y or 0, Width or 0, Height or 0
+    X, Y = FormatXWYH(X, Y)
+    Width, Height = FormatXWYH(Width, Height)
+    DrawRect(X + Width * 0.5, Y + Height * 0.5, Width, Height, tonumber(R) or 255, tonumber(G) or 255, tonumber(B) or 255, tonumber(A) or 255)
+end
+
+---DrawTexture
+---@param TxtDictionary string
+---@param TxtName string
+---@param X number
+---@param Y number
+---@param Width number
+---@param Height number
+---@param Heading number
+---@param R number
+---@param G number
+---@param B number
+---@param A number
+---@return nil
+function DrawTexture(TxtDictionary, TxtName, X, Y, Width, Height, Heading, R, G, B, A)
+    if not HasStreamedTextureDictLoaded(tostring(TxtDictionary) or "") then
+        RequestStreamedTextureDict(tostring(TxtDictionary) or "", true)
+    end
+    X, Y, Width, Height = X or 0, Y or 0, Width or 0, Height or 0
+    X, Y = FormatXWYH(X, Y)
+    Width, Height = FormatXWYH(Width, Height)
+    DrawSprite(tostring(TxtDictionary) or "", tostring(TxtName) or "", X + Width * 0.5, Y + Height * 0.5, Width, Height, tonumber(Heading) or 0, tonumber(R) or 255, tonumber(G) or 255, tonumber(B) or 255, tonumber(A) or 255)
+end
+--[[
+Sprite.lua
+]]--
+---@type table
 Sprite = setmetatable({}, Sprite)
+
+---@type table
 Sprite.__index = Sprite
+
+---@type table
+---@return string
 Sprite.__call = function()
     return "Sprite"
 end
@@ -26,6 +350,8 @@ end
 ---@param G number
 ---@param B number
 ---@param A number
+---@return table
+---@public
 function Sprite.New(TxtDictionary, TxtName, X, Y, Width, Height, Heading, R, G, B, A)
     local _Sprite = {
         TxtDictionary = tostring(TxtDictionary),
@@ -43,6 +369,8 @@ end
 ---Position
 ---@param X number
 ---@param Y number
+---@return table
+---@public
 function Sprite:Position(X, Y)
     if tonumber(X) and tonumber(Y) then
         self.X = tonumber(X)
@@ -55,6 +383,8 @@ end
 ---Size
 ---@param Width number
 ---@param Height number
+---@return table
+---@public
 function Sprite:Size(Width, Height)
     if tonumber(Width) and tonumber(Width) then
         self.Width = tonumber(Width)
@@ -69,6 +399,8 @@ end
 ---@param G number
 ---@param B number
 ---@param A number
+---@return table
+---@public
 function Sprite:Colour(R, G, B, A)
     if tonumber(R) or tonumber(G) or tonumber(B) or tonumber(A) then
         self._Colour.R = tonumber(R) or 255
@@ -81,6 +413,8 @@ function Sprite:Colour(R, G, B, A)
 end
 
 ---Draw
+---@return nil
+---@public
 function Sprite:Draw()
     if not HasStreamedTextureDictLoaded(self.TxtDictionary) then
         RequestStreamedTextureDict(self.TxtDictionary, true)
@@ -91,12 +425,17 @@ function Sprite:Draw()
     Position.X, Position.Y = FormatXWYH(Position.X, Position.Y)
     DrawSprite(self.TxtDictionary, self.TxtName, Position.X + Size.Width * 0.5, Position.Y + Size.Height * 0.5, Size.Width, Size.Height, self.Heading, self._Colour.R, self._Colour.G, self._Colour.B, self._Colour.A)
 end
-
 --[[
 UIResRectangle.lua
 ]]--
+---@type table
 UIResRectangle = setmetatable({}, UIResRectangle)
+
+---@type table
 UIResRectangle.__index = UIResRectangle
+
+---@type table
+---@return string
 UIResRectangle.__call = function()
     return "Rectangle"
 end
@@ -110,6 +449,8 @@ end
 ---@param G number
 ---@param B number
 ---@param A number
+---@return table
+---@public
 function UIResRectangle.New(X, Y, Width, Height, R, G, B, A)
     local _UIResRectangle = {
         X = tonumber(X) or 0,
@@ -124,6 +465,8 @@ end
 ---Position
 ---@param X number
 ---@param Y number
+---@return table
+---@public
 function UIResRectangle:Position(X, Y)
     if tonumber(X) and tonumber(Y) then
         self.X = tonumber(X)
@@ -136,6 +479,8 @@ end
 ---Size
 ---@param Width number
 ---@param Height number
+---@return table
+---@public
 function UIResRectangle:Size(Width, Height)
     if tonumber(Width) and tonumber(Height) then
         self.Width = tonumber(Width)
@@ -150,6 +495,8 @@ end
 ---@param G number
 ---@param B number
 ---@param A number
+---@return table
+---@public
 function UIResRectangle:Colour(R, G, B, A)
     if tonumber(R) or tonumber(G) or tonumber(B) or tonumber(A) then
         self._Colour.R = tonumber(R) or 255
@@ -162,6 +509,8 @@ function UIResRectangle:Colour(R, G, B, A)
 end
 
 ---Draw
+---@return table
+---@public
 function UIResRectangle:Draw()
     local Position = self:Position()
     local Size = self:Size()
@@ -173,8 +522,14 @@ end
 --[[
 UIResText.lua
 ]]--
+---@type table
 UIResText = setmetatable({}, UIResText)
+
+---@type table
 UIResText.__index = UIResText
+
+---@type table
+---@return string
 UIResText.__call = function()
     return "Text"
 end
@@ -289,6 +644,8 @@ end
 ---@param DropShadow number
 ---@param Outline number
 ---@param WordWrap number
+---@return table
+---@public
 function UIResText.New(Text, X, Y, Scale, R, G, B, A, Font, Alignment, DropShadow, Outline, WordWrap)
     local _UIResText = {
         _Text = tostring(Text) or "",
@@ -308,6 +665,8 @@ end
 ---Position
 ---@param X number
 ---@param Y number
+---@return table
+---@public
 function UIResText:Position(X, Y)
     if tonumber(X) and tonumber(Y) then
         self.X = tonumber(X)
@@ -322,6 +681,8 @@ end
 ---@param G number
 ---@param B number
 ---@param A number
+---@return table
+---@public
 function UIResText:Colour(R, G, B, A)
     if tonumber(R) and tonumber(G) and tonumber(B) and tonumber(A) then
         self._Colour.R = tonumber(R)
@@ -335,6 +696,8 @@ end
 
 ---Text
 ---@param Text string
+---@return string
+---@public
 function UIResText:Text(Text)
     if tostring(Text) and Text ~= nil then
         self._Text = tostring(Text)
@@ -344,6 +707,8 @@ function UIResText:Text(Text)
 end
 
 ---Draw
+---@return nil
+---@public
 function UIResText:Draw()
     local Position = self:Position()
     Position.X, Position.Y = FormatXWYH(Position.X, Position.Y)
@@ -379,19 +744,18 @@ function UIResText:Draw()
     EndTextCommandDisplayText(Position.X, Position.Y)
 end
 
-
 --[[
 UIVisual.lua
 ]]--
----
---- Generated by EmmyLua(https://github.com/EmmyLua)
---- Created by Dylan Malandain.
---- DateTime: 23/01/2019 00:51
----
----
+---@type table
 UIVisual = setmetatable({}, UIVisual)
+
+---@type table
 UIVisual.__index = UIVisual
 
+---Popup
+---@param array table
+---@public
 function UIVisual:Popup(array)
     ClearPrints()
     if (array.colors == nil) then
@@ -419,6 +783,9 @@ function UIVisual:Popup(array)
     end
 end
 
+---PopupChar
+---@param array table
+---@public
 function UIVisual:PopupChar(array)
     if (array.colors == nil) then
         SetNotificationBackgroundColor(140)
@@ -461,6 +828,9 @@ function UIVisual:PopupChar(array)
     DrawNotification(false, true)
 end
 
+---Text
+---@param array table
+---@public
 function UIVisual:Text(array)
     ClearPrints()
     SetTextEntry_2("STRING")
@@ -487,6 +857,9 @@ function UIVisual:Text(array)
     end
 end
 
+---FloatingHelpText
+---@param array table
+---@public
 function UIVisual:FloatingHelpText(array)
     BeginTextCommandDisplayHelp("STRING")
     if (array.message ~= nil) then
@@ -508,6 +881,9 @@ function UIVisual:FloatingHelpText(array)
     end
 end
 
+---ShowFreemodeMessage
+---@param array table
+---@public
 function UIVisual:ShowFreemodeMessage(array)
     if (array.sound ~= nil) then
         if (array.sound.audio_name ~= nil) then
@@ -576,6 +952,8 @@ end
 --[[
 UIMenu/elements/Badge.lua
 ]]--
+
+---@type table
 BadgeStyle = {
     None = 0,
     BronzeMedal = 1,
@@ -602,6 +980,7 @@ BadgeStyle = {
     Tick = 22
 }
 
+---@type table
 BadgeTexture = {
     [0] = function()
         return ""
@@ -737,6 +1116,7 @@ BadgeTexture = {
     end,
 }
 
+---@type table
 BadgeDictionary = {
     [0] = function(Selected)
         if Selected then
@@ -754,6 +1134,7 @@ BadgeDictionary = {
     end,
 }
 
+---@type table
 BadgeColour = {
     [5] = function(Selected)
         if Selected then
@@ -781,6 +1162,7 @@ BadgeColour = {
 ---GetBadgeTexture
 ---@param Badge number
 ---@param Selected table
+---@return string
 function GetBadgeTexture(Badge, Selected)
     if BadgeTexture[Badge] then
         return BadgeTexture[Badge](Selected)
@@ -792,6 +1174,7 @@ end
 ---GetBadgeDictionary
 ---@param Badge number
 ---@param Selected table
+---@return string
 function GetBadgeDictionary(Badge, Selected)
     if BadgeDictionary[Badge] then
         return BadgeDictionary[Badge](Selected)
@@ -803,6 +1186,7 @@ end
 ---GetBadgeColour
 ---@param Badge number
 ---@param Selected table
+---@return number
 function GetBadgeColour(Badge, Selected)
     if BadgeColour[Badge] then
         return BadgeColour[Badge](Selected)
@@ -813,6 +1197,7 @@ end
 --[[
 UIMenu/elements/Colours.lua
 ]]--
+---@type table
 Colours = {
     DefaultColors = { R = 0, G = 0, B = 0, A = 0 },
     PureWhite = { R = 255, G = 255, B = 255, A = 255 },
@@ -1035,8 +1420,10 @@ Colours = {
 --[[
 UIMenu/elements/ColoursPanel.lua
 ]]--
+---@type table
 ColoursPanel = {}
 
+---@type table
 ColoursPanel.HairCut = {
     { 22, 19, 19 }, -- 0
     { 30, 28, 25 }, -- 1
@@ -1106,6 +1493,7 @@ ColoursPanel.HairCut = {
 --[[
 UIMenu/elements/StringMeasurer.lua
 ]]--
+---@type table
 CharacterMap = {
     [' '] = 6,
     ['!'] = 6,
@@ -1204,6 +1592,7 @@ CharacterMap = {
 
 ---MeasureString
 ---@param str string
+---@return string
 function MeasureString(str)
     local output = 0
     for i = 1, GetCharacterCount(str), 1 do
@@ -1216,8 +1605,14 @@ end
 --[[
 UIMenu/items/UIMenuCheckboxItem.lua
 ]]--
+---@type table
 UIMenuCheckboxItem = setmetatable({}, UIMenuCheckboxItem)
+
+---@type table
 UIMenuCheckboxItem.__index = UIMenuCheckboxItem
+
+---@type table
+---@return string
 UIMenuCheckboxItem.__call = function()
     return "UIMenuItem", "UIMenuCheckboxItem"
 end
@@ -1227,6 +1622,8 @@ end
 ---@param Check boolean
 ---@param Description string
 ---@param CheckboxStyle number
+---@return table
+---@public
 function UIMenuCheckboxItem.New(Text, Check, Description, CheckboxStyle)
     if CheckboxStyle ~= nil then
         CheckboxStyle = tonumber(CheckboxStyle)
@@ -1246,6 +1643,8 @@ end
 
 ---SetParentMenu
 ---@param Menu table
+---@return table
+---@public
 function UIMenuCheckboxItem:SetParentMenu(Menu)
     if Menu() == "UIMenu" then
         self.Base.ParentMenu = Menu
@@ -1256,6 +1655,8 @@ end
 
 ---Position
 ---@param Y number
+---@return nil
+---@public
 function UIMenuCheckboxItem:Position(Y)
     if tonumber(Y) then
         self.Base:Position(Y)
@@ -1265,6 +1666,8 @@ end
 
 ---Selected
 ---@param bool boolean
+---@return boolean
+---@public
 function UIMenuCheckboxItem:Selected(bool)
     if bool ~= nil then
         self.Base._Selected = tobool(bool)
@@ -1275,6 +1678,8 @@ end
 
 ---Hovered
 ---@param bool boolean
+---@return boolean
+---@public
 function UIMenuCheckboxItem:Hovered(bool)
     if bool ~= nil then
         self.Base._Hovered = tobool(bool)
@@ -1285,6 +1690,8 @@ end
 
 ---Enabled
 ---@param bool boolean
+---@return boolean
+---@public
 function UIMenuCheckboxItem:Enabled(bool)
     if bool ~= nil then
         self.Base._Enabled = tobool(bool)
@@ -1295,6 +1702,8 @@ end
 
 ---Description
 ---@param str string
+---@return string
+---@public
 function UIMenuCheckboxItem:Description(str)
     if tostring(str) and str ~= nil then
         self.Base._Description = tostring(str)
@@ -1306,6 +1715,8 @@ end
 ---Offset
 ---@param X number
 ---@param Y number
+---@return table
+---@public
 function UIMenuCheckboxItem:Offset(X, Y)
     if tonumber(X) or tonumber(Y) then
         if tonumber(X) then
@@ -1321,6 +1732,8 @@ end
 
 ---Text
 ---@param Text string
+---@return string
+---@public
 function UIMenuCheckboxItem:Text(Text)
     if tostring(Text) and Text ~= nil then
         self.Base.Text:Text(tostring(Text))
@@ -1330,21 +1743,29 @@ function UIMenuCheckboxItem:Text(Text)
 end
 
 ---SetLeftBadge
+---@return function
+---@public
 function UIMenuCheckboxItem:SetLeftBadge()
     error("This item does not support badges")
 end
 
 ---SetRightBadge
+---@return function
+---@public
 function UIMenuCheckboxItem:SetRightBadge()
     error("This item does not support badges")
 end
 
 ---RightLabel
+---@return function
+---@public
 function UIMenuCheckboxItem:RightLabel()
     error("This item does not support a right label")
 end
 
 ---Draw
+---@return nil
+---@public
 function UIMenuCheckboxItem:Draw()
     self.Base:Draw()
     self.CheckedSprite:Position(380 + self.Base._Offset.X + self.Base.ParentMenu.WidthOffset, self.CheckedSprite.Y)
@@ -1382,8 +1803,14 @@ end
 --[[
 UIMenu/items/UIMenuColouredItem.lua
 ]]--
+---@type table
 UIMenuColouredItem = setmetatable({}, UIMenuColouredItem)
+
+---@type table
 UIMenuColouredItem.__index = UIMenuColouredItem
+
+---@type table
+---@return string
 UIMenuColouredItem.__call = function()
     return "UIMenuItem", "UIMenuColouredItem"
 end
@@ -1393,6 +1820,8 @@ end
 ---@param Description string
 ---@param MainColour table
 ---@param HighlightColour table
+---@return table
+---@public
 function UIMenuColouredItem.New(Text, Description, MainColour, HighlightColour)
     if type(Colour) ~= "table" then
         Colour = { R = 0, G = 0, B = 0, A = 255 }
@@ -1415,9 +1844,12 @@ end
 
 ---SetParentMenu
 ---@param Menu table
+---@return table
+---@public
 function UIMenuColouredItem:SetParentMenu(Menu)
     if Menu() == "UIMenu" then
         self.Base.ParentMenu = Menu
+        self.ParentMenu = Menu
     else
         return self.Base.ParentMenu
     end
@@ -1425,6 +1857,8 @@ end
 
 ---Position
 ---@param Y number
+---@return nil
+---@public
 function UIMenuColouredItem:Position(Y)
     if tonumber(Y) then
         self.Base:Position(Y)
@@ -1434,6 +1868,8 @@ end
 
 ---Selected
 ---@param bool boolean
+---@return boolean
+---@public
 function UIMenuColouredItem:Selected(bool)
     if bool ~= nil then
         self.Base._Selected = tobool(bool)
@@ -1444,6 +1880,8 @@ end
 
 ---Hovered
 ---@param bool boolean
+---@return boolean
+---@public
 function UIMenuColouredItem:Hovered(bool)
     if bool ~= nil then
         self.Base._Hovered = tobool(bool)
@@ -1454,6 +1892,8 @@ end
 
 ---Enabled
 ---@param bool boolean
+---@return boolean
+---@public
 function UIMenuColouredItem:Enabled(bool)
     if bool ~= nil then
         self.Base._Enabled = tobool(bool)
@@ -1464,6 +1904,8 @@ end
 
 ---Description
 ---@param str string
+---@return string
+---@public
 function UIMenuColouredItem:Description(str)
     if tostring(str) and str ~= nil then
         self.Base._Description = tostring(str)
@@ -1475,6 +1917,8 @@ end
 ---Offset
 ---@param X number
 ---@param Y number
+---@return table
+---@public
 function UIMenuColouredItem:Offset(X, Y)
     if tonumber(X) or tonumber(Y) then
         if tonumber(X) then
@@ -1490,6 +1934,8 @@ end
 
 ---Text
 ---@param Text string
+---@return string
+---@public
 function UIMenuColouredItem:Text(Text)
     if tostring(Text) and Text ~= nil then
         self.Base.Text:Text(tostring(Text))
@@ -1502,6 +1948,8 @@ end
 ---@param Text string
 ---@param MainColour table
 ---@param HighlightColour table
+---@return table
+---@public
 function UIMenuColouredItem:RightLabel(Text, MainColour, HighlightColour)
     if tostring(Text) and Text ~= nil then
         if type(MainColour) == "table" then
@@ -1520,6 +1968,8 @@ end
 
 ---SetLeftBadge
 ---@param Badge number
+---@return nil
+---@public
 function UIMenuColouredItem:SetLeftBadge(Badge)
     if tonumber(Badge) then
         self.Base.LeftBadge.Badge = tonumber(Badge)
@@ -1528,6 +1978,8 @@ end
 
 ---SetRightBadge
 ---@param Badge number
+---@return nil
+---@public
 function UIMenuColouredItem:SetRightBadge(Badge)
     if tonumber(Badge) then
         self.Base.RightBadge.Badge = tonumber(Badge)
@@ -1535,15 +1987,24 @@ function UIMenuColouredItem:SetRightBadge(Badge)
 end
 
 ---Draw
+---@return nil
+---@public
 function UIMenuColouredItem:Draw()
+    self.Rectangle:Size(431 + self.ParentMenu.WidthOffset, self.Rectangle.Height)
     self.Rectangle:Draw()
     self.Base:Draw()
 end
 --[[
 UIMenu/items/UIMenuItem.lua
 ]]--
+---@type table
 UIMenuItem = setmetatable({}, UIMenuItem)
+
+---@type table
 UIMenuItem.__index = UIMenuItem
+
+---@type table
+---@return string
 UIMenuItem.__call = function()
     return "UIMenuItem", "UIMenuItem"
 end
@@ -1551,8 +2012,10 @@ end
 ---New
 ---@param Text string
 ---@param Description string
+---@return table
+---@public
 function UIMenuItem.New(Text, Description)
-    _UIMenuItem = {
+    local _UIMenuItem = {
         Rectangle = UIResRectangle.New(0, 0, 431, 38, 255, 255, 255, 20),
         Text = UIResText.New(tostring(Text) or "", 8, 0, 0.33, 245, 245, 245, 255, 0),
         _Description = tostring(Description) or "";
@@ -1580,6 +2043,8 @@ end
 
 ---SetParentMenu
 ---@param Menu table
+---@return table
+---@public
 function UIMenuItem:SetParentMenu(Menu)
     if Menu ~= nil and Menu() == "UIMenu" then
         self.ParentMenu = Menu
@@ -1590,6 +2055,8 @@ end
 
 ---Selected
 ---@param bool boolean
+---@return boolean
+---@public
 function UIMenuItem:Selected(bool)
     if bool ~= nil then
         self._Selected = tobool(bool)
@@ -1600,6 +2067,8 @@ end
 
 ---Hovered
 ---@param bool boolean
+---@return boolean
+---@public
 function UIMenuItem:Hovered(bool)
     if bool ~= nil then
         self._Hovered = tobool(bool)
@@ -1610,6 +2079,8 @@ end
 
 ---Enabled
 ---@param bool boolean
+---@return boolean
+---@public
 function UIMenuItem:Enabled(bool)
     if bool ~= nil then
         self._Enabled = tobool(bool)
@@ -1620,6 +2091,8 @@ end
 
 ---Description
 ---@param str string
+---@return string
+---@public
 function UIMenuItem:Description(str)
     if tostring(str) and str ~= nil then
         self._Description = tostring(str)
@@ -1631,6 +2104,8 @@ end
 ---Offset
 ---@param X number
 ---@param Y number
+---@return thread
+---@public
 function UIMenuItem:Offset(X, Y)
     if tonumber(X) or tonumber(Y) then
         if tonumber(X) then
@@ -1646,6 +2121,8 @@ end
 
 ---Position
 ---@param Y number
+---@return nil
+---@public
 function UIMenuItem:Position(Y)
     if tonumber(Y) then
         self.Rectangle:Position(self._Offset.X, Y + 144 + self._Offset.Y)
@@ -1661,6 +2138,8 @@ end
 ---@param Text string
 ---@param MainColour table
 ---@param HighlightColour table
+---@return table
+---@public
 function UIMenuItem:RightLabel(Text, MainColour, HighlightColour)
     if MainColour ~= nil then
         labelMainColour = MainColour
@@ -1689,6 +2168,8 @@ end
 
 ---SetLeftBadge
 ---@param Badge number
+---@return nil
+---@public
 function UIMenuItem:SetLeftBadge(Badge)
     if tonumber(Badge) then
         self.LeftBadge.Badge = tonumber(Badge)
@@ -1697,6 +2178,8 @@ end
 
 ---SetRightBadge
 ---@param Badge number
+---@return nil
+---@public
 function UIMenuItem:SetRightBadge(Badge)
     if tonumber(Badge) then
         self.RightBadge.Badge = tonumber(Badge)
@@ -1705,6 +2188,8 @@ end
 
 ---Text
 ---@param Text string
+---@return string
+---@public
 function UIMenuItem:Text(Text)
     if tostring(Text) and Text ~= nil then
         self.Text:Text(tostring(Text))
@@ -1715,6 +2200,8 @@ end
 
 ---AddPanel
 ---@param Panel table
+---@return nil
+---@public
 function UIMenuItem:AddPanel(Panel)
     if Panel() == "UIMenuPanel" then
         table.insert(self.Panels, Panel)
@@ -1724,6 +2211,8 @@ end
 
 ---RemovePanelAt
 ---@param Index table
+---@return nil
+---@public
 function UIMenuItem:RemovePanelAt(Index)
     if tonumber(Index) then
         if self.Panels[Index] then
@@ -1734,6 +2223,8 @@ end
 
 ---FindPanelIndex
 ---@param Panel table
+---@return number
+---@public
 function UIMenuItem:FindPanelIndex(Panel)
     if Panel() == "UIMenuPanel" then
         for Index = 1, #self.Panels do
@@ -1745,6 +2236,9 @@ function UIMenuItem:FindPanelIndex(Panel)
     return nil
 end
 
+---FindPanelItem
+---@return number
+---@public
 function UIMenuItem:FindPanelItem()
     for Index = #self.Items, 1, -1 do
         if self.Items[Index].Panel then
@@ -1754,6 +2248,9 @@ function UIMenuItem:FindPanelItem()
     return nil
 end
 
+---Draw
+---@return nil
+---@public
 function UIMenuItem:Draw()
     self.Rectangle:Size(431 + self.ParentMenu.WidthOffset, self.Rectangle.Height)
     self.SelectedSprite:Size(431 + self.ParentMenu.WidthOffset, self.SelectedSprite.Height)
@@ -1813,8 +2310,14 @@ end
 --[[
 UIMenu/items/UIMenuListItem.lua
 ]]--
+---@type table
 UIMenuListItem = setmetatable({}, UIMenuListItem)
+
+---@type table
 UIMenuListItem.__index = UIMenuListItem
+
+---@type table
+---@return string
 UIMenuListItem.__call = function()
     return "UIMenuItem", "UIMenuListItem"
 end
@@ -1824,6 +2327,8 @@ end
 ---@param Items table
 ---@param Index number
 ---@param Description string
+---@return table
+---@public
 function UIMenuListItem.New(Text, Items, Index, Description)
     if type(Items) ~= "table" then
         Items = {}
@@ -1849,6 +2354,8 @@ end
 
 ---SetParentMenu
 ---@param Menu table
+---@return table
+---@public
 function UIMenuListItem:SetParentMenu(Menu)
     if Menu ~= nil and Menu() == "UIMenu" then
         self.Base.ParentMenu = Menu
@@ -1859,6 +2366,8 @@ end
 
 ---Position
 ---@param Y number
+---@return nil
+---@public
 function UIMenuListItem:Position(Y)
     if tonumber(Y) then
         self.LeftArrow:Position(300 + self.Base._Offset.X + self.Base.ParentMenu.WidthOffset, 147 + Y + self.Base._Offset.Y)
@@ -1870,6 +2379,8 @@ end
 
 ---Selected
 ---@param bool boolean
+---@return boolean
+---@public
 function UIMenuListItem:Selected(bool)
     if bool ~= nil then
         self.Base._Selected = tobool(bool)
@@ -1880,6 +2391,8 @@ end
 
 ---Hovered
 ---@param bool boolean
+---@return boolean
+---@public
 function UIMenuListItem:Hovered(bool)
     if bool ~= nil then
         self.Base._Hovered = tobool(bool)
@@ -1890,6 +2403,8 @@ end
 
 ---Enabled
 ---@param bool boolean
+---@return boolean
+---@public
 function UIMenuListItem:Enabled(bool)
     if bool ~= nil then
         self.Base._Enabled = tobool(bool)
@@ -1900,6 +2415,8 @@ end
 
 ---Description
 ---@param str string
+---@return string
+---@public
 function UIMenuListItem:Description(str)
     if tostring(str) and str ~= nil then
         self.Base._Description = tostring(str)
@@ -1911,6 +2428,8 @@ end
 ---Offset
 ---@param X number
 ---@param Y number
+---@return table
+---@public
 function UIMenuListItem:Offset(X, Y)
     if tonumber(X) or tonumber(Y) then
         if tonumber(X) then
@@ -1926,6 +2445,8 @@ end
 
 ---Text
 ---@param Text string
+---@return string
+---@public
 function UIMenuListItem:Text(Text)
     if tostring(Text) and Text ~= nil then
         self.Base.Text:Text(tostring(Text))
@@ -1936,6 +2457,8 @@ end
 
 ---Index
 ---@param Index table
+---@return number
+---@public
 function UIMenuListItem:Index(Index)
     if tonumber(Index) then
         if tonumber(Index) > #self.Items then
@@ -1952,6 +2475,8 @@ end
 
 ---ItemToIndex
 ---@param Item table
+---@return table
+---@public
 function UIMenuListItem:ItemToIndex(Item)
     for i = 1, #self.Items do
         if type(Item) == type(self.Items[i]) and Item == self.Items[i] then
@@ -1964,6 +2489,8 @@ end
 
 ---IndexToItem
 ---@param Index table
+---@return table
+---@public
 function UIMenuListItem:IndexToItem(Index)
     if tonumber(Index) then
         if tonumber(Index) == 0 then
@@ -1976,22 +2503,30 @@ function UIMenuListItem:IndexToItem(Index)
 end
 
 ---SetLeftBadge
+---@return function
+---@public
 function UIMenuListItem:SetLeftBadge()
     error("This item does not support badges")
 end
 
 ---SetRightBadge
+---@return function
+---@public
 function UIMenuListItem:SetRightBadge()
     error("This item does not support badges")
 end
 
 ---RightLabel
+---@return function
+---@public
 function UIMenuListItem:RightLabel()
     error("This item does not support a right label")
 end
 
 ---AddPanel
 ---@param Panel table
+---@return nil
+---@public
 function UIMenuListItem:AddPanel(Panel)
     if Panel() == "UIMenuPanel" then
         table.insert(self.Panels, Panel)
@@ -2001,6 +2536,8 @@ end
 
 ---RemovePanelAt
 ---@param Index table
+---@return nil
+---@public
 function UIMenuListItem:RemovePanelAt(Index)
     if tonumber(Index) then
         if self.Panels[Index] then
@@ -2011,6 +2548,8 @@ end
 
 ---FindPanelIndex
 ---@param Panel table
+---@return number
+---@public
 function UIMenuListItem:FindPanelIndex(Panel)
     if Panel() == "UIMenuPanel" then
         for Index = 1, #self.Panels do
@@ -2023,6 +2562,8 @@ function UIMenuListItem:FindPanelIndex(Panel)
 end
 
 ---FindPanelItem
+---@return number
+---@public
 function UIMenuListItem:FindPanelItem()
     for Index = #self.Items, 1, -1 do
         if self.Items[Index].Panel then
@@ -2033,6 +2574,8 @@ function UIMenuListItem:FindPanelItem()
 end
 
 ---Draw
+---@return nil
+---@public
 function UIMenuListItem:Draw()
     self.Base:Draw()
 
@@ -2067,8 +2610,14 @@ end
 --[[
 UIMenu/items/UIMenuProgressItem.lua
 ]]--
+---@type table
 UIMenuProgressItem = setmetatable({}, UIMenuProgressItem)
+
+---@type table
 UIMenuProgressItem.__index = UIMenuProgressItem
+
+---@type table
+---@return string
 UIMenuProgressItem.__call = function()
     return "UIMenuItem", "UIMenuProgressItem"
 end
@@ -2079,6 +2628,8 @@ end
 ---@param Index number
 ---@param Description string
 ---@param Counter boolean
+---@return table
+---@public
 function UIMenuProgressItem.New(Text, Items, Index, Description, Counter)
     if type(Items) ~= "table" then
         Items = {}
@@ -2119,6 +2670,8 @@ end
 
 ---SetParentMenu
 ---@param Menu table
+---@return table
+---@public
 function UIMenuProgressItem:SetParentMenu(Menu)
     if Menu() == "UIMenu" then
         self.Base.ParentMenu = Menu
@@ -2129,6 +2682,8 @@ end
 
 ---Position
 ---@param Y number
+---@return nil
+---@public
 function UIMenuProgressItem:Position(Y)
     if tonumber(Y) then
         self.Base:Position(Y)
@@ -2141,6 +2696,8 @@ end
 
 ---Selected
 ---@param bool number
+---@return boolean
+---@public
 function UIMenuProgressItem:Selected(bool)
     if bool ~= nil then
         self.Base._Selected = tobool(bool)
@@ -2151,6 +2708,8 @@ end
 
 ---Hovered
 ---@param bool boolean
+---@return boolean
+---@public
 function UIMenuProgressItem:Hovered(bool)
     if bool ~= nil then
         self.Base._Hovered = tobool(bool)
@@ -2161,6 +2720,8 @@ end
 
 ---Enabled
 ---@param bool boolean
+---@return boolean
+---@public
 function UIMenuProgressItem:Enabled(bool)
     if bool ~= nil then
         self.Base._Enabled = tobool(bool)
@@ -2171,6 +2732,8 @@ end
 
 ---Description
 ---@param str string
+---@return string
+---@public
 function UIMenuProgressItem:Description(str)
     if tostring(str) and str ~= nil then
         self.Base._Description = tostring(str)
@@ -2182,6 +2745,8 @@ end
 ---Offset
 ---@param X number
 ---@param Y number
+---@return table
+---@public
 function UIMenuProgressItem:Offset(X, Y)
     if tonumber(X) or tonumber(Y) then
         if tonumber(X) then
@@ -2197,6 +2762,8 @@ end
 
 ---Text
 ---@param Text string
+---@return string
+---@public
 function UIMenuProgressItem:Text(Text)
     if tostring(Text) and Text ~= nil then
         self.Base.Text:Text(tostring(Text))
@@ -2207,6 +2774,8 @@ end
 
 ---Index
 ---@param Index table
+---@return number
+---@public
 function UIMenuProgressItem:Index(Index)
     if tonumber(Index) then
         if tonumber(Index) > #self.Data.Items then
@@ -2231,6 +2800,8 @@ end
 
 ---ItemToIndex
 ---@param Item table
+---@return table
+---@public
 function UIMenuProgressItem:ItemToIndex(Item)
     for i = 1, #self.Data.Items do
         if type(Item) == type(self.Data.Items[i]) and Item == self.Data.Items[i] then
@@ -2243,6 +2814,8 @@ end
 
 ---IndexToItem
 ---@param Index table
+---@return table
+---@public
 function UIMenuProgressItem:IndexToItem(Index)
     if tonumber(Index) then
         if tonumber(Index) == 0 then
@@ -2255,28 +2828,38 @@ function UIMenuProgressItem:IndexToItem(Index)
 end
 
 ---SetLeftBadge
+---@return function
+---@public
 function UIMenuProgressItem:SetLeftBadge()
     error("This item does not support badges")
 end
 
 ---SetRightBadge
+---@return function
+---@public
 function UIMenuProgressItem:SetRightBadge()
     error("This item does not support badges")
 end
 
 ---RightLabel
+---@return function
+---@public
 function UIMenuProgressItem:RightLabel()
     error("This item does not support a right label")
 end
 
 ---CalculateProgress
 ---@param CursorX number
+---@return nil
+---@public
 function UIMenuProgressItem:CalculateProgress(CursorX)
     local Progress = CursorX - self.Bar.X
     self:Index(math.round(#self.Data.Items * (((Progress >= 0 and Progress <= self.Data.Max) and Progress or ((Progress < 0) and 0 or self.Data.Max)) / self.Data.Max)))
 end
 
 ---Draw
+---@return nil
+---@public
 function UIMenuProgressItem:Draw()
     self.Base:Draw()
 
@@ -2294,8 +2877,14 @@ end
 --[[
 UIMenu/items/UIMenuSliderHeritageItem.lua
 ]]--
+---@type table
 UIMenuSliderHeritageItem = setmetatable({}, UIMenuSliderHeritageItem)
+
+---@type table
 UIMenuSliderHeritageItem.__index = UIMenuSliderHeritageItem
+
+---@type table
+---@return string
 UIMenuSliderHeritageItem.__call = function()
     return "UIMenuItem", "UIMenuSliderHeritageItem"
 end
@@ -2307,6 +2896,8 @@ end
 ---@param Description string
 ---@param SliderColors table
 ---@param BackgroundSliderColors table
+---@return table
+---@public
 function UIMenuSliderHeritageItem.New(Text, Items, Index, Description, SliderColors, BackgroundSliderColors)
     if type(Items) ~= "table" then
         Items = {}
@@ -2347,6 +2938,8 @@ end
 
 ---SetParentMenu
 ---@param Menu table
+---@return table
+---@public
 function UIMenuSliderHeritageItem:SetParentMenu(Menu)
     if Menu() == "UIMenu" then
         self.Base.ParentMenu = Menu
@@ -2357,6 +2950,8 @@ end
 
 ---Position
 ---@param Y number
+---@return nil
+---@public
 function UIMenuSliderHeritageItem:Position(Y)
     if tonumber(Y) then
         self.Background:Position(250 + self.Base._Offset.X + self.Base.ParentMenu.WidthOffset, Y + 158.5 + self.Base._Offset.Y)
@@ -2370,6 +2965,8 @@ end
 
 ---Selected
 ---@param bool boolean
+---@return boolean
+---@public
 function UIMenuSliderHeritageItem:Selected(bool)
     if bool ~= nil then
         self.Base._Selected = tobool(bool)
@@ -2380,6 +2977,8 @@ end
 
 ---Hovered
 ---@param bool boolean
+---@return boolean
+---@public
 function UIMenuSliderHeritageItem:Hovered(bool)
     if bool ~= nil then
         self.Base._Hovered = tobool(bool)
@@ -2390,6 +2989,8 @@ end
 
 ---Enabled
 ---@param bool boolean
+---@return boolean
+---@public
 function UIMenuSliderHeritageItem:Enabled(bool)
     if bool ~= nil then
         self.Base._Enabled = tobool(bool)
@@ -2400,6 +3001,8 @@ end
 
 ---Description
 ---@param str string
+---@return string
+---@public
 function UIMenuSliderHeritageItem:Description(str)
     if tostring(str) and str ~= nil then
         self.Base._Description = tostring(str)
@@ -2411,6 +3014,8 @@ end
 ---Offset
 ---@param X number
 ---@param Y number
+---@return table
+---@public
 function UIMenuSliderHeritageItem:Offset(X, Y)
     if tonumber(X) or tonumber(Y) then
         if tonumber(X) then
@@ -2426,6 +3031,8 @@ end
 
 ---Text
 ---@param Text string
+---@return string
+---@public
 function UIMenuSliderHeritageItem:Text(Text)
     if tostring(Text) and Text ~= nil then
         self.Base.Text:Text(tostring(Text))
@@ -2436,6 +3043,8 @@ end
 
 ---Index
 ---@param Index number
+---@return number
+---@public
 function UIMenuSliderHeritageItem:Index(Index)
     if tonumber(Index) then
         if tonumber(Index) > #self.Items then
@@ -2452,6 +3061,8 @@ end
 
 ---ItemToIndex
 ---@param Item table
+---@return table
+---@public
 function UIMenuSliderHeritageItem:ItemToIndex(Item)
     for i = 1, #self.Items do
         if type(Item) == type(self.Items[i]) and Item == self.Items[i] then
@@ -2462,6 +3073,8 @@ end
 
 ---IndexToItem
 ---@param Index number
+---@return table
+---@public
 function UIMenuSliderHeritageItem:IndexToItem(Index)
     if tonumber(Index) then
         if tonumber(Index) == 0 then
@@ -2474,21 +3087,29 @@ function UIMenuSliderHeritageItem:IndexToItem(Index)
 end
 
 ---SetLeftBadge
+---@return function
+---@public
 function UIMenuSliderHeritageItem:SetLeftBadge()
     error("This item does not support badges")
 end
 
 ---SetRightBadge
+---@return function
+---@public
 function UIMenuSliderHeritageItem:SetRightBadge()
     error("This item does not support badges")
 end
 
 ---RightLabel
+---@return function
+---@public
 function UIMenuSliderHeritageItem:RightLabel()
     error("This item does not support a right label")
 end
 
 ---Draw
+---@return nil
+---@public
 function UIMenuSliderHeritageItem:Draw()
     self.Base:Draw()
     if self:Enabled() then
@@ -2515,8 +3136,14 @@ end
 --[[
 UIMenu/items/UIMenuSliderItem.lua
 ]]--
+---@type table
 UIMenuSliderItem = setmetatable({}, UIMenuSliderItem)
+
+---@type table
 UIMenuSliderItem.__index = UIMenuSliderItem
+
+---@type table
+---@return string
 UIMenuSliderItem.__call = function()
     return "UIMenuItem", "UIMenuSliderItem"
 end
@@ -2529,6 +3156,8 @@ end
 ---@param Divider boolean
 ---@param SliderColors table
 ---@param BackgroundSliderColors table
+---@return table
+---@public
 function UIMenuSliderItem.New(Text, Items, Index, Description, Divider, SliderColors, BackgroundSliderColors)
     if type(Items) ~= "table" then
         Items = {}
@@ -2566,6 +3195,8 @@ end
 
 ---SetParentMenu
 ---@param Menu table
+---@return table
+---@public
 function UIMenuSliderItem:SetParentMenu(Menu)
     if Menu() == "UIMenu" then
         self.Base.ParentMenu = Menu
@@ -2576,6 +3207,8 @@ end
 
 ---Position
 ---@param Y number
+---@return nil
+---@public
 function UIMenuSliderItem:Position(Y)
     if tonumber(Y) then
         self.Background:Position(250 + self.Base._Offset.X + self.Base.ParentMenu.WidthOffset, Y + 158.5 + self.Base._Offset.Y)
@@ -2589,6 +3222,8 @@ end
 
 ---Selected
 ---@param bool table
+---@return boolean
+---@public
 function UIMenuSliderItem:Selected(bool)
     if bool ~= nil then
 
@@ -2598,6 +3233,10 @@ function UIMenuSliderItem:Selected(bool)
     end
 end
 
+---Hovered
+---@param bool boolean
+---@return boolean
+---@public
 function UIMenuSliderItem:Hovered(bool)
     if bool ~= nil then
         self.Base._Hovered = tobool(bool)
@@ -2606,6 +3245,10 @@ function UIMenuSliderItem:Hovered(bool)
     end
 end
 
+---Enabled
+---@param bool boolean
+---@return boolean
+---@public
 function UIMenuSliderItem:Enabled(bool)
     if bool ~= nil then
         self.Base._Enabled = tobool(bool)
@@ -2614,6 +3257,10 @@ function UIMenuSliderItem:Enabled(bool)
     end
 end
 
+---Description
+---@param str string
+---@return string
+---@public
 function UIMenuSliderItem:Description(str)
     if tostring(str) and str ~= nil then
         self.Base._Description = tostring(str)
@@ -2622,6 +3269,11 @@ function UIMenuSliderItem:Description(str)
     end
 end
 
+---Offset
+---@param X number
+---@param Y number
+---@return table
+---@public
 function UIMenuSliderItem:Offset(X, Y)
     if tonumber(X) or tonumber(Y) then
         if tonumber(X) then
@@ -2635,6 +3287,10 @@ function UIMenuSliderItem:Offset(X, Y)
     end
 end
 
+---Text
+---@param Text string
+---@return string
+---@public
 function UIMenuSliderItem:Text(Text)
     if tostring(Text) and Text ~= nil then
         self.Base.Text:Text(tostring(Text))
@@ -2643,6 +3299,10 @@ function UIMenuSliderItem:Text(Text)
     end
 end
 
+---Index
+---@param Index number
+---@return number
+---@public
 function UIMenuSliderItem:Index(Index)
     if tonumber(Index) then
         if tonumber(Index) > #self.Items then
@@ -2657,6 +3317,10 @@ function UIMenuSliderItem:Index(Index)
     end
 end
 
+---ItemToIndex
+---@param Item number
+---@return number
+---@public
 function UIMenuSliderItem:ItemToIndex(Item)
     for i = 1, #self.Items do
         if type(Item) == type(self.Items[i]) and Item == self.Items[i] then
@@ -2665,6 +3329,10 @@ function UIMenuSliderItem:ItemToIndex(Item)
     end
 end
 
+---IndexToItem
+---@param Index number
+---@return table
+---@public
 function UIMenuSliderItem:IndexToItem(Index)
     if tonumber(Index) then
         if tonumber(Index) == 0 then
@@ -2676,18 +3344,30 @@ function UIMenuSliderItem:IndexToItem(Index)
     end
 end
 
+---SetLeftBadge
+---@return function
+---@public
 function UIMenuSliderItem:SetLeftBadge()
     error("This item does not support badges")
 end
 
+---SetRightBadge
+---@return function
+---@public
 function UIMenuSliderItem:SetRightBadge()
     error("This item does not support badges")
 end
 
+---RightLabel
+---@return function
+---@public
 function UIMenuSliderItem:RightLabel()
     error("This item does not support a right label")
 end
 
+---Draw
+---@return nil
+---@public
 function UIMenuSliderItem:Draw()
     self.Base:Draw()
 
@@ -2721,10 +3401,279 @@ function UIMenuSliderItem:Draw()
 end
 
 --[[
+UIMenu/items/UIMenuSliderProgressItem.lua
+]]--
+---@type table
+UIMenuSliderProgressItem = setmetatable({}, UIMenuSliderProgressItem)
+
+---@type table
+UIMenuSliderProgressItem.__index = UIMenuSliderProgressItem
+
+---@type table
+---@return string
+UIMenuSliderProgressItem.__call = function()
+    return "UIMenuItem", "UIMenuSliderProgressItem"
+end
+
+---New
+---@param Text string
+---@param Items string
+---@param Index number
+---@param Description string
+---@param SliderColors thread
+---@param BackgroundSliderColors thread
+---@return table
+---@public
+function UIMenuSliderProgressItem.New(Text, Items, Index, Description, SliderColors, BackgroundSliderColors)
+    if type(Items) ~= "table" then
+        Items = {}
+    end
+    if Index == 0 then
+        Index = 1
+    end
+    if type(SliderColors) ~= "table" or SliderColors == nil then
+        _SliderColors = { R = 57, G = 119, B = 200, A = 255 }
+    else
+        _SliderColors = SliderColors
+    end
+    if type(BackgroundSliderColors) ~= "table" or BackgroundSliderColors == nil then
+        _BackgroundSliderColors = { R = 4, G = 32, B = 57, A = 255 }
+    else
+        _BackgroundSliderColors = BackgroundSliderColors
+    end
+    local _UIMenuSliderProgressItem = {
+        Base = UIMenuItem.New(Text or "", Description or ""),
+        Items = Items,
+        LeftArrow = Sprite.New("commonmenu", "arrowleft", 0, 105, 25, 25),
+        RightArrow = Sprite.New("commonmenu", "arrowright", 0, 105, 25, 25),
+        Background = UIResRectangle.New(0, 0, 150, 10, _BackgroundSliderColors.R, _BackgroundSliderColors.G, _BackgroundSliderColors.B, _BackgroundSliderColors.A),
+        Slider = UIResRectangle.New(0, 0, 75, 10, _SliderColors.R, _SliderColors.G, _SliderColors.B, _SliderColors.A),
+        Divider = UIResRectangle.New(0, 0, 4, 20, 255, 255, 255, 255),
+        _Index = tonumber(Index) or 1,
+        OnSliderChanged = function(menu, item, newindex)
+        end,
+        OnSliderSelected = function(menu, item, newindex)
+        end,
+    }
+
+    local Offset = ((_UIMenuSliderProgressItem.Background.Width) / (#_UIMenuSliderProgressItem.Items - 1)) * (_UIMenuSliderProgressItem._Index - 1)
+    _UIMenuSliderProgressItem.Slider.Width = Offset
+
+    return setmetatable(_UIMenuSliderProgressItem, UIMenuSliderProgressItem)
+end
+
+---SetParentMenu
+---@param Menu table
+---@return table
+---@public
+function UIMenuSliderProgressItem:SetParentMenu(Menu)
+    if Menu() == "UIMenu" then
+        self.Base.ParentMenu = Menu
+    else
+        return self.Base.ParentMenu
+    end
+end
+
+---Position
+---@param Y number
+---@return table
+---@public
+function UIMenuSliderProgressItem:Position(Y)
+    if tonumber(Y) then
+        self.Background:Position(250 + self.Base._Offset.X + self.Base.ParentMenu.WidthOffset, Y + 158.5 + self.Base._Offset.Y)
+        self.Slider:Position(250 + self.Base._Offset.X + self.Base.ParentMenu.WidthOffset, Y + 158.5 + self.Base._Offset.Y)
+        self.Divider:Position(323.5 + self.Base._Offset.X + self.Base.ParentMenu.WidthOffset, Y + 153 + self.Base._Offset.Y)
+        self.LeftArrow:Position(225 + self.Base._Offset.X + self.Base.ParentMenu.WidthOffset, 150.5 + Y + self.Base._Offset.Y)
+        self.RightArrow:Position(400 + self.Base._Offset.X + self.Base.ParentMenu.WidthOffset, 150.5 + Y + self.Base._Offset.Y)
+        self.Base:Position(Y)
+    end
+end
+
+---Selected
+---@param bool table
+---@return table
+---@public
+function UIMenuSliderProgressItem:Selected(bool)
+    if bool ~= nil then
+
+        self.Base._Selected = tobool(bool)
+    else
+        return self.Base._Selected
+    end
+end
+
+---Hovered
+---@param bool boolean
+---@return boolean
+---@public
+function UIMenuSliderProgressItem:Hovered(bool)
+    if bool ~= nil then
+        self.Base._Hovered = tobool(bool)
+    else
+        return self.Base._Hovered
+    end
+end
+
+---Enabled
+---@param bool number
+---@return boolean
+---@public
+function UIMenuSliderProgressItem:Enabled(bool)
+    if bool ~= nil then
+        self.Base._Enabled = tobool(bool)
+    else
+        return self.Base._Enabled
+    end
+end
+
+---Description
+---@param str string
+---@return string
+---@public
+function UIMenuSliderProgressItem:Description(str)
+    if tostring(str) and str ~= nil then
+        self.Base._Description = tostring(str)
+    else
+        return self.Base._Description
+    end
+end
+
+---Offset
+---@param X number
+---@param Y number
+---@return table
+---@public
+function UIMenuSliderProgressItem:Offset(X, Y)
+    if tonumber(X) or tonumber(Y) then
+        if tonumber(X) then
+            self.Base._Offset.X = tonumber(X)
+        end
+        if tonumber(Y) then
+            self.Base._Offset.Y = tonumber(Y)
+        end
+    else
+        return self.Base._Offset
+    end
+end
+
+---Text
+---@param Text string
+---@return string
+---@public
+function UIMenuSliderProgressItem:Text(Text)
+    if tostring(Text) and Text ~= nil then
+        self.Base.Text:Text(tostring(Text))
+    else
+        return self.Base.Text:Text()
+    end
+end
+
+---Index
+---@param Index number
+---@return number
+---@public
+function UIMenuSliderProgressItem:Index(Index)
+    if tonumber(Index) then
+        if tonumber(Index) > #self.Items then
+            self._Index = #self.Items
+        elseif tonumber(Index) < 1 then
+            self._Index = 1
+        else
+            self._Index = tonumber(Index)
+        end
+    else
+        local Offset = ((self.Background.Width) / (#self.Items - 1)) * (self._Index - 1)
+        self.Slider.Width = Offset
+        return self._Index
+    end
+end
+
+---ItemToIndex
+---@param Item number
+---@return number
+---@public
+function UIMenuSliderProgressItem:ItemToIndex(Item)
+    for i = 1, #self.Items do
+        if type(Item) == type(self.Items[i]) and Item == self.Items[i] then
+            return i
+        end
+    end
+end
+
+---IndexToItem
+---@param Index number
+---@return number
+---@public
+function UIMenuSliderProgressItem:IndexToItem(Index)
+    if tonumber(Index) then
+        if tonumber(Index) == 0 then
+            Index = 1
+        end
+        if self.Items[tonumber(Index)] then
+            return self.Items[tonumber(Index)]
+        end
+    end
+end
+
+---SetLeftBadge
+---@return nil
+---@public
+function UIMenuSliderProgressItem:SetLeftBadge()
+    error("This item does not support badges")
+end
+
+---SetRightBadge
+---@return nil
+---@public
+function UIMenuSliderProgressItem:SetRightBadge()
+    error("This item does not support badges")
+end
+
+---RightLabel
+---@return nil
+---@public
+function UIMenuSliderProgressItem:RightLabel()
+    error("This item does not support a right label")
+end
+
+---Draw
+---@return nil
+---@public
+function UIMenuSliderProgressItem:Draw()
+    self.Base:Draw()
+
+    if self:Enabled() then
+        if self:Selected() then
+            self.LeftArrow:Colour(0, 0, 0, 255)
+            self.RightArrow:Colour(0, 0, 0, 255)
+        else
+            self.LeftArrow:Colour(245, 245, 245, 255)
+            self.RightArrow:Colour(245, 245, 245, 255)
+        end
+    else
+        self.LeftArrow:Colour(163, 159, 148, 255)
+        self.RightArrow:Colour(163, 159, 148, 255)
+    end
+
+    if self:Selected() then
+        self.LeftArrow:Draw()
+        self.RightArrow:Draw()
+    end
+
+    self.Background:Draw()
+    self.Slider:Draw()
+end
+--[[
 UIMenu/panels/UIMenuColourPanel.lua
 ]]--
+---@type table
 UIMenuColourPanel = setmetatable({}, UIMenuColourPanel)
+
+---@type table
 UIMenuColourPanel.__index = UIMenuColourPanel
+
+---@type table
+---@return string
 UIMenuColourPanel.__call = function()
     return "UIMenuPanel", "UIMenuColourPanel"
 end
@@ -2732,8 +3681,10 @@ end
 ---New
 ---@param Title string
 ---@param Colours number
+---@return table
+---@public
 function UIMenuColourPanel.New(Title, Colours)
-    _UIMenuColourPanel = {
+    local _UIMenuColourPanel = {
         Data = {
             Pagination = {
                 Min = 1,
@@ -2748,10 +3699,11 @@ function UIMenuColourPanel.New(Title, Colours)
         },
         Background = Sprite.New("commonmenu", "gradient_bgd", 0, 0, 431, 112),
         Bar = {},
+        EnableArrow = true,
         LeftArrow = Sprite.New("commonmenu", "arrowleft", 0, 0, 30, 30),
         RightArrow = Sprite.New("commonmenu", "arrowright", 0, 0, 30, 30),
         SelectedRectangle = UIResRectangle.New(0, 0, 44.5, 8),
-        Text = UIResText.New(Title .. " (1 of " .. #Colours .. ")" or "Title" .. " (1 of " .. #Colours .. ")", 0, 0, 0.35, 255, 255, 255, 255, 0, "Centre"),
+        Text = UIResText.New(Title .. " [1 / " .. #Colours .. "]" or "Title" .. " [1 / " .. #Colours .. "]", 0, 0, 0.35, 255, 255, 255, 255, 0, "Centre"),
         ParentItem = nil,
     }
 
@@ -2773,6 +3725,8 @@ end
 
 ---SetParentItem
 ---@param Item table
+---@return table
+---@public
 function UIMenuColourPanel:SetParentItem(Item)
     -- required
     if Item() == "UIMenuItem" then
@@ -2784,6 +3738,8 @@ end
 
 ---Enabled
 ---@param Enabled boolean
+---@return boolean
+---@public
 function UIMenuColourPanel:Enabled(Enabled)
     if type(Enabled) == "boolean" then
         self.Data.Enabled = Enabled
@@ -2794,18 +3750,20 @@ end
 
 ---Position
 ---@param Y number
+---@return nil
+---@public
 function UIMenuColourPanel:Position(Y)
-    -- required
     if tonumber(Y) then
         local ParentOffsetX, ParentOffsetWidth = self.ParentItem:Offset().X, self.ParentItem:SetParentMenu().WidthOffset
-
         self.Background:Position(ParentOffsetX, Y)
         for Index = 1, #self.Bar do
             self.Bar[Index]:Position(15 + (44.5 * (Index - 1)) + ParentOffsetX + (ParentOffsetWidth / 2), 55 + Y)
         end
         self.SelectedRectangle:Position(15 + (44.5 * ((self:CurrentSelection() - self.Data.Pagination.Min) - 1)) + ParentOffsetX + (ParentOffsetWidth / 2), 47 + Y)
-        self.LeftArrow:Position(7.5 + ParentOffsetX + (ParentOffsetWidth / 2), 15 + Y)
-        self.RightArrow:Position(393.5 + ParentOffsetX + (ParentOffsetWidth / 2), 15 + Y)
+        if self.EnableArrow ~= false then
+            self.LeftArrow:Position(7.5 + ParentOffsetX + (ParentOffsetWidth / 2), 15 + Y)
+            self.RightArrow:Position(393.5 + ParentOffsetX + (ParentOffsetWidth / 2), 15 + Y)
+        end
         self.Text:Position(215.5 + ParentOffsetX + (ParentOffsetWidth / 2), 15 + Y)
     end
 end
@@ -2813,6 +3771,8 @@ end
 ---CurrentSelection
 ---@param value number
 ---@param PreventUpdate table
+---@return number
+---@public
 function UIMenuColourPanel:CurrentSelection(value, PreventUpdate)
     if tonumber(value) then
         if #self.Data.Items == 0 then
@@ -2845,6 +3805,8 @@ end
 
 ---UpdateParent
 ---@param Colour table
+---@return nil
+---@public
 function UIMenuColourPanel:UpdateParent(Colour)
     local _, ParentType = self.ParentItem()
     if ParentType == "UIMenuListItem" then
@@ -2876,6 +3838,8 @@ end
 
 ---UpdateSelection
 ---@param PreventUpdate table
+---@return nil
+---@public
 function UIMenuColourPanel:UpdateSelection(PreventUpdate)
     local CurrentSelection = self:CurrentSelection()
     if not PreventUpdate then
@@ -2885,65 +3849,35 @@ function UIMenuColourPanel:UpdateSelection(PreventUpdate)
     for Index = 1, 9 do
         self.Bar[Index]:Colour(table.unpack(self.Data.Items[self.Data.Pagination.Min + Index]))
     end
-    self.Text:Text(self.Data.Title .. " (" .. CurrentSelection .. " of " .. #self.Data.Items .. ")")
+    self.Text:Text(self.Data.Title .. " [" .. CurrentSelection .. " / " .. #self.Data.Items .. "]")
 end
 
 ---Functions
+---@return nil
+---@public
 function UIMenuColourPanel:Functions()
     local SafeZone = { X = 0, Y = 0 }
     if self.ParentItem:SetParentMenu().Settings.ScaleWithSafezone then
         SafeZone = GetSafeZoneBounds()
     end
-    if IsMouseInBounds(self.LeftArrow.X + SafeZone.X, self.LeftArrow.Y + SafeZone.Y, self.LeftArrow.Width, self.LeftArrow.Height) then
-        if IsDisabledControlJustPressed(0, 24) then
-            if #self.Data.Items > self.Data.Pagination.Total + 1 then
-                if self:CurrentSelection() <= self.Data.Pagination.Min + 1 then
-                    if self:CurrentSelection() == 1 then
-                        self.Data.Pagination.Min = #self.Data.Items - (self.Data.Pagination.Total + 1)
-                        self.Data.Pagination.Max = #self.Data.Items
-                        self.Data.Index = 1000 - (1000 % #self.Data.Items)
-                        self.Data.Index = self.Data.Index + (#self.Data.Items - 1)
-                        self:UpdateSelection()
-                    else
-                        self.Data.Pagination.Min = self.Data.Pagination.Min - 1
-                        self.Data.Pagination.Max = self.Data.Pagination.Max - 1
-                        self.Data.Index = self.Data.Index - 1
-                        self:UpdateSelection()
-                    end
-                else
-                    self.Data.Index = self.Data.Index - 1
-                    self:UpdateSelection()
-                end
-            else
-                self.Data.Index = self.Data.Index - 1
-                self:UpdateSelection()
-            end
-        end
+
+    --@Key Process
+    if IsDisabledControlJustPressed(0, 24) or IsDisabledControlJustPressed(0, 174) then
+        self:GoLeft()
+    end
+    if IsDisabledControlJustPressed(0, 24) or IsDisabledControlJustPressed(0, 175) then
+        self:GoRight()
     end
 
+    --@Mouse Process
+    if IsMouseInBounds(self.LeftArrow.X + SafeZone.X, self.LeftArrow.Y + SafeZone.Y, self.LeftArrow.Width, self.LeftArrow.Height) then
+        if IsDisabledControlJustPressed(0, 24) then
+            self:GoLeft()
+        end
+    end
     if IsMouseInBounds(self.RightArrow.X + SafeZone.X, self.RightArrow.Y + SafeZone.Y, self.RightArrow.Width, self.RightArrow.Height) then
         if IsDisabledControlJustPressed(0, 24) then
-            if #self.Data.Items > self.Data.Pagination.Total + 1 then
-                if self:CurrentSelection() >= self.Data.Pagination.Max then
-                    if self:CurrentSelection() == #self.Data.Items then
-                        self.Data.Pagination.Min = 0
-                        self.Data.Pagination.Max = self.Data.Pagination.Total + 1
-                        self.Data.Index = 1000 - (1000 % #self.Data.Items)
-                        self:UpdateSelection()
-                    else
-                        self.Data.Pagination.Max = self.Data.Pagination.Max + 1
-                        self.Data.Pagination.Min = self.Data.Pagination.Max - (self.Data.Pagination.Total + 1)
-                        self.Data.Index = self.Data.Index + 1
-                        self:UpdateSelection()
-                    end
-                else
-                    self.Data.Index = self.Data.Index + 1
-                    self:UpdateSelection()
-                end
-            else
-                self.Data.Index = self.Data.Index + 1
-                self:UpdateSelection()
-            end
+            self:GoRight()
         end
     end
 
@@ -2956,14 +3890,72 @@ function UIMenuColourPanel:Functions()
     end
 end
 
+---GoLeft
+---@return nil
+---@private
+function UIMenuColourPanel:GoLeft()
+    if #self.Data.Items > self.Data.Pagination.Total + 1 then
+        if self:CurrentSelection() <= self.Data.Pagination.Min + 1 then
+            if self:CurrentSelection() == 1 then
+                self.Data.Pagination.Min = #self.Data.Items - (self.Data.Pagination.Total + 1)
+                self.Data.Pagination.Max = #self.Data.Items
+                self.Data.Index = 1000 - (1000 % #self.Data.Items)
+                self.Data.Index = self.Data.Index + (#self.Data.Items - 1)
+                self:UpdateSelection()
+            else
+                self.Data.Pagination.Min = self.Data.Pagination.Min - 1
+                self.Data.Pagination.Max = self.Data.Pagination.Max - 1
+                self.Data.Index = self.Data.Index - 1
+                self:UpdateSelection()
+            end
+        else
+            self.Data.Index = self.Data.Index - 1
+            self:UpdateSelection()
+        end
+    else
+        self.Data.Index = self.Data.Index - 1
+        self:UpdateSelection()
+    end
+end
+
+---GoRight
+---@return nil
+---@private
+function UIMenuColourPanel:GoRight()
+    if #self.Data.Items > self.Data.Pagination.Total + 1 then
+        if self:CurrentSelection() >= self.Data.Pagination.Max then
+            if self:CurrentSelection() == #self.Data.Items then
+                self.Data.Pagination.Min = 0
+                self.Data.Pagination.Max = self.Data.Pagination.Total + 1
+                self.Data.Index = 1000 - (1000 % #self.Data.Items)
+                self:UpdateSelection()
+            else
+                self.Data.Pagination.Max = self.Data.Pagination.Max + 1
+                self.Data.Pagination.Min = self.Data.Pagination.Max - (self.Data.Pagination.Total + 1)
+                self.Data.Index = self.Data.Index + 1
+                self:UpdateSelection()
+            end
+        else
+            self.Data.Index = self.Data.Index + 1
+            self:UpdateSelection()
+        end
+    else
+        self.Data.Index = self.Data.Index + 1
+        self:UpdateSelection()
+    end
+end
+
 ---Draw
+---@return nil
+---@public
 function UIMenuColourPanel:Draw()
     if self.Data.Enabled then
         self.Background:Size(431 + self.ParentItem:SetParentMenu().WidthOffset, 112)
-
         self.Background:Draw()
-        self.LeftArrow:Draw()
-        self.RightArrow:Draw()
+        if self.EnableArrow ~= false then
+            self.LeftArrow:Draw()
+            self.RightArrow:Draw()
+        end
         self.Text:Draw()
         self.SelectedRectangle:Draw()
         for Index = 1, #self.Bar do
@@ -2972,12 +3964,17 @@ function UIMenuColourPanel:Draw()
         self:Functions()
     end
 end
-
 --[[
 UIMenu/panels/UIMenuGridPanel.lua
 ]]--
+---@type table
 UIMenuGridPanel = setmetatable({}, UIMenuGridPanel)
+
+---@type table
 UIMenuGridPanel.__index = UIMenuGridPanel
+
+---@type table
+---@return string
 UIMenuGridPanel.__call = function()
     return "UIMenuPanel", "UIMenuGridPanel"
 end
@@ -2987,8 +3984,10 @@ end
 ---@param LeftText string
 ---@param RightText string
 ---@param BottomText string
+---@return table
+---@public
 function UIMenuGridPanel.New(TopText, LeftText, RightText, BottomText)
-    _UIMenuGridPanel = {
+    local _UIMenuGridPanel = {
         Data = {
             Enabled = true,
         },
@@ -3009,6 +4008,8 @@ end
 
 ---SetParentItem
 ---@param Item table
+---@return table
+---@public
 function UIMenuGridPanel:SetParentItem(Item)
     -- required
     if Item() == "UIMenuItem" then
@@ -3020,6 +4021,8 @@ end
 
 ---Enabled
 ---@param Enabled boolean
+---@return boolean
+---@public
 function UIMenuGridPanel:Enabled(Enabled)
     if type(Enabled) == "boolean" then
         self.Data.Enabled = Enabled
@@ -3031,6 +4034,8 @@ end
 ---CirclePosition
 ---@param X number
 ---@param Y number
+---@return table
+---@public
 function UIMenuGridPanel:CirclePosition(X, Y)
     if tonumber(X) and tonumber(Y) then
         self.Circle.X = (self.Grid.X + 20) + ((self.Grid.Width - 40) * ((X >= 0.0 and X <= 1.0) and X or 0.0)) - (self.Circle.Width / 2)
@@ -3042,17 +4047,17 @@ end
 
 ---Position
 ---@param Y number
+---@return nil
+---@public
 function UIMenuGridPanel:Position(Y)
     if tonumber(Y) then
         local ParentOffsetX, ParentOffsetWidth = self.ParentItem:Offset().X, self.ParentItem:SetParentMenu().WidthOffset
-
         self.Background:Position(ParentOffsetX, Y)
         self.Grid:Position(ParentOffsetX + 115.5 + (ParentOffsetWidth / 2), 37.5 + Y)
         self.Text.Top:Position(ParentOffsetX + 215.5 + (ParentOffsetWidth / 2), 5 + Y)
         self.Text.Left:Position(ParentOffsetX + 57.75 + (ParentOffsetWidth / 2), 120 + Y)
         self.Text.Right:Position(ParentOffsetX + 373.25 + (ParentOffsetWidth / 2), 120 + Y)
         self.Text.Bottom:Position(ParentOffsetX + 215.5 + (ParentOffsetWidth / 2), 240 + Y)
-
         if not self.CircleLocked then
             self.CircleLocked = true
             self:CirclePosition(0.5, 0.5)
@@ -3063,6 +4068,8 @@ end
 ---UpdateParent
 ---@param X number
 ---@param Y number
+---@return nil
+---@public
 function UIMenuGridPanel:UpdateParent(X, Y)
     local _, ParentType = self.ParentItem()
     self.Data.Value = { X = X, Y = Y }
@@ -3094,12 +4101,13 @@ function UIMenuGridPanel:UpdateParent(X, Y)
 end
 
 ---Functions
+---@return nil
+---@public
 function UIMenuGridPanel:Functions()
     local SafeZone = { X = 0, Y = 0 }
     if self.ParentItem:SetParentMenu().Settings.ScaleWithSafezone then
         SafeZone = GetSafeZoneBounds()
     end
-
     if IsMouseInBounds(self.Grid.X + 20 + SafeZone.X, self.Grid.Y + 20 + SafeZone.Y, self.Grid.Width - 40, self.Grid.Height - 40) then
         if IsDisabledControlJustPressed(0, 24) then
             if not self.Pressed then
@@ -3131,6 +4139,8 @@ function UIMenuGridPanel:Functions()
 end
 
 ---Draw
+---@return nil
+---@public
 function UIMenuGridPanel:Draw()
     if self.Data.Enabled then
         self.Background:Size(431 + self.ParentItem:SetParentMenu().WidthOffset, 275)
@@ -3144,13 +4154,17 @@ function UIMenuGridPanel:Draw()
         self:Functions()
     end
 end
-
-
 --[[
 UIMenu/panels/UIMenuHorizontalOneLineGridPanel.lua
 ]]--
+---@type table
 UIMenuHorizontalOneLineGridPanel = setmetatable({}, UIMenuHorizontalOneLineGridPanel)
+
+---@type table
 UIMenuHorizontalOneLineGridPanel.__index = UIMenuHorizontalOneLineGridPanel
+
+---@type table
+---@return string
 UIMenuHorizontalOneLineGridPanel.__call = function()
     return "UIMenuPanel", "UIMenuHorizontalOneLineGridPanel"
 end
@@ -3158,8 +4172,10 @@ end
 ---New
 ---@param LeftText string
 ---@param RightText string
+---@return table
+---@public
 function UIMenuHorizontalOneLineGridPanel.New(LeftText, RightText)
-    _UIMenuHorizontalOneLineGridPanel = {
+    local _UIMenuHorizontalOneLineGridPanel = {
         Data = {
             Enabled = true,
         },
@@ -3178,6 +4194,8 @@ end
 
 ---SetParentItem
 ---@param Item table
+---@return table
+---@public
 function UIMenuHorizontalOneLineGridPanel:SetParentItem(Item)
     -- required
     if Item() == "UIMenuItem" then
@@ -3189,6 +4207,8 @@ end
 
 ---Enabled
 ---@param Enabled boolean
+---@return boolean
+---@public
 function UIMenuHorizontalOneLineGridPanel:Enabled(Enabled)
     if type(Enabled) == "boolean" then
         self.Data.Enabled = Enabled
@@ -3200,6 +4220,8 @@ end
 ---CirclePosition
 ---@param X number
 ---@param Y number
+---@return table
+---@public
 function UIMenuHorizontalOneLineGridPanel:CirclePosition(X, Y)
     if tonumber(X) and tonumber(Y) then
         self.Circle.X = (self.Grid.X + 20) + ((self.Grid.Width - 40) * ((X >= 0.0 and X <= 1.0) and X or 0.0)) - (self.Circle.Width / 2)
@@ -3211,6 +4233,8 @@ end
 
 ---Position
 ---@param Y number
+---@return nil
+---@public
 function UIMenuHorizontalOneLineGridPanel:Position(Y)
     if tonumber(Y) then
         local ParentOffsetX, ParentOffsetWidth = self.ParentItem:Offset().X, self.ParentItem:SetParentMenu().WidthOffset
@@ -3228,6 +4252,8 @@ end
 ---UpdateParent
 ---@param X number
 ---@param Y number
+---@return nil
+---@public
 function UIMenuHorizontalOneLineGridPanel:UpdateParent(X)
     local _, ParentType = self.ParentItem()
     self.Data.Value = { X = X }
@@ -3259,6 +4285,8 @@ function UIMenuHorizontalOneLineGridPanel:UpdateParent(X)
 end
 
 ---Functions
+---@return nil
+---@public
 function UIMenuHorizontalOneLineGridPanel:Functions()
     local SafeZone = { X = 0, Y = 0 }
     if self.ParentItem:SetParentMenu().Settings.ScaleWithSafezone then
@@ -3294,7 +4322,10 @@ function UIMenuHorizontalOneLineGridPanel:Functions()
         end
     end
 end
+
 ---Draw
+---@return nil
+---@public
 function UIMenuHorizontalOneLineGridPanel:Draw()
     if self.Data.Enabled then
         self.Background:Size(431 + self.ParentItem:SetParentMenu().WidthOffset, 275)
@@ -3306,13 +4337,17 @@ function UIMenuHorizontalOneLineGridPanel:Draw()
         self:Functions()
     end
 end
-
-
 --[[
 UIMenu/panels/UIMenuPercentagePanel.lua
 ]]--
+---@type table
 UIMenuPercentagePanel = setmetatable({}, UIMenuPercentagePanel)
+
+---@type table
 UIMenuPercentagePanel.__index = UIMenuPercentagePanel
+
+---@type table
+---@return string
 UIMenuPercentagePanel.__call = function()
     return "UIMenuPanel", "UIMenuPercentagePanel"
 end
@@ -3320,8 +4355,10 @@ end
 ---New
 ---@param MinText number
 ---@param MaxText number
+---@return table
+---@public
 function UIMenuPercentagePanel.New(MinText, MaxText)
-    _UIMenuPercentagePanel = {
+    local _UIMenuPercentagePanel = {
         Data = {
             Enabled = true,
         },
@@ -3342,6 +4379,8 @@ end
 
 ---SetParentItem
 ---@param Item table
+---@return table
+---@public
 function UIMenuPercentagePanel:SetParentItem(Item)
     if Item() == "UIMenuItem" then
         self.ParentItem = Item
@@ -3352,6 +4391,8 @@ end
 
 ---Enabled
 ---@param Enabled boolean
+---@return boolean
+---@public
 function UIMenuPercentagePanel:Enabled(Enabled)
     if type(Enabled) == "boolean" then
         self.Data.Enabled = Enabled
@@ -3362,8 +4403,9 @@ end
 
 ---Position
 ---@param Y number
+---@return nil
+---@public
 function UIMenuPercentagePanel:Position(Y)
-    -- required
     if tonumber(Y) then
         local ParentOffsetX, ParentOffsetWidth = self.ParentItem:Offset().X, self.ParentItem:SetParentMenu().WidthOffset
         self.Background:Position(ParentOffsetX, Y)
@@ -3377,6 +4419,8 @@ end
 
 ---Percentage
 ---@param Value number
+---@return number
+---@public
 function UIMenuPercentagePanel:Percentage(Value)
     if tonumber(Value) then
         local Percent = ((Value < 0.0) and 0.0) or ((Value > 1.0) and 1.0 or Value)
@@ -3394,6 +4438,8 @@ end
 
 ---UpdateParent
 ---@param Percentage number
+---@return nil
+---@public
 function UIMenuPercentagePanel:UpdateParent(Percentage)
     local _, ParentType = self.ParentItem()
     if ParentType == "UIMenuListItem" then
@@ -3424,6 +4470,8 @@ function UIMenuPercentagePanel:UpdateParent(Percentage)
 end
 
 ---Functions
+---@return nil
+---@public
 function UIMenuPercentagePanel:Functions()
     local SafeZone = { X = 0, Y = 0 }
     if self.ParentItem:SetParentMenu().Settings.ScaleWithSafezone then
@@ -3458,6 +4506,8 @@ function UIMenuPercentagePanel:Functions()
 end
 
 ---Draw
+---@return nil
+---@public
 function UIMenuPercentagePanel:Draw()
     if self.Data.Enabled then
         self.Background:Size(431 + self.ParentItem:SetParentMenu().WidthOffset, 76)
@@ -3470,24 +4520,26 @@ function UIMenuPercentagePanel:Draw()
         self:Functions()
     end
 end
-
 --[[
 UIMenu/panels/UIMenuStatisticsPanel.lua
 ]]--
----
---- Generated by EmmyLua(https://github.com/EmmyLua)
---- Created by Dylan Malandain.
---- DateTime: 03/02/2019 16:01
----
+---@type table
 UIMenuStatisticsPanel = setmetatable({}, UIMenuStatisticsPanel)
+
+---@type table
 UIMenuStatisticsPanel.__index = UIMenuStatisticsPanel
+
+---@type table
+---@return string
 UIMenuStatisticsPanel.__call = function()
     return "UIMenuPanel", "UIMenuStatisticsPanel"
 end
 
 ---New
+---@return table
+---@public
 function UIMenuStatisticsPanel.New()
-    _UIMenuStatisticsPanel = {
+    local _UIMenuStatisticsPanel = {
         Background = UIResRectangle.New(0, 0, 431, 47, 0, 0, 0, 170),
         Divider = true,
         ParentItem = nil,
@@ -3498,6 +4550,8 @@ end
 
 ---AddStatistics
 ---@param Name string
+---@return nil
+---@public
 function UIMenuStatisticsPanel:AddStatistics(Name)
     local Items = {
         Text = UIResText.New(Name or "", 0, 0, 0.35, 255, 255, 255, 255, 0, "Left"),
@@ -3516,6 +4570,8 @@ end
 
 ---SetParentItem
 ---@param Item number
+---@return table
+---@public
 function UIMenuStatisticsPanel:SetParentItem(Item)
     if Item() == "UIMenuItem" then
         self.ParentItem = Item
@@ -3527,6 +4583,8 @@ end
 ---SetPercentage
 ---@param ItemID number
 ---@param Number number
+---@return nil
+---@public
 function UIMenuStatisticsPanel:SetPercentage(ItemID, Number)
     if ItemID ~= nil then
         if Number <= 0 then
@@ -3545,6 +4603,8 @@ end
 
 ---GetPercentage
 ---@param ItemID number
+---@return number
+---@public
 function UIMenuStatisticsPanel:GetPercentage(ItemID)
     if ItemID ~= nil then
         return self.Items[ItemID].ProgressBar.Width * 2.0
@@ -3555,6 +4615,8 @@ end
 
 ---Position
 ---@param Y number
+---@return nil
+---@public
 function UIMenuStatisticsPanel:Position(Y)
     if tonumber(Y) then
         local ParentOffsetX, ParentOffsetWidth = self.ParentItem:Offset().X, self.ParentItem:SetParentMenu().WidthOffset
@@ -3576,6 +4638,8 @@ function UIMenuStatisticsPanel:Position(Y)
 end
 
 ---Draw
+---@return nil
+---@public
 function UIMenuStatisticsPanel:Draw()
     self.Background:Draw()
     for i = 1, #self.Items do
@@ -3587,12 +4651,17 @@ function UIMenuStatisticsPanel:Draw()
         end
     end
 end
-
 --[[
 UIMenu/panels/UIMenuVerticalOneLineGridPanel.lua
 ]]--
+---@type table
 UIMenuVerticalOneLineGridPanel = setmetatable({}, UIMenuVerticalOneLineGridPanel)
+
+---@type table
 UIMenuVerticalOneLineGridPanel.__index = UIMenuVerticalOneLineGridPanel
+
+---@type table
+---@return string
 UIMenuVerticalOneLineGridPanel.__call = function()
     return "UIMenuPanel", "UIMenuVerticalOneLineGridPanel"
 end
@@ -3600,8 +4669,10 @@ end
 ---New
 ---@param TopText string
 ---@param BottomText string
+---@return table
+---@public
 function UIMenuVerticalOneLineGridPanel.New(TopText, BottomText)
-    _UIMenuVerticalOneLineGridPanel = {
+    local _UIMenuVerticalOneLineGridPanel = {
         Data = {
             Enabled = true,
         },
@@ -3620,8 +4691,9 @@ end
 
 ---SetParentItem
 ---@param Item table
+---@return table
+---@public
 function UIMenuVerticalOneLineGridPanel:SetParentItem(Item)
-    -- required
     if Item() == "UIMenuItem" then
         self.ParentItem = Item
     else
@@ -3631,6 +4703,8 @@ end
 
 ---Enabled
 ---@param Enabled boolean
+---@return boolean
+---@public
 function UIMenuVerticalOneLineGridPanel:Enabled(Enabled)
     if type(Enabled) == "boolean" then
         self.Data.Enabled = Enabled
@@ -3642,6 +4716,8 @@ end
 ---CirclePosition
 ---@param X number
 ---@param Y number
+---@return table
+---@public
 function UIMenuVerticalOneLineGridPanel:CirclePosition(X, Y)
     if tonumber(X) and tonumber(Y) then
         self.Circle.X = (self.Grid.X + 20) + ((self.Grid.Width - 40) * ((X >= 0.0 and X <= 1.0) and X or 0.0)) - (self.Circle.Width / 2)
@@ -3653,15 +4729,15 @@ end
 
 ---Position
 ---@param Y number
+---@return nil
+---@public
 function UIMenuVerticalOneLineGridPanel:Position(Y)
     if tonumber(Y) then
         local ParentOffsetX, ParentOffsetWidth = self.ParentItem:Offset().X, self.ParentItem:SetParentMenu().WidthOffset
-
         self.Background:Position(ParentOffsetX, Y)
         self.Grid:Position(ParentOffsetX + 115.5 + (ParentOffsetWidth / 2), 37.5 + Y)
         self.Text.Top:Position(ParentOffsetX + 215.5 + (ParentOffsetWidth / 2), 5 + Y)
         self.Text.Bottom:Position(ParentOffsetX + 215.5 + (ParentOffsetWidth / 2), 240 + Y)
-
         if not self.CircleLocked then
             self.CircleLocked = true
             self:CirclePosition(0.5, 0.5)
@@ -3672,6 +4748,8 @@ end
 ---UpdateParent
 ---@param X number
 ---@param Y number
+---@return nil
+---@public
 function UIMenuVerticalOneLineGridPanel:UpdateParent(Y)
     local _, ParentType = self.ParentItem()
     self.Data.Value = { Y = Y }
@@ -3703,6 +4781,8 @@ function UIMenuVerticalOneLineGridPanel:UpdateParent(Y)
 end
 
 ---Functions
+---@return nil
+---@public
 function UIMenuVerticalOneLineGridPanel:Functions()
     local SafeZone = { X = 0, Y = 0 }
     if self.ParentItem:SetParentMenu().Settings.ScaleWithSafezone then
@@ -3741,6 +4821,8 @@ function UIMenuVerticalOneLineGridPanel:Functions()
 end
 
 ---Draw
+---@return nil
+---@public
 function UIMenuVerticalOneLineGridPanel:Draw()
     if self.Data.Enabled then
         self.Background:Size(431 + self.ParentItem:SetParentMenu().WidthOffset, 275)
@@ -3756,8 +4838,14 @@ end
 --[[
 UIMenu/windows/UIMenuHeritageWindow.lua
 ]]--
+---@type table
 UIMenuHeritageWindow = setmetatable({}, UIMenuHeritageWindow)
+
+---@type table
 UIMenuHeritageWindow.__index = UIMenuHeritageWindow
+
+---@type table
+---@return string
 UIMenuHeritageWindow.__call = function()
     return "UIMenuWindow", "UIMenuHeritageWindow"
 end
@@ -3765,6 +4853,8 @@ end
 ---New
 ---@param Mum number
 ---@param Dad number
+---@return table
+---@public
 function UIMenuHeritageWindow.New(Mum, Dad)
     if not tonumber(Mum) then
         Mum = 0
@@ -3778,20 +4868,22 @@ function UIMenuHeritageWindow.New(Mum, Dad)
     if not (Dad >= 0 and Dad <= 23) then
         Dad = 0
     end
-    _UIMenuHeritageWindow = {
+    local _UIMenuHeritageWindow = {
         Background = Sprite.New("pause_menu_pages_char_mom_dad", "mumdadbg", 0, 0, 431, 228), -- Background is required, must be a sprite or a rectangle.
         MumSprite = Sprite.New("char_creator_portraits", ((Mum < 21) and "female_" .. Mum or "special_female_" .. (tonumber(string.sub(Mum, 2, 2)) - 1)), 0, 0, 228, 228),
         DadSprite = Sprite.New("char_creator_portraits", ((Dad < 21) and "male_" .. Dad or "special_male_" .. (tonumber(string.sub(Dad, 2, 2)) - 1)), 0, 0, 228, 228),
         Mum = Mum,
         Dad = Dad,
-        _Offset = { X = 0, Y = 0 }, -- required
-        ParentMenu = nil, -- required
+        _Offset = { X = 0, Y = 0 },
+        ParentMenu = nil,
     }
     return setmetatable(_UIMenuHeritageWindow, UIMenuHeritageWindow)
 end
 
 ---SetParentMenu
 ---@param Menu table
+---@return table
+---@public
 function UIMenuHeritageWindow:SetParentMenu(Menu)
     -- required
     if Menu() == "UIMenu" then
@@ -3804,8 +4896,9 @@ end
 ---Offset
 ---@param X number
 ---@param Y number
+---@return table
+---@public
 function UIMenuHeritageWindow:Offset(X, Y)
-    -- required
     if tonumber(X) or tonumber(Y) then
         if tonumber(X) then
             self._Offset.X = tonumber(X)
@@ -3820,6 +4913,8 @@ end
 
 ---Position
 ---@param Y number
+---@return nil
+---@public
 function UIMenuHeritageWindow:Position(Y)
     if tonumber(Y) then
         self.Background:Position(self._Offset.X, 144 + Y + self._Offset.Y)
@@ -3829,6 +4924,8 @@ function UIMenuHeritageWindow:Position(Y)
 end
 
 ---@param Dad number
+---@return nil
+---@public
 function UIMenuHeritageWindow:Index(Mum, Dad)
     if not tonumber(Mum) then
         Mum = self.Mum
@@ -3842,29 +4939,33 @@ function UIMenuHeritageWindow:Index(Mum, Dad)
     if not (Dad >= 0 and Dad <= 23) then
         Dad = self.Dad
     end
-
     self.Mum = Mum
     self.Dad = Dad
-
     self.MumSprite.TxtName = ((self.Mum < 21) and "female_" .. self.Mum or "special_female_" .. (tonumber(string.sub(Mum, 2, 2)) - 1))
     self.DadSprite.TxtName = ((self.Dad < 21) and "male_" .. self.Dad or "special_male_" .. (tonumber(string.sub(Dad, 2, 2)) - 1))
 end
 
 ---Draw
+---@return nil
+---@public
 function UIMenuHeritageWindow:Draw()
     self.Background:Size(431 + self.ParentMenu.WidthOffset, 228)
     self.Background:Draw()
     self.DadSprite:Draw()
     self.MumSprite:Draw()
 end
-
 --[[
 UIMenu/MenuPool.lua
 ]]--
+---@type table
 MenuPool = setmetatable({}, MenuPool)
+
+---@type table
 MenuPool.__index = MenuPool
 
 ---New
+---@return table
+---@public
 function MenuPool.New()
     local _MenuPool = {
         Menus = {}
@@ -3878,6 +4979,8 @@ end
 ---@param Description string
 ---@param KeepPosition boolean
 ---@param KeepBanner boolean
+---@return table
+---@public
 function MenuPool:AddSubMenu(Menu, Text, Description, KeepPosition, KeepBanner)
     if Menu() == "UIMenu" then
         local Item = UIMenuItem.New(tostring(Text), Description or "")
@@ -3907,6 +5010,8 @@ end
 
 ---Add
 ---@param Menu table
+---@return nil
+---@public
 function MenuPool:Add(Menu)
     if Menu() == "UIMenu" then
         table.insert(self.Menus, Menu)
@@ -3915,6 +5020,8 @@ end
 
 ---MouseEdgeEnabled
 ---@param bool boolean
+---@return nil
+---@public
 function MenuPool:MouseEdgeEnabled(bool)
     if bool ~= nil then
         for _, Menu in pairs(self.Menus) do
@@ -3925,6 +5032,8 @@ end
 
 ---ControlDisablingEnabled
 ---@param bool boolean
+---@return nil
+---@public
 function MenuPool:ControlDisablingEnabled(bool)
     if bool ~= nil then
         for _, Menu in pairs(self.Menus) do
@@ -3935,6 +5044,8 @@ end
 
 ---ResetCursorOnOpen
 ---@param bool boolean
+---@return nil
+---@public
 function MenuPool:ResetCursorOnOpen(bool)
     if bool ~= nil then
         for _, Menu in pairs(self.Menus) do
@@ -3945,6 +5056,8 @@ end
 
 ---MultilineFormats
 ---@param bool boolean
+---@return nil
+---@public
 function MenuPool:MultilineFormats(bool)
     if bool ~= nil then
         for _, Menu in pairs(self.Menus) do
@@ -3956,6 +5069,8 @@ end
 ---Audio
 ---@param Attribute number
 ---@param Setting table
+---@return nil
+---@public
 function MenuPool:Audio(Attribute, Setting)
     if Attribute ~= nil and Setting ~= nil then
         for _, Menu in pairs(self.Menus) do
@@ -3968,6 +5083,8 @@ end
 
 ---WidthOffset
 ---@param offset number
+---@return nil
+---@public
 function MenuPool:WidthOffset(offset)
     if tonumber(offset) then
         for _, Menu in pairs(self.Menus) do
@@ -3978,6 +5095,8 @@ end
 
 ---CounterPreText
 ---@param str string
+---@return nil
+---@public
 function MenuPool:CounterPreText(str)
     if str ~= nil then
         for _, Menu in pairs(self.Menus) do
@@ -3988,6 +5107,8 @@ end
 
 ---DisableInstructionalButtons
 ---@param bool boolean
+---@return nil
+---@public
 function MenuPool:DisableInstructionalButtons(bool)
     if bool ~= nil then
         for _, Menu in pairs(self.Menus) do
@@ -3998,6 +5119,8 @@ end
 
 ---MouseControlsEnabled
 ---@param bool boolean
+---@return nil
+---@public
 function MenuPool:MouseControlsEnabled(bool)
     if bool ~= nil then
         for _, Menu in pairs(self.Menus) do
@@ -4007,6 +5130,8 @@ function MenuPool:MouseControlsEnabled(bool)
 end
 
 ---RefreshIndex
+---@return nil
+---@public
 function MenuPool:RefreshIndex()
     for _, Menu in pairs(self.Menus) do
         Menu:RefreshIndex()
@@ -4014,6 +5139,8 @@ function MenuPool:RefreshIndex()
 end
 
 ---ProcessMenus
+---@return nil
+---@public
 function MenuPool:ProcessMenus()
     self:ProcessControl()
     self:ProcessMouse()
@@ -4021,6 +5148,8 @@ function MenuPool:ProcessMenus()
 end
 
 ---ProcessControl
+---@return nil
+---@public
 function MenuPool:ProcessControl()
     for _, Menu in pairs(self.Menus) do
         if Menu:Visible() then
@@ -4030,6 +5159,8 @@ function MenuPool:ProcessControl()
 end
 
 ---ProcessMouse
+---@return nil
+---@public
 function MenuPool:ProcessMouse()
     for _, Menu in pairs(self.Menus) do
         if Menu:Visible() then
@@ -4039,6 +5170,8 @@ function MenuPool:ProcessMouse()
 end
 
 ---Draw
+---@return nil
+---@public
 function MenuPool:Draw()
     for _, Menu in pairs(self.Menus) do
         if Menu:Visible() then
@@ -4048,6 +5181,8 @@ function MenuPool:Draw()
 end
 
 ---IsAnyMenuOpen
+---@return boolean
+---@public
 function MenuPool:IsAnyMenuOpen()
     local open = false
     for _, Menu in pairs(self.Menus) do
@@ -4060,6 +5195,8 @@ function MenuPool:IsAnyMenuOpen()
 end
 
 ---CloseAllMenus
+---@return nil
+---@public
 function MenuPool:CloseAllMenus()
     for _, Menu in pairs(self.Menus) do
         if Menu:Visible() then
@@ -4071,6 +5208,8 @@ end
 
 ---SetBannerSprite
 ---@param Sprite table
+---@return nil
+---@public
 function MenuPool:SetBannerSprite(Sprite)
     if Sprite() == "Sprite" then
         for _, Menu in pairs(self.Menus) do
@@ -4081,6 +5220,8 @@ end
 
 ---SetBannerRectangle
 ---@param Rectangle table
+---@return nil
+---@public
 function MenuPool:SetBannerRectangle(Rectangle)
     if Rectangle() == "Rectangle" then
         for _, Menu in pairs(self.Menus) do
@@ -4091,6 +5232,8 @@ end
 
 ---TotalItemsPerPage
 ---@param Value table
+---@return nil
+---@public
 function MenuPool:TotalItemsPerPage(Value)
     if tonumber(Value) then
         for _, Menu in pairs(self.Menus) do
@@ -4098,12 +5241,17 @@ function MenuPool:TotalItemsPerPage(Value)
         end
     end
 end
-
 --[[
 UIMenu/UIMenu.lua
 ]]--
+---@type table
 UIMenu = setmetatable({}, UIMenu)
+
+---@type table
 UIMenu.__index = UIMenu
+
+---@type table
+---@return string
 UIMenu.__call = function()
     return "UIMenu"
 end
@@ -4120,6 +5268,8 @@ end
 ---@param G number
 ---@param B number
 ---@param A number
+---@return table
+---@public
 function UIMenu.New(Title, Subtitle, X, Y, TxtDictionary, TxtName, Heading, R, G, B, A)
     local X, Y = tonumber(X) or 0, tonumber(Y) or 0
     if Title ~= nil then
@@ -4171,7 +5321,7 @@ function UIMenu.New(Title, Subtitle, X, Y, TxtDictionary, TxtName, Heading, R, G
         Logo = Sprite.New(TxtDictionary, TxtName, 0 + X, 0 + Y, 431, 107, Heading, R, G, B, A),
         Banner = nil,
         Title = UIResText.New(Title, 215 + X, 20 + Y, 1.15, 255, 255, 255, 255, 1, 1, 0),
-        BetterSize = false,
+        BetterSize = true,
         Subtitle = { ExtraY = 0 },
         WidthOffset = 0,
         Position = { X = X, Y = Y },
@@ -4303,7 +5453,7 @@ function UIMenu.New(Title, Subtitle, X, Y, TxtDictionary, TxtName, Heading, R, G
         _UIMenu.Subtitle.ExtraY = 37
     end
 
-    _UIMenu.ArrowSprite = Sprite.New("commonmenu", "shop_arrows_upanddown", 190 + _UIMenu.Position.X, 147 + 37 * (_UIMenu.Pagination.Total + 1) + _UIMenu.Position.Y - 37 + _UIMenu.Subtitle.ExtraY, 50, 50)
+    _UIMenu.ArrowSprite = Sprite.New("commonmenu", "shop_arrows_upanddown", 190 + _UIMenu.Position.X, 147 + 37 * (_UIMenu.Pagination.Total + 1) + _UIMenu.Position.Y - 37 + _UIMenu.Subtitle.ExtraY, 40, 40)
     _UIMenu.Extra.Up = UIResRectangle.New(0 + _UIMenu.Position.X, 144 + 38 * (_UIMenu.Pagination.Total + 1) + _UIMenu.Position.Y - 37 + _UIMenu.Subtitle.ExtraY, 431, 18, 0, 0, 0, 200)
     _UIMenu.Extra.Down = UIResRectangle.New(0 + _UIMenu.Position.X, 144 + 18 + 38 * (_UIMenu.Pagination.Total + 1) + _UIMenu.Position.Y - 37 + _UIMenu.Subtitle.ExtraY, 431, 18, 0, 0, 0, 200)
 
@@ -4314,7 +5464,7 @@ function UIMenu.New(Title, Subtitle, X, Y, TxtDictionary, TxtName, Heading, R, G
     _UIMenu.Background = Sprite.New("commonmenu", "gradient_bgd", _UIMenu.Position.X, 144 + _UIMenu.Position.Y - 37 + _UIMenu.Subtitle.ExtraY, 290, 25)
 
     if _UIMenu.BetterSize == true then
-        _UIMenu.WidthOffset = math.floor(tonumber(70))
+        _UIMenu.WidthOffset = math.floor(tonumber(69))
         _UIMenu.Logo:Size(431 + _UIMenu.WidthOffset, 107)
         _UIMenu.Title:Position(((_UIMenu.WidthOffset + 431) / 2) + _UIMenu.Position.X, 20 + _UIMenu.Position.Y)
         if _UIMenu.Subtitle.Rectangle ~= nil then
@@ -4339,6 +5489,8 @@ end
 
 ---SetMenuWidthOffset
 ---@param Offset number
+---@return number
+---@public
 function UIMenu:SetMenuWidthOffset(Offset)
     if tonumber(Offset) then
         self.WidthOffset = math.floor(tonumber(Offset) + tonumber(70))
@@ -4356,13 +5508,14 @@ end
 
 ---DisEnableControls
 ---@param bool boolean
+---@return nil
+---@public
 function UIMenu:DisEnableControls(bool)
     if bool then
         EnableAllControlActions(2)
     else
         DisableAllControlActions(2)
     end
-
     if bool then
         return
     else
@@ -4380,6 +5533,8 @@ end
 
 ---InstructionalButtons
 ---@param bool boolean
+---@return nil
+---@public
 function UIMenu:InstructionalButtons(bool)
     if bool ~= nil then
         self.Settings.InstrucitonalButtons = tobool(bool)
@@ -4389,6 +5544,8 @@ end
 ---SetBannerSprite
 ---@param Sprite string
 ---@param IncludeChildren boolean
+---@return nil
+---@public
 function UIMenu:SetBannerSprite(Sprite, IncludeChildren)
     if Sprite() == "Sprite" then
         self.Logo = Sprite
@@ -4409,6 +5566,8 @@ end
 ---SetBannerRectangle
 ---@param Rectangle string
 ---@param IncludeChildren boolean
+---@return nil
+---@public
 function UIMenu:SetBannerRectangle(Rectangle, IncludeChildren)
     if Rectangle() == "Rectangle" then
         self.Banner = Rectangle
@@ -4428,6 +5587,8 @@ end
 
 ---CurrentSelection
 ---@param value number
+---@return number
+---@public
 function UIMenu:CurrentSelection(value)
     if tonumber(value) then
         if #self.Items == 0 then
@@ -4456,6 +5617,8 @@ function UIMenu:CurrentSelection(value)
 end
 
 ---CalculateWindowHeight
+---@return number
+---@public
 function UIMenu:CalculateWindowHeight()
     local Height = 0
     for i = 1, #self.Windows do
@@ -4466,6 +5629,8 @@ end
 
 ---CalculateItemHeightOffset
 ---@param Item table
+---@return number
+---@public
 function UIMenu:CalculateItemHeightOffset(Item)
     if Item.Base then
         return Item.Base.Rectangle.Height
@@ -4475,6 +5640,8 @@ function UIMenu:CalculateItemHeightOffset(Item)
 end
 
 ---CalculateItemHeight
+---@return number
+---@public
 function UIMenu:CalculateItemHeight()
     local ItemOffset = 0 + self.Subtitle.ExtraY - 37
     for i = self.Pagination.Min + 1, self.Pagination.Max do
@@ -4488,15 +5655,15 @@ function UIMenu:CalculateItemHeight()
 end
 
 ---RecalculateDescriptionPosition
+---@return nil
+---@public
 function UIMenu:RecalculateDescriptionPosition()
     local WindowHeight = self:CalculateWindowHeight()
     self.Description.Bar:Position(self.Position.X, 149 + self.Position.Y + WindowHeight)
     self.Description.Rectangle:Position(self.Position.X, 149 + self.Position.Y + WindowHeight)
     self.Description.Text:Position(self.Position.X + 8, 155 + self.Position.Y + WindowHeight)
-
     self.Description.Bar:Size(431 + self.WidthOffset, 4)
     self.Description.Rectangle:Size(431 + self.WidthOffset, 30)
-
     self.Description.Bar:Position(self.Position.X, self:CalculateItemHeight() + ((#self.Items > (self.Pagination.Total + 1)) and 37 or 0) + self.Description.Bar:Position().Y)
     self.Description.Rectangle:Position(self.Position.X, self:CalculateItemHeight() + ((#self.Items > (self.Pagination.Total + 1)) and 37 or 0) + self.Description.Rectangle:Position().Y)
     self.Description.Text:Position(self.Position.X + 8, self:CalculateItemHeight() + ((#self.Items > (self.Pagination.Total + 1)) and 37 or 0) + self.Description.Text:Position().Y)
@@ -4504,18 +5671,20 @@ end
 
 ---CaclulatePanelPosition
 ---@param HasDescription boolean
+---@return number
+---@public
 function UIMenu:CaclulatePanelPosition(HasDescription)
     local Height = self:CalculateWindowHeight() + 149 + self.Position.Y
-
     if HasDescription then
         Height = Height + self.Description.Rectangle:Size().Height + 5
     end
-
     return self:CalculateItemHeight() + ((#self.Items > (self.Pagination.Total + 1)) and 37 or 0) + Height
 end
 
 ---AddWindow
 ---@param Window table
+---@return nil
+---@public
 function UIMenu:AddWindow(Window)
     if Window() == "UIMenuWindow" then
         Window:SetParentMenu(self)
@@ -4528,6 +5697,8 @@ end
 
 ---RemoveWindowAt
 ---@param Index table
+---@return nil
+---@public
 function UIMenu:RemoveWindowAt(Index)
     if tonumber(Index) then
         if self.Windows[Index] then
@@ -4540,26 +5711,47 @@ end
 
 ---AddItem
 ---@param Item table
+---@return nil
+---@public
 function UIMenu:AddItem(Item)
-    if Item() == "UIMenuItem" then
-        local SelectedItem = self:CurrentSelection()
-        Item:SetParentMenu(self)
-
-        Item:Offset(self.Position.X, self.Position.Y)
-        Item:Position((#self.Items * 25) - 37 + self.Subtitle.ExtraY)
-        table.insert(self.Items, Item)
-        self:RecalculateDescriptionPosition()
-        self:CurrentSelection(SelectedItem)
+    Items = Item
+    if #Items == 0 then
+        if Item() == "UIMenuItem" then
+            local SelectedItem = self:CurrentSelection()
+            Item:SetParentMenu(self)
+            Item:Offset(self.Position.X, self.Position.Y)
+            Item:Position((#self.Items * 25) - 37 + self.Subtitle.ExtraY)
+            table.insert(self.Items, Item)
+            self:RecalculateDescriptionPosition()
+            self:CurrentSelection(SelectedItem)
+        end
+    end
+    for i = 1, #Items, 1 do
+        Item = Items[i]
+        if Item() == "UIMenuItem" then
+            local SelectedItem = self:CurrentSelection()
+            Item:SetParentMenu(self)
+            Item:Offset(self.Position.X, self.Position.Y)
+            Item:Position((#self.Items * 25) - 37 + self.Subtitle.ExtraY)
+            table.insert(self.Items, Item)
+            self:RecalculateDescriptionPosition()
+            self:CurrentSelection(SelectedItem)
+        end
     end
 end
+
 ---GetItemAt
 ---@param Index table
+---@return table
+---@public
 function UIMenu:GetItemAt(index)
     return self.Items[index]
 end
 
 ---RemoveItemAt
 ---@param Index table
+---@return nil
+---@public
 function UIMenu:RemoveItemAt(Index)
     if tonumber(Index) then
         if self.Items[Index] then
@@ -4576,6 +5768,8 @@ function UIMenu:RemoveItemAt(Index)
 end
 
 ---RefreshIndex
+---@return nil
+---@public
 function UIMenu:RefreshIndex()
     if #self.Items == 0 then
         self.ActiveItem = 1000
@@ -4591,6 +5785,8 @@ function UIMenu:RefreshIndex()
 end
 
 ---Clear
+---@return nil
+---@public
 function UIMenu:Clear()
     self.Items = {}
     self.ReDraw = true
@@ -4599,6 +5795,8 @@ end
 
 ---MultilineFormat
 ---@param str string
+---@return string
+---@public
 function UIMenu:MultilineFormat(str)
     if tostring(str) then
         local PixelPerLine = 425 + self.WidthOffset
@@ -4622,6 +5820,8 @@ function UIMenu:MultilineFormat(str)
 end
 
 ---DrawCalculations
+---@return nil
+---@public
 function UIMenu:DrawCalculations()
     local WindowHeight = self:CalculateWindowHeight()
     if self.Settings.MultilineFormats then
@@ -4644,13 +5844,14 @@ function UIMenu:DrawCalculations()
     self.Extra.Up:Size(431 + self.WidthOffset, 18)
     self.Extra.Down:Size(431 + self.WidthOffset, 18)
 
-    self.Extra.Up:Position(self.Position.X, 144 + self:CalculateItemHeight() + self.Position.Y + WindowHeight)
-    self.Extra.Down:Position(self.Position.X, 144 + 18 + self:CalculateItemHeight() + self.Position.Y + WindowHeight)
+    local offsetExtra = 4
+    self.Extra.Up:Position(self.Position.X, 144 + self:CalculateItemHeight() + self.Position.Y + WindowHeight + offsetExtra)
+    self.Extra.Down:Position(self.Position.X, 144 + 18 + self:CalculateItemHeight() + self.Position.Y + WindowHeight + offsetExtra)
 
     if self.WidthOffset > 0 then
-        self.ArrowSprite:Position(190 + self.Position.X + (self.WidthOffset / 2), 137 + self:CalculateItemHeight() + self.Position.Y + WindowHeight)
+        self.ArrowSprite:Position(190 + self.Position.X + (self.WidthOffset / 2), 141 + self:CalculateItemHeight() + self.Position.Y + WindowHeight + offsetExtra)
     else
-        self.ArrowSprite:Position(190 + self.Position.X + self.WidthOffset, 137 + self:CalculateItemHeight() + self.Position.Y + WindowHeight)
+        self.ArrowSprite:Position(190 + self.Position.X + self.WidthOffset, 141 + self:CalculateItemHeight() + self.Position.Y + WindowHeight + offsetExtra)
     end
 
     self.ReDraw = false
@@ -4670,6 +5871,8 @@ end
 
 ---Visible
 ---@param bool boolean
+---@return boolean
+---@public
 function UIMenu:Visible(bool)
     if bool ~= nil then
         self._Visible = tobool(bool)
@@ -4690,24 +5893,22 @@ function UIMenu:Visible(bool)
 end
 
 ---ProcessControl
+---@return nil
+---@public
 function UIMenu:ProcessControl()
     if not self._Visible then
         return
     end
-
     if self.JustOpened then
         self.JustOpened = false
         return
     end
-
     if self.Controls.Back.Enabled and (IsDisabledControlJustReleased(0, 177) or IsDisabledControlJustReleased(1, 177) or IsDisabledControlJustReleased(2, 177) or IsDisabledControlJustReleased(0, 199) or IsDisabledControlJustReleased(1, 199) or IsDisabledControlJustReleased(2, 199)) then
         self:GoBack()
     end
-
     if #self.Items == 0 then
         return
     end
-
     if not self.UpPressed then
         if self.Controls.Up.Enabled and (IsDisabledControlJustPressed(0, 172) or IsDisabledControlJustPressed(1, 172) or IsDisabledControlJustPressed(2, 172) or IsDisabledControlJustPressed(0, 241) or IsDisabledControlJustPressed(1, 241) or IsDisabledControlJustPressed(2, 241) or IsDisabledControlJustPressed(2, 241)) then
             Citizen.CreateThread(function()
@@ -4732,7 +5933,6 @@ function UIMenu:ProcessControl()
             end)
         end
     end
-
     if not self.DownPressed then
         if self.Controls.Down.Enabled and (IsDisabledControlJustPressed(0, 173) or IsDisabledControlJustPressed(1, 173) or IsDisabledControlJustPressed(2, 173) or IsDisabledControlJustPressed(0, 242) or IsDisabledControlJustPressed(1, 242) or IsDisabledControlJustPressed(2, 242)) then
             Citizen.CreateThread(function()
@@ -4757,7 +5957,6 @@ function UIMenu:ProcessControl()
             end)
         end
     end
-
     if not self.LeftPressed then
         if self.Controls.Left.Enabled and (IsDisabledControlPressed(0, 174) or IsDisabledControlPressed(1, 174) or IsDisabledControlPressed(2, 174)) then
             local type, subtype = self.Items[self:CurrentSelection()]()
@@ -4784,7 +5983,6 @@ function UIMenu:ProcessControl()
             end)
         end
     end
-
     if not self.RightPressed then
         if self.Controls.Right.Enabled and (IsDisabledControlPressed(0, 175) or IsDisabledControlPressed(1, 175) or IsDisabledControlPressed(2, 175)) then
             Citizen.CreateThread(function()
@@ -4811,13 +6009,14 @@ function UIMenu:ProcessControl()
             end)
         end
     end
-
     if self.Controls.Select.Enabled and (IsDisabledControlJustPressed(0, 201) or IsDisabledControlJustPressed(1, 201) or IsDisabledControlJustPressed(2, 201)) then
         self:SelectItem()
     end
 end
 
 ---GoUpOverflow
+---@return nil
+---@public
 function UIMenu:GoUpOverflow()
     if #self.Items <= self.Pagination.Total + 1 then
         return
@@ -4848,6 +6047,8 @@ function UIMenu:GoUpOverflow()
 end
 
 ---GoUp
+---@return nil
+---@public
 function UIMenu:GoUp()
     if #self.Items > self.Pagination.Total + 1 then
         return
@@ -4861,6 +6062,8 @@ function UIMenu:GoUp()
 end
 
 ---GoDownOverflow
+---@return nil
+---@public
 function UIMenu:GoDownOverflow()
     if #self.Items <= self.Pagination.Total + 1 then
         return
@@ -4891,6 +6094,8 @@ function UIMenu:GoDownOverflow()
 end
 
 ---GoDown
+---@return nil
+---@public
 function UIMenu:GoDown()
     if #self.Items > self.Pagination.Total + 1 then
         return
@@ -4904,9 +6109,16 @@ function UIMenu:GoDown()
     self.ReDraw = true
 end
 
+---GoLeft
+---@return number
+---@public
 function UIMenu:GoLeft()
     local type, subtype = self.Items[self:CurrentSelection()]()
-    if subtype ~= "UIMenuListItem" and subtype ~= "UIMenuSliderItem" and subtype ~= "UIMenuProgressItem" and subtype ~= "UIMenuSliderHeritageItem" then
+    if subtype ~= "UIMenuListItem" and
+            subtype ~= "UIMenuSliderItem" and
+            subtype ~= "UIMenuProgressItem" and
+            subtype ~= "UIMenuSliderHeritageItem" and
+            subtype ~= "UIMenuSliderProgressItem" then
         return
     end
 
@@ -4922,6 +6134,12 @@ function UIMenu:GoLeft()
         Item.OnListChanged(self, Item, Item._Index)
         PlaySoundFrontend(-1, self.Settings.Audio.LeftRight, self.Settings.Audio.Library, true)
     elseif subtype == "UIMenuSliderItem" then
+        local Item = self.Items[self:CurrentSelection()]
+        Item:Index(Item._Index - 1)
+        self.OnSliderChange(self, Item, Item:Index())
+        Item.OnSliderChanged(self, Item, Item._Index)
+        PlaySoundFrontend(-1, self.Settings.Audio.LeftRight, self.Settings.Audio.Library, true)
+    elseif subtype == "UIMenuSliderProgressItem" then
         local Item = self.Items[self:CurrentSelection()]
         Item:Index(Item._Index - 1)
         self.OnSliderChange(self, Item, Item:Index())
@@ -4954,9 +6172,15 @@ function UIMenu:GoLeft()
 end
 
 ---GoRight
+---@return nil
+---@public
 function UIMenu:GoRight()
     local type, subtype = self.Items[self:CurrentSelection()]()
-    if subtype ~= "UIMenuListItem" and subtype ~= "UIMenuSliderItem" and subtype ~= "UIMenuProgressItem" and subtype ~= "UIMenuSliderHeritageItem" then
+    if subtype ~= "UIMenuListItem" and
+            subtype ~= "UIMenuSliderItem" and
+            subtype ~= "UIMenuProgressItem" and
+            subtype ~= "UIMenuSliderHeritageItem" and
+            subtype ~= "UIMenuSliderProgressItem" then
         return
     end
     if not self.Items[self:CurrentSelection()]:Enabled() then
@@ -4970,6 +6194,12 @@ function UIMenu:GoRight()
         Item.OnListChanged(self, Item, Item._Index)
         PlaySoundFrontend(-1, self.Settings.Audio.LeftRight, self.Settings.Audio.Library, true)
     elseif subtype == "UIMenuSliderItem" then
+        local Item = self.Items[self:CurrentSelection()]
+        Item:Index(Item._Index + 1)
+        self.OnSliderChange(self, Item, Item:Index())
+        Item.OnSliderChanged(self, Item, Item._Index)
+        PlaySoundFrontend(-1, self.Settings.Audio.LeftRight, self.Settings.Audio.Library, true)
+    elseif subtype == "UIMenuSliderProgressItem" then
         local Item = self.Items[self:CurrentSelection()]
         Item:Index(Item._Index + 1)
         self.OnSliderChange(self, Item, Item:Index())
@@ -5001,6 +6231,8 @@ function UIMenu:GoRight()
 end
 
 ---SelectItem
+---@return nil
+---@public
 function UIMenu:SelectItem()
     if not self.Items[self:CurrentSelection()]:Enabled() then
         PlaySoundFrontend(-1, self.Settings.Audio.Error, self.Settings.Audio.Library, true)
@@ -5018,6 +6250,10 @@ function UIMenu:SelectItem()
         self.OnListSelect(self, Item, Item._Index)
         Item.OnListSelected(self, Item, Item._Index)
     elseif subtype == "UIMenuSliderItem" then
+        PlaySoundFrontend(-1, self.Settings.Audio.Select, self.Settings.Audio.Library, true)
+        self.OnSliderSelect(self, Item, Item._Index)
+        Item.OnSliderSelected(Item._Index)
+    elseif subtype == "UIMenuSliderProgressItem" then
         PlaySoundFrontend(-1, self.Settings.Audio.Select, self.Settings.Audio.Library, true)
         self.OnSliderSelect(self, Item, Item._Index)
         Item.OnSliderSelected(Item._Index)
@@ -5043,6 +6279,8 @@ function UIMenu:SelectItem()
 end
 
 ---GoBack
+---@return nil
+---@public
 function UIMenu:GoBack()
     PlaySoundFrontend(-1, self.Settings.Audio.Back, self.Settings.Audio.Library, true)
     self:Visible(false)
@@ -5060,6 +6298,8 @@ end
 ---BindMenuToItem
 ---@param Menu table
 ---@param Item table
+---@return nil
+---@public
 function UIMenu:BindMenuToItem(Menu, Item)
     if Menu() == "UIMenu" and Item() == "UIMenuItem" then
         Menu.ParentMenu = self
@@ -5070,6 +6310,8 @@ end
 
 ---ReleaseMenuFromItem
 ---@param Item table
+---@return boolean
+---@public
 function UIMenu:ReleaseMenuFromItem(Item)
     if Item() == "UIMenuItem" then
         if not self.Children[Item] then
@@ -5084,6 +6326,8 @@ end
 
 ---PageCounterName
 ---@param text string
+---@return nil
+---@public
 function UIMenu:PageCounterName(String)
     self.PageCounter.isCustom = true
     self.PageCounter.PreText = String
@@ -5092,47 +6336,39 @@ function UIMenu:PageCounterName(String)
 end
 
 ---Draw
+---@return nil
+---@public
 function UIMenu:Draw()
     if not self._Visible then
         return
     end
-
     HideHudComponentThisFrame(19)
-
     if self.Settings.ControlDisablingEnabled then
         self:DisEnableControls(false)
     end
-
     if self.Settings.InstructionalButtons then
         DrawScaleformMovieFullscreen(self.InstructionalScaleform, 255, 255, 255, 255, 0)
     end
-
     if self.Settings.ScaleWithSafezone then
         ScreenDrawPositionBegin(76, 84)
         ScreenDrawPositionRatio(0, 0, 0, 0)
     end
-
     if self.ReDraw then
         self:DrawCalculations()
     end
-
     if self.Logo then
         self.Logo:Draw()
     elseif self.Banner then
         self.Banner:Draw()
     end
-
     self.Title:Draw()
-
     if self.Subtitle.Rectangle then
         self.Subtitle.Rectangle:Draw()
         self.Subtitle.Text:Draw()
     end
-
     if #self.Items ~= 0 or #self.Windows ~= 0 then
         self.Background:Draw()
     end
-
     if #self.Windows ~= 0 then
         local WindowOffset = 0
         for index = 1, #self.Windows do
@@ -5144,7 +6380,6 @@ function UIMenu:Draw()
             Window:Draw()
         end
     end
-
     if #self.Items == 0 then
         if self.Settings.ScaleWithSafezone then
             ScreenDrawPositionEnd()
@@ -5222,6 +6457,8 @@ function UIMenu:Draw()
 end
 
 ---ProcessMouse
+---@return nil
+---@public
 function UIMenu:ProcessMouse()
     if not self._Visible or self.JustOpened or #self.Items == 0 or tobool(Controller()) or not self.Settings.MouseControlsEnabled then
         EnableControlAction(0, 2, true)
@@ -5299,6 +6536,17 @@ function UIMenu:ProcessMouse()
                                 elseif not IsMouseInBounds(Item.LeftArrow.X + SafeZone.X, Item.LeftArrow.Y + SafeZone.Y, Item.LeftArrow.Width, Item.LeftArrow.Height) then
                                     self:SelectItem()
                                 end
+                            elseif SubType == "UIMenuSliderProgressItem" then
+                                if IsMouseInBounds(Item.LeftArrow.X + SafeZone.X, Item.LeftArrow.Y + SafeZone.Y, Item.LeftArrow.Width, Item.LeftArrow.Height) then
+                                    self:GoLeft()
+                                elseif not IsMouseInBounds(Item.RightArrow.X + SafeZone.X, Item.RightArrow.Y + SafeZone.Y, Item.RightArrow.Width, Item.RightArrow.Height) then
+                                    self:SelectItem()
+                                end
+                                if IsMouseInBounds(Item.RightArrow.X + SafeZone.X, Item.RightArrow.Y + SafeZone.Y, Item.RightArrow.Width, Item.RightArrow.Height) then
+                                    self:GoRight()
+                                elseif not IsMouseInBounds(Item.LeftArrow.X + SafeZone.X, Item.LeftArrow.Y + SafeZone.Y, Item.LeftArrow.Width, Item.LeftArrow.Height) then
+                                    self:SelectItem()
+                                end
                             elseif SubType == "UIMenuSliderHeritageItem" then
                                 if IsMouseInBounds(Item.LeftArrow.X + SafeZone.X, Item.LeftArrow.Y + SafeZone.Y, Item.LeftArrow.Width, Item.LeftArrow.Height) then
                                     self:GoLeft()
@@ -5352,6 +6600,13 @@ function UIMenu:ProcessMouse()
                                         self:GoRight()
                                     end
                                 elseif SubType == "UIMenuSliderItem" then
+                                    if IsMouseInBounds(Item.LeftArrow.X + SafeZone.X, Item.LeftArrow.Y + SafeZone.Y, Item.LeftArrow.Width, Item.LeftArrow.Height) then
+                                        self:GoLeft()
+                                    end
+                                    if IsMouseInBounds(Item.RightArrow.X + SafeZone.X, Item.RightArrow.Y + SafeZone.Y, Item.RightArrow.Width, Item.RightArrow.Height) then
+                                        self:GoRight()
+                                    end
+                                elseif SubType == "UIMenuSliderProgressItem" then
                                     if IsMouseInBounds(Item.LeftArrow.X + SafeZone.X, Item.LeftArrow.Y + SafeZone.Y, Item.LeftArrow.Width, Item.LeftArrow.Height) then
                                         self:GoLeft()
                                     end
@@ -5473,6 +6728,8 @@ end
 
 ---AddInstructionButton
 ---@param button table
+---@return nil
+---@public
 function UIMenu:AddInstructionButton(button)
     if type(button) == "table" and #button == 2 then
         table.insert(self.InstructionalButtons, button)
@@ -5481,6 +6738,8 @@ end
 
 ---RemoveInstructionButton
 ---@param button table
+---@return nil
+---@public
 function UIMenu:RemoveInstructionButton(button)
     if type(button) == "table" then
         for i = 1, #self.InstructionalButtons do
@@ -5502,6 +6761,8 @@ end
 ---@param Inputgroup number
 ---@param Control number
 ---@param Controller table
+---@return nil
+---@public
 function UIMenu:AddEnabledControl(Inputgroup, Control, Controller)
     if tonumber(Inputgroup) and tonumber(Control) then
         table.insert(self.Settings.EnabledControls[(Controller and "Controller" or "Keyboard")], { Inputgroup, Control })
@@ -5512,6 +6773,8 @@ end
 ---@param Inputgroup number
 ---@param Control number
 ---@param Controller table
+---@return nil
+---@public
 function UIMenu:RemoveEnabledControl(Inputgroup, Control, Controller)
     local Type = (Controller and "Controller" or "Keyboard")
     for Index = 1, #self.Settings.EnabledControls[Type] do
@@ -5522,6 +6785,9 @@ function UIMenu:RemoveEnabledControl(Inputgroup, Control, Controller)
     end
 end
 
+---UpdateScaleform
+---@return nil
+---@public
 function UIMenu:UpdateScaleform()
     if not self._Visible or not self.Settings.InstructionalButtons then
         return
@@ -5574,13 +6840,13 @@ end
 --[[
 UITimerBar/items/UITimerBarItem.lua
 ]]--
----
---- Generated by EmmyLua(https://github.com/EmmyLua)
---- Created by Dylan Malandain.
---- DateTime: 29/01/2019 22:57
----
+---@type table
 UITimerBarItem = setmetatable({}, UITimerBarItem)
+
+---@type table
 UITimerBarItem.__index = UITimerBarItem
+
+---@type table
 UITimerBarItem.__call = function()
     return "UITimerBarItem"
 end
@@ -5596,6 +6862,8 @@ end
 ---@param G number
 ---@param B number
 ---@param A number
+---@return table
+---@public
 function UITimerBarItem.New(Text, TxtDictionary, TxtName, X, Y, Heading, R, G, B, A)
     local X, Y = tonumber(X) or 0, tonumber(Y) or 0
     if TxtDictionary ~= nil then
@@ -5644,12 +6912,16 @@ end
 
 ---SetTextTimerBar
 ---@param Text string
+---@return nil
+---@public
 function UITimerBarItem:SetTextTimerBar(Text)
     self.TextTimerBar:Text(Text)
 end
 
 ---SetText
 ---@param Text string
+---@return nil
+---@public
 function UITimerBarItem:SetText(Text)
     self.Text:Text(Text)
 end
@@ -5659,6 +6931,8 @@ end
 ---@param G number
 ---@param B number
 ---@param A number
+---@return nil
+---@public
 function UITimerBarItem:SetTextTimerBarColor(R, G, B, A)
     self.TextTimerBar:Colour(R, G, B, A)
 end
@@ -5668,36 +6942,35 @@ end
 ---@param G number
 ---@param B number
 ---@param A number
+---@return nil
+---@public
 function UITimerBarItem:SetTextColor(R, G, B, A)
     self.Text:Colour(R, G, B, A)
 end
 
 ---Draw
 ---@param Interval number
+---@return nil
+---@public
 function UITimerBarItem:Draw(Interval)
-
     self.Background:Position(self.Position.X, self.Position.Y - Interval)
     self.Text:Position(self.Position.X + 170.0, self.Position.Y - Interval + 7.0)
-
     self.TextTimerBar:Position(self.Position.X + 340.0, self.Position.Y - Interval)
-
     self.Background:Draw()
     self.TextTimerBar:Draw()
     self.Text:Draw()
-
 end
-
 
 --[[
 UITimerBar/items/UITimerBarProgressItem.lua
 ]]--
----
---- Generated by EmmyLua(https://github.com/EmmyLua)
---- Created by Dylan Malandain.
---- DateTime: 26/01/2019 17:36
----
+---@type table
 UITimerBarProgressItem = setmetatable({}, UITimerBarProgressItem)
+
+---@type table
 UITimerBarProgressItem.__index = UITimerBarProgressItem
+
+---@type table
 UITimerBarProgressItem.__call = function()
     return "UITimerBarProgressItem"
 end
@@ -5713,6 +6986,8 @@ end
 ---@param G number
 ---@param B number
 ---@param A number
+---@return table
+---@public
 function UITimerBarProgressItem.New(Text, TxtDictionary, TxtName, X, Y, Heading, R, G, B, A)
     local X, Y = tonumber(X) or 0, tonumber(Y) or 0
     if TxtDictionary ~= nil then
@@ -5765,47 +7040,48 @@ end
 ---@param G number
 ---@param B number
 ---@param A number
+---@return nil
+---@public
 function UITimerBarProgressItem:SetTextColor(R, G, B, A)
     self.Text:Colour(R, G, B, A)
 end
 
 ---GetPercentage
----@return number
+---@return nil
+---@public
 function UITimerBarProgressItem:GetPercentage()
     return self.ProgressBar.Width * 1 / 1.5
 end
 
 ---SetPercentage
 ---@param Number number
----@return number
+---@return nil
+---@public
 function UITimerBarProgressItem:SetPercentage(Number)
     if (Number <= 100) then
         self.ProgressBar.Width = Number * 1.5
     else
-        self.ProgressBar.Width = 210
+        self.ProgressBar.Width = 100 * 1.5
     end
 end
 
 ---Draw
 ---@param Interval number
+---@return nil
+---@public
 function UITimerBarProgressItem:Draw(Interval)
     self.Background:Position(self.Position.X, self.Position.Y - Interval)
-
     self.Text:Position(self.Position.X + 170.0, self.Position.Y - Interval + 7.0)
-
     self.BackgroundProgressBar:Position(self.Position.X + 190.0, self.Position.Y - Interval + 10.0)
     self.ProgressBar:Position(self.Position.X + 190.0, self.Position.Y - Interval + 10.0)
-
     self.Background:Draw()
     self.Text:Draw()
     self.BackgroundProgressBar:Draw()
     self.ProgressBar:Draw()
 end
-
 --[[
 UITimerBar/items/UITimerBarPool.lua
 ]]--
-
 ---
 --- Generated by EmmyLua(https://github.com/EmmyLua)
 --- Created by Dylan Malandain.
@@ -5816,6 +7092,7 @@ UITimerBarPool.__index = UITimerBarPool
 
 ---New
 ---@return table
+---@public
 function UITimerBarPool.New()
     local _UITimerBarPool = {
         TimerBars = {},
@@ -5823,6 +7100,10 @@ function UITimerBarPool.New()
     return setmetatable(_UITimerBarPool, UITimerBarPool)
 end
 
+---Add
+---@param TimerBar table
+---@return table
+---@public
 function UITimerBarPool:Add(TimerBar)
     if TimerBar() == "UITimerBarProgressItem" or "UITimerBarItem" then
         table.insert(self.TimerBars, TimerBar)
@@ -5830,260 +7111,43 @@ function UITimerBarPool:Add(TimerBar)
     end
 end
 
+---Remove
+---@param id number
+---@return number
+---@public
 function UITimerBarPool:Remove(id)
     table.remove(self.TimerBars, id)
     return self.TimerBars
 end
 
 ---Draw
+---@return nil
+---@public
 function UITimerBarPool:Draw()
     for _, TimerBar in pairs(self.TimerBars) do
         TimerBar:Draw(38 * _)
     end
-end
-
---[[
-Wrapper/Utility.llua
-]]--
-function GetResolution()
-    local W, H = GetActiveScreenResolution()
-    if (W / H) > 3.5 then
-        return GetScreenResolution()
-    else
-        return W, H
-    end
-end
-
-function FormatXWYH(Value, Value2)
-    return Value / 1920, Value2 / 1080
-end
-
-function math.round(num, numDecimalPlaces)
-    return tonumber(string.format("%." .. (numDecimalPlaces or 0) .. "f", num))
-end
-
-function tobool(input)
-    if input == "true" or tonumber(input) == 1 or input == true then
-        return true
-    else
-        return false
-    end
-end
-
-function string.split(inputstr, sep)
-    if sep == nil then
-        sep = "%s"
-    end
-    local t = {};
-    i = 1
-    for str in string.gmatch(inputstr, "([^" .. sep .. "]+)") do
-        t[i] = str
-        i = i + 1
-    end
-
-    return t
-end
-
-function string.starts(String, Start)
-    return string.sub(String, 1, string.len(Start)) == Start
-end
-
-function IsMouseInBounds(X, Y, Width, Height)
-    local MX, MY = math.round(GetControlNormal(0, 239) * 1920), math.round(GetControlNormal(0, 240) * 1080)
-    MX, MY = FormatXWYH(MX, MY)
-    X, Y = FormatXWYH(X, Y)
-    Width, Height = FormatXWYH(Width, Height)
-    return (MX >= X and MX <= X + Width) and (MY > Y and MY < Y + Height)
-end
-
-function TableDump(o)
-    if type(o) == 'table' then
-        local s = '{ '
-        for k, v in pairs(o) do
-            if type(k) ~= 'number' then
-                k = '"' .. k .. '"'
-            end
-            s = s .. '[' .. k .. '] = ' .. TableDump(v) .. ','
-        end
-        return s .. '} '
-    else
-        return print(tostring(o))
-    end
-end
-
-function GetSafeZoneBounds()
-    local SafeSize = GetSafeZoneSize()
-    SafeSize = math.round(SafeSize, 2)
-    SafeSize = (SafeSize * 100) - 90
-    SafeSize = 10 - SafeSize
-
-    local W, H = 1920, 1080
-
-    return { X = math.round(SafeSize * ((W / H) * 5.4)), Y = math.round(SafeSize * 5.4) }
-end
-
-function Controller()
-    return not IsInputDisabled(2)
-end
-
-function ShowPopup(text)
-    SetNotificationTextEntry("STRING")
-    AddTextComponentString(text)
-    DrawNotification(false, false)
-end
-
-function ShowNotification(text)
-    ClearPrints()
-    SetTextEntry_2("STRING")
-    AddTextComponentString(text)
-    DrawSubtitleTimed(6000, 1)
-end
-
-function print_table(node)
-    -- to make output beautiful
-    local function tab(amt)
-        local str = ""
-        for i = 1, amt do
-            str = str .. "\t"
-        end
-        return str
-    end
-
-    local cache, stack, output = {}, {}, {}
-    local depth = 1
-    local output_str = "{\n"
-
-    while true do
-        local size = 0
-        for k, v in pairs(node) do
-            size = size + 1
-        end
-
-        local cur_index = 1
-        for k, v in pairs(node) do
-            if (cache[node] == nil) or (cur_index >= cache[node]) then
-
-                if (string.find(output_str, "}", output_str:len())) then
-                    output_str = output_str .. ",\n"
-                elseif not (string.find(output_str, "\n", output_str:len())) then
-                    output_str = output_str .. "\n"
-                end
-
-                -- This is necessary for working with HUGE tables otherwise we run out of memory using concat on huge strings
-                table.insert(output, output_str)
-                output_str = ""
-
-                local key
-                if (type(k) == "number" or type(k) == "boolean") then
-                    key = "[" .. tostring(k) .. "]"
-                else
-                    key = "['" .. tostring(k) .. "']"
-                end
-
-                if (type(v) == "number" or type(v) == "boolean") then
-                    output_str = output_str .. tab(depth) .. key .. " = " .. tostring(v)
-                elseif (type(v) == "table") then
-                    output_str = output_str .. tab(depth) .. key .. " = {\n"
-                    table.insert(stack, node)
-                    table.insert(stack, v)
-                    cache[node] = cur_index + 1
-                    break
-                else
-                    output_str = output_str .. tab(depth) .. key .. " = '" .. tostring(v) .. "'"
-                end
-
-                if (cur_index == size) then
-                    output_str = output_str .. "\n" .. tab(depth - 1) .. "}"
-                else
-                    output_str = output_str .. ","
-                end
-            else
-                -- close the table
-                if (cur_index == size) then
-                    output_str = output_str .. "\n" .. tab(depth - 1) .. "}"
-                end
-            end
-
-            cur_index = cur_index + 1
-        end
-
-        if (size == 0) then
-            output_str = output_str .. "\n" .. tab(depth - 1) .. "}"
-        end
-
-        if (#stack > 0) then
-            node = stack[#stack]
-            stack[#stack] = nil
-            depth = cache[node] == nil and depth + 1 or depth - 1
-        else
-            break
+    if (#self.TimerBars > 0) then
+        for i = 6, 9, 1 do
+            HideHudComponentThisFrame(i)
         end
     end
-
-    -- This is necessary for working with HUGE tables otherwise we run out of memory using concat on huge strings
-    table.insert(output, output_str)
-    output_str = table.concat(output)
-
-    print(output_str)
 end
 
-function RenderText(Text, X, Y, Font, Scale, R, G, B, A, Alignment, DropShadow, Outline, WordWrap)
-    Text = tostring(Text)
-    X, Y = FormatXWYH(X, Y)
-    SetTextFont(Font or 0)
-    SetTextScale(1.0, Scale or 0)
-    SetTextColour(R or 255, G or 255, B or 255, A or 255)
 
-    if DropShadow then
-        SetTextDropShadow()
-    end
-    if Outline then
-        SetTextOutline()
-    end
-
-    if Alignment ~= nil then
-        if Alignment == 1 or Alignment == "Center" or Alignment == "Centre" then
-            SetTextCentre(true)
-        elseif Alignment == 2 or Alignment == "Right" then
-            SetTextRightJustify(true)
-            SetTextWrap(0, X)
-        end
-    end
-
-    if tonumber(WordWrap) then
-        if tonumber(WordWrap) ~= 0 then
-            WordWrap, _ = FormatXWYH(WordWrap, 0)
-            SetTextWrap(WordWrap, X - WordWrap)
-        end
-    end
-
-    BeginTextCommandDisplayText("STRING")
-    AddLongString(Text)
-    EndTextCommandDisplayText(X, Y)
-end
-
-function DrawRectangle(X, Y, Width, Height, R, G, B, A)
-    X, Y, Width, Height = X or 0, Y or 0, Width or 0, Height or 0
-    X, Y = FormatXWYH(X, Y)
-    Width, Height = FormatXWYH(Width, Height)
-    DrawRect(X + Width * 0.5, Y + Height * 0.5, Width, Height, tonumber(R) or 255, tonumber(G) or 255, tonumber(B) or 255, tonumber(A) or 255)
-end
-
-function DrawTexture(TxtDictionary, TxtName, X, Y, Width, Height, Heading, R, G, B, A)
-    if not HasStreamedTextureDictLoaded(tostring(TxtDictionary) or "") then
-        RequestStreamedTextureDict(tostring(TxtDictionary) or "", true)
-    end
-    X, Y, Width, Height = X or 0, Y or 0, Width or 0, Height or 0
-    X, Y = FormatXWYH(X, Y)
-    Width, Height = FormatXWYH(Width, Height)
-    DrawSprite(tostring(TxtDictionary) or "", tostring(TxtName) or "", X + Width * 0.5, Y + Height * 0.5, Width, Height, tonumber(Heading) or 0, tonumber(R) or 255, tonumber(G) or 255, tonumber(B) or 255, tonumber(A) or 255)
-end
 --[[
 NativeUI.Lua
 ]]--
+print("Github download : https://github.com/iTexZoz/NativeUILua-Reloaded/releases")
+print("[Feature Suggestions] and [Frequently asked question] : https://github.com/iTexZoz/NativeUILua-Reloaded/issues/9")
+print("NativeUILua-Reloaded wiki : https://github.com/iTexZoz/NativeUILua-Reloaded/wiki")
+
+---@type table
 NativeUI = {}
 
 ---CreatePool
+---@return table
+---@public
 function NativeUI.CreatePool()
     return MenuPool.New()
 end
@@ -6100,6 +7164,8 @@ end
 ---@param G number
 ---@param B number
 ---@param A number
+---@return table
+---@public
 function NativeUI.CreateMenu(Title, Subtitle, X, Y, TxtDictionary, TxtName, Heading, R, G, B, A)
     return UIMenu.New(Title, Subtitle, X, Y, TxtDictionary, TxtName, Heading, R, G, B, A)
 end
@@ -6107,6 +7173,8 @@ end
 ---CreateItem
 ---@param Text string
 ---@param Description string
+---@return table
+---@public
 function NativeUI.CreateItem(Text, Description)
     return UIMenuItem.New(Text, Description)
 end
@@ -6116,6 +7184,8 @@ end
 ---@param Description string
 ---@param MainColour table
 ---@param HighlightColour table
+---@return table
+---@public
 function NativeUI.CreateColouredItem(Text, Description, MainColour, HighlightColour)
     return UIMenuColouredItem.New(Text, Description, MainColour, HighlightColour)
 end
@@ -6124,6 +7194,8 @@ end
 ---@param Text string
 ---@param Check boolean
 ---@param Description string
+---@return table
+---@public
 function NativeUI.CreateCheckboxItem(Text, Check, Description, CheckboxStyle)
     return UIMenuCheckboxItem.New(Text, Check, Description, CheckboxStyle)
 end
@@ -6133,6 +7205,8 @@ end
 ---@param Items number
 ---@param Index table
 ---@param Description string
+---@return table
+---@public
 function NativeUI.CreateListItem(Text, Items, Index, Description)
     return UIMenuListItem.New(Text, Items, Index, Description)
 end
@@ -6145,6 +7219,8 @@ end
 ---@param Divider boolean
 ---@param SliderColors table
 ---@param BackgroundSliderColors table
+---@return table
+---@public
 function NativeUI.CreateSliderItem(Text, Items, Index, Description, Divider, SliderColors, BackgroundSliderColors)
     return UIMenuSliderItem.New(Text, Items, Index, Description, Divider, SliderColors, BackgroundSliderColors)
 end
@@ -6156,8 +7232,23 @@ end
 ---@param Description string
 ---@param SliderColors table
 ---@param BackgroundSliderColors table
+---@return table
+---@public
 function NativeUI.CreateSliderHeritageItem(Text, Items, Index, Description, SliderColors, BackgroundSliderColors)
     return UIMenuSliderHeritageItem.New(Text, Items, Index, Description, SliderColors, BackgroundSliderColors)
+end
+
+---CreateSliderProgressItem
+---@param Text string
+---@param Items number
+---@param Index number
+---@param Description string
+---@param SliderColors table
+---@param BackgroundSliderColors table
+---@return table
+---@public
+function NativeUI.CreateSliderProgressItem(Text, Items, Index, Description, SliderColors, BackgroundSliderColors)
+    return UIMenuSliderProgressItem.New(Text, Items, Index, Description, SliderColors, BackgroundSliderColors)
 end
 
 ---CreateProgressItem
@@ -6166,6 +7257,8 @@ end
 ---@param Index table
 ---@param Description number
 ---@param Counter boolean
+---@return table
+---@public
 function NativeUI.CreateProgressItem(Text, Items, Index, Description, Counter)
     return UIMenuProgressItem.New(Text, Items, Index, Description, Counter)
 end
@@ -6173,6 +7266,8 @@ end
 ---CreateHeritageWindow
 ---@param Mum number
 ---@param Dad number
+---@return table
+---@public
 function NativeUI.CreateHeritageWindow(Mum, Dad)
     return UIMenuHeritageWindow.New(Mum, Dad)
 end
@@ -6182,6 +7277,8 @@ end
 ---@param LeftText string
 ---@param RightText string
 ---@param BottomText string
+---@return table
+---@public
 function NativeUI.CreateGridPanel(TopText, LeftText, RightText, BottomText)
     return UIMenuGridPanel.New(TopText, LeftText, RightText, BottomText)
 end
@@ -6189,6 +7286,8 @@ end
 ---CreateHorizontalGridPanel
 ---@param LeftText string
 ---@param RightText string
+---@return table
+---@public
 function NativeUI.CreateHorizontalGridPanel(LeftText, RightText)
     return UIMenuHorizontalOneLineGridPanel.New(LeftText, RightText)
 end
@@ -6196,6 +7295,8 @@ end
 ---CreateVerticalGridPanel
 ---@param TopText string
 ---@param BottomText string
+---@return table
+---@public
 function NativeUI.CreateVerticalGridPanel(TopText, BottomText)
     return UIMenuVerticalOneLineGridPanel.New(TopText, BottomText)
 end
@@ -6203,6 +7304,8 @@ end
 ---CreateColourPanel
 ---@param Title string
 ---@param Colours table
+---@return table
+---@public
 function NativeUI.CreateColourPanel(Title, Colours)
     return UIMenuColourPanel.New(Title, Colours)
 end
@@ -6210,8 +7313,17 @@ end
 ---CreatePercentagePanel
 ---@param MinText string
 ---@param MaxText string
+---@return table
+---@public
 function NativeUI.CreatePercentagePanel(MinText, MaxText)
     return UIMenuPercentagePanel.New(MinText, MaxText)
+end
+
+---CreateStatisticsPanel
+---@return table
+---@public
+function NativeUI.CreateStatisticsPanel()
+    return UIMenuStatisticsPanel.New()
 end
 
 ---CreateSprite
@@ -6226,6 +7338,8 @@ end
 ---@param G number
 ---@param B number
 ---@param A number
+---@return table
+---@public
 function NativeUI.CreateSprite(TxtDictionary, TxtName, X, Y, Width, Height, Heading, R, G, B, A)
     return Sprite.New(TxtDictionary, TxtName, X, Y, Width, Height, Heading, R, G, B, A)
 end
@@ -6239,6 +7353,8 @@ end
 ---@param G number
 ---@param B number
 ---@param A number
+---@return table
+---@public
 function NativeUI.CreateRectangle(X, Y, Width, Height, R, G, B, A)
     return UIResRectangle.New(X, Y, Width, Height, R, G, B, A)
 end
@@ -6257,6 +7373,8 @@ end
 ---@param DropShadow number
 ---@param Outline number
 ---@param WordWrap number
+---@return table
+---@public
 function NativeUI.CreateText(Text, X, Y, Scale, R, G, B, A, Font, Alignment, DropShadow, Outline, WordWrap)
     return UIResText.New(Text, X, Y, Scale, R, G, B, A, Font, Alignment, DropShadow, Outline, WordWrap)
 end
@@ -6272,6 +7390,8 @@ end
 ---@param G number
 ---@param B number
 ---@param A number
+---@return table
+---@public
 function NativeUI.CreateTimerBarProgress(Text, TxtDictionary, TxtName, X, Y, Heading, R, G, B, A)
     return UITimerBarProgressItem.New(Text, TxtDictionary, TxtName, X, Y, Heading, R, G, B, A)
 end
@@ -6287,11 +7407,15 @@ end
 ---@param G number
 ---@param B number
 ---@param A number
+---@return table
+---@public
 function NativeUI.CreateTimerBar(Text, TxtDictionary, TxtName, X, Y, Heading, R, G, B, A)
     return UITimerBarItem.New(Text, TxtDictionary, TxtName, X, Y, Heading, R, G, B, A)
 end
 
 ---TimerBarPool
+---@return table
+---@public
 function NativeUI.TimerBarPool()
     return UITimerBarPool.New()
 end
