@@ -90,7 +90,7 @@ function NativeUI.CreateSliderHeritageItem(Text, Items, Index, Description, Slid
     return UIMenuSliderHeritageItem.New(Text, Items, Index, Description, SliderColors, BackgroundSliderColors)
 end
 
----CreateSliderProgresItem
+---CreateSliderProgressItem
 ---@param Text string
 ---@param Items number
 ---@param Index number
@@ -98,7 +98,7 @@ end
 ---@param SliderColors table
 ---@param BackgroundSliderColors table
 ---@return table
-function NativeUI.CreateSliderProgresItem(Text, Items, Index, Description, SliderColors, BackgroundSliderColors)
+function NativeUI.CreateSliderProgressItem(Text, Items, Index, Description, SliderColors, BackgroundSliderColors)
     return UIMenuSliderProgressItem.New(Text, Items, Index, Description, SliderColors, BackgroundSliderColors)
 end
 
