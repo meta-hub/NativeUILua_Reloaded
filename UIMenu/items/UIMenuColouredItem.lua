@@ -139,6 +139,42 @@ function UIMenuColouredItem:Text(Text)
     end
 end
 
+---SetTextSelectedColor
+---@param R number
+---@param G number
+---@param B number
+---@param A number
+---@return table
+---@public
+function UIMenuItem:SetTextSelectedColor(R, G, B, A)
+    if tonumber(R) and tonumber(G) and tonumber(B) and tonumber(A) then
+        self.Base._Text.Colour.Selected.R = R
+        self.Base._Text.Colour.Selected.G = G
+        self.Base._Text.Colour.Selected.B = B
+        self.Base._Text.Colour.Selected.A = A
+    else
+        return { R = self.Base._Text.Colour.Selected.R, G = self.Base._Text.Colour.Selected.G, B = self.Base._Text.Colour.Selected.B, A = self.Base._Text.Colour.Selected.A, }
+    end
+end
+
+---SetTextHoveredColor
+---@param R number
+---@param G number
+---@param B number
+---@param A number
+---@return table
+---@public
+function UIMenuItem:SetTextHoveredColor(R, G, B, A)
+    if tonumber(R) and tonumber(G) and tonumber(B) and tonumber(A) then
+        self.Base._Text.Colour.Hovered.R = R
+        self.Base._Text.Colour.Hovered.G = G
+        self.Base._Text.Colour.Hovered.B = B
+        self.Base._Text.Colour.Hovered.A = A
+    else
+        return { R = self.Base._Text.Colour.Hovered.R, G = self.Base._Text.Colour.Hovered.G, B = self.Base._Text.Colour.Hovered.B, A = self.Base._Text.Colour.Hovered.A, }
+    end
+end
+
 ---RightLabel
 ---@param Text string
 ---@param MainColour table

@@ -19,6 +19,13 @@ function UIMenuItem.New(Text, Description)
     local _UIMenuItem = {
         Rectangle = UIResRectangle.New(0, 0, 431, 38, 255, 255, 255, 20),
         Text = UIResText.New(tostring(Text) or "", 8, 0, 0.33, 245, 245, 245, 255, 0),
+        _Text = {
+            Padding = { X = 8, },
+            Colour = {
+                Selected = { R = 0, G = 0, B = 0, A = 255 },
+                Hovered = { R = 245, G = 245, B = 245, A = 255 },
+            }
+        },
         _Description = tostring(Description) or "";
         SelectedSprite = Sprite.New("commonmenu", "gradient_nav", 0, 0, 431, 38),
         LeftBadge = { Sprite = Sprite.New("commonmenu", "", 0, 0, 40, 40), Badge = 0 },
@@ -128,7 +135,7 @@ function UIMenuItem:Position(Y)
     if tonumber(Y) then
         self.Rectangle:Position(self._Offset.X, Y + 144 + self._Offset.Y)
         self.SelectedSprite:Position(0 + self._Offset.X, Y + 144 + self._Offset.Y)
-        self.Text:Position(8 + self._Offset.X, Y + 147 + self._Offset.Y)
+        self.Text:Position(self._Text.Padding.X + self._Offset.X, Y + 147 + self._Offset.Y)
         self.LeftBadge.Sprite:Position(0 + self._Offset.X, Y + 142 + self._Offset.Y)
         self.RightBadge.Sprite:Position(385 + self._Offset.X, Y + 142 + self._Offset.Y)
         self.Label.Text:Position(420 + self._Offset.X, Y + 148 + self._Offset.Y)
@@ -199,6 +206,42 @@ function UIMenuItem:Text(Text)
     end
 end
 
+---SetTextSelectedColor
+---@param R number
+---@param G number
+---@param B number
+---@param A number
+---@return table
+---@public
+function UIMenuItem:SetTextSelectedColor(R, G, B, A)
+    if tonumber(R) and tonumber(G) and tonumber(B) and tonumber(A) then
+        self._Text.Colour.Selected.R = R
+        self._Text.Colour.Selected.G = G
+        self._Text.Colour.Selected.B = B
+        self._Text.Colour.Selected.A = A
+    else
+        return { R = self._Text.Colour.Selected.R, G = self._Text.Colour.Selected.G, B = self._Text.Colour.Selected.B, A = self._Text.Colour.Selected.A, }
+    end
+end
+
+---SetTextHoveredColor
+---@param R number
+---@param G number
+---@param B number
+---@param A number
+---@return table
+---@public
+function UIMenuItem:SetTextHoveredColor(R, G, B, A)
+    if tonumber(R) and tonumber(G) and tonumber(B) and tonumber(A) then
+        self._Text.Colour.Hovered.R = R
+        self._Text.Colour.Hovered.G = G
+        self._Text.Colour.Hovered.B = B
+        self._Text.Colour.Hovered.A = A
+    else
+        return { R = self._Text.Colour.Hovered.R, G = self._Text.Colour.Hovered.G, B = self._Text.Colour.Hovered.B, A = self._Text.Colour.Hovered.A, }
+    end
+end
+
 ---AddPanel
 ---@param Panel table
 ---@return nil
@@ -266,10 +309,10 @@ function UIMenuItem:Draw()
 
     if self._Enabled then
         if self._Selected then
-            self.Text:Colour(0, 0, 0, 255)
+            self.Text:Colour(self._Text.Colour.Selected.R, self._Text.Colour.Selected.G, self._Text.Colour.Selected.B, self._Text.Colour.Selected.A)
             self.Label.Text:Colour(self.Label.HighlightColour.R, self.Label.HighlightColour.G, self.Label.HighlightColour.B, self.Label.HighlightColour.A)
         else
-            self.Text:Colour(245, 245, 245, 255)
+            self.Text:Colour(self._Text.Colour.Hovered.R, self._Text.Colour.Hovered.G, self._Text.Colour.Hovered.B, self._Text.Colour.Hovered.A)
             self.Label.Text:Colour(self.Label.MainColour.R, self.Label.MainColour.G, self.Label.MainColour.B, self.Label.MainColour.A)
         end
     else
@@ -278,7 +321,7 @@ function UIMenuItem:Draw()
     end
 
     if self.LeftBadge.Badge == BadgeStyle.None then
-        self.Text:Position(8 + self._Offset.X, self.Text.Y)
+        self.Text:Position(self._Text.Padding.X + self._Offset.X, self.Text.Y)
     else
         self.Text:Position(35 + self._Offset.X, self.Text.Y)
         self.LeftBadge.Sprite.TxtDictionary = GetBadgeDictionary(self.LeftBadge.Badge, self._Selected)
