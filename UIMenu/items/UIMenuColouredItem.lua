@@ -146,7 +146,7 @@ end
 ---@param A number
 ---@return table
 ---@public
-function UIMenuItem:SetTextSelectedColor(R, G, B, A)
+function UIMenuColouredItem:SetTextSelectedColor(R, G, B, A)
     if tonumber(R) and tonumber(G) and tonumber(B) and tonumber(A) then
         self.Base._Text.Colour.Selected.R = R
         self.Base._Text.Colour.Selected.G = G
@@ -164,7 +164,7 @@ end
 ---@param A number
 ---@return table
 ---@public
-function UIMenuItem:SetTextHoveredColor(R, G, B, A)
+function UIMenuColouredItem:SetTextHoveredColor(R, G, B, A)
     if tonumber(R) and tonumber(G) and tonumber(B) and tonumber(A) then
         self.Base._Text.Colour.Hovered.R = R
         self.Base._Text.Colour.Hovered.G = G
