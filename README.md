@@ -3,7 +3,6 @@
 ![OpenIssue](https://img.shields.io/github/issues/iTexZoz/NativeUILua-Reloaded.svg?style=flat)
 ![LastReleases](https://img.shields.io/github/release/iTexZoz/NativeUILua-Reloaded.svg?label=Last%20releases&style=flat)
 ![License](https://img.shields.io/github/license/iTexZoz/NativeUILua-Reloaded.svg?style=flat)
-![TotalReleaseDownload](https://img.shields.io/github/downloads/iTexZoz/NativeUILua-Reloaded/total.svg?style=flat)
 
 - Warning, NativeUI-Shared.lua will not be kept update, I invite the community to update it with the changes. 
 - Following a change and for more understanding I decided to remove the fork and to dedicate a repository to this magnificent project that will be named NativeUI Reloaded , previously based on [FrazzIe](https://github.com/FrazzIe) work.
