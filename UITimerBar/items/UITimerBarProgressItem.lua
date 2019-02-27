@@ -84,7 +84,7 @@ end
 ---@return nil
 ---@public
 function UITimerBarProgressItem:GetPercentage()
-    return self.ProgressBar.Width * 1 / 1.5
+    return math.floor(self.ProgressBar.Width * 1 / 1.5)
 end
 
 ---SetPercentage
