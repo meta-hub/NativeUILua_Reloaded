@@ -279,3 +279,21 @@ end
 function NativeUI.TimerBarPool()
     return UITimerBarPool.New()
 end
+
+---ProgressBarPool
+function NativeUI.ProgressBarPool()
+    return UIProgressBarPool.New()
+end
+
+---CreateProgressBarItem
+---@param Text string
+---@param X number
+---@param Y number
+---@param Heading number
+---@param R number
+---@param G number
+---@param B number
+---@param A number
+function NativeUI.CreateProgressBarItem(Text, X, Y, Heading, R, G, B, A)
+    return UIProgressBarItem.New(Text, X, Y, Heading, R, G, B, A)
+end
