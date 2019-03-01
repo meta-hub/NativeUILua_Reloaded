@@ -273,6 +273,22 @@ function NativeUI.CreateTimerBar(Text, TxtDictionary, TxtName, X, Y, Heading, R,
     return UITimerBarItem.New(Text, TxtDictionary, TxtName, X, Y, Heading, R, G, B, A)
 end
 
+---CreateTimerBarProgressWithIcon
+---@param TxtDictionary string
+---@param TxtName string
+---@param IconDictionary string
+---@param IconName string
+---@param X number
+---@param Y number
+---@param Heading number
+---@param R number
+---@param G number
+---@param B number
+---@param A number
+function NativeUI.CreateTimerBarProgressWithIcon(TxtDictionary, TxtName, IconDictionary, IconName, X, Y, Heading, R, G, B, A)
+    return UITimerBarProgressWithIconItem.New(TxtDictionary, TxtName, IconDictionary, IconName, X, Y, Heading, R, G, B, A)
+end
+
 ---TimerBarPool
 ---@return table
 ---@public

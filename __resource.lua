@@ -48,6 +48,8 @@ client_scripts {
 
     'UITimerBar/items/UITimerBarItem.lua',
     'UITimerBar/items/UITimerBarProgressItem.lua',
+    'UITimerBar/items/UITimerBarProgressWithIconItem.lua',
+
 }
 
 client_scripts {
