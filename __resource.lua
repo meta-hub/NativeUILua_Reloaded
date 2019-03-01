@@ -37,7 +37,6 @@ client_scripts {
     "UIMenu/panels/UIMenuColourPanel.lua",
     "UIMenu/panels/UIMenuPercentagePanel.lua",
     "UIMenu/panels/UIMenuStatisticsPanel.lua",
-    --"UIMenu/panels/UIMenuDescriptifPanel.lua",
 
     "UIMenu/UIMenu.lua",
     "UIMenu/MenuPool.lua",
