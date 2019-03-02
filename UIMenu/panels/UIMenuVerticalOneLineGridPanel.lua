@@ -117,7 +117,7 @@ function UIMenuVerticalOneLineGridPanel:UpdateParent(Y)
                 end
             end
             self.ParentItem.Base.ParentMenu.OnListChange(self.ParentItem.Base.ParentMenu, self.ParentItem, self.ParentItem._Index)
-            self.ParentItem.OnListChanged(self.ParentItem.Base.ParentMenu, self.ParentItem, self.ParentItem._Index)
+            self.ParentItem.Base.OnListChanged(self.ParentItem.Base.ParentMenu, self.ParentItem, self.ParentItem._Index)
         end
     elseif ParentType == "UIMenuItem" then
         self.ParentItem.ActivatedPanel(self.ParentItem.ParentMenu, self.ParentItem, self, { Y = Y })
