@@ -15,7 +15,7 @@ end
 ---@param BottomText string
 ---@return table
 ---@public
-function UIMenuVerticalOneLineGridPanel.New(TopText, BottomText)
+function UIMenuVerticalOneLineGridPanel.New(TopText, BottomText, CirclePositionY)
     local _UIMenuVerticalOneLineGridPanel = {
         Data = {
             Enabled = true,
@@ -29,6 +29,7 @@ function UIMenuVerticalOneLineGridPanel.New(TopText, BottomText)
             Top = UIResText.New(TopText or "Top", 0, 0, 0.35, 255, 255, 255, 255, 0, "Centre"),
             Bottom = UIResText.New(BottomText or "Bottom", 0, 0, 0.35, 255, 255, 255, 255, 0, "Centre"),
         },
+        SetCirclePosition = { X = 0.5, Y = CirclePositionY or 0.5 }
     }
     return setmetatable(_UIMenuVerticalOneLineGridPanel, UIMenuVerticalOneLineGridPanel)
 end
@@ -84,13 +85,12 @@ function UIMenuVerticalOneLineGridPanel:Position(Y)
         self.Text.Bottom:Position(ParentOffsetX + 215.5 + (ParentOffsetWidth / 2), 240 + Y)
         if not self.CircleLocked then
             self.CircleLocked = true
-            self:CirclePosition(0.5, 0.5)
+            self:CirclePosition(self.SetCirclePosition.X, self.SetCirclePosition.Y)
         end
     end
 end
 
 ---UpdateParent
----@param X number
 ---@param Y number
 ---@return nil
 ---@public
@@ -117,7 +117,8 @@ function UIMenuVerticalOneLineGridPanel:UpdateParent(Y)
                 end
             end
             self.ParentItem.Base.ParentMenu.OnListChange(self.ParentItem.Base.ParentMenu, self.ParentItem, self.ParentItem._Index)
-            self.ParentItem.Base.OnListChanged(self.ParentItem.Base.ParentMenu, self.ParentItem, self.ParentItem._Index)
+            self.ParentItem.OnListChanged(self.ParentItem.Base.ParentMenu, self.ParentItem, self.ParentItem._Index)
+            self.ParentItem.Base.ActivatedPanel(self.ParentItem.ParentMenu, self.ParentItem, self, { Y = Y })
         end
     elseif ParentType == "UIMenuItem" then
         self.ParentItem.ActivatedPanel(self.ParentItem.ParentMenu, self.ParentItem, self, { Y = Y })

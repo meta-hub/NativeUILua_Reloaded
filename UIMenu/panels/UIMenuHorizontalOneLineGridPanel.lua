@@ -15,7 +15,7 @@ end
 ---@param RightText string
 ---@return table
 ---@public
-function UIMenuHorizontalOneLineGridPanel.New(LeftText, RightText)
+function UIMenuHorizontalOneLineGridPanel.New(LeftText, RightText, CirclePositionX)
     local _UIMenuHorizontalOneLineGridPanel = {
         Data = {
             Enabled = true,
@@ -29,6 +29,7 @@ function UIMenuHorizontalOneLineGridPanel.New(LeftText, RightText)
             Left = UIResText.New(LeftText or "Left", 0, 0, 0.35, 255, 255, 255, 255, 0, "Centre"),
             Right = UIResText.New(RightText or "Right", 0, 0, 0.35, 255, 255, 255, 255, 0, "Centre"),
         },
+        SetCirclePosition = { X = CirclePositionX or 0.5, Y = 0.5 }
     }
     return setmetatable(_UIMenuHorizontalOneLineGridPanel, UIMenuHorizontalOneLineGridPanel)
 end
@@ -85,14 +86,13 @@ function UIMenuHorizontalOneLineGridPanel:Position(Y)
         self.Text.Right:Position(ParentOffsetX + 373.25 + (ParentOffsetWidth / 2), 120 + Y)
         if not self.CircleLocked then
             self.CircleLocked = true
-            self:CirclePosition(0.5, 0.5)
+            self:CirclePosition(self.SetCirclePosition.X, self.SetCirclePosition.Y)
         end
     end
 end
 
 ---UpdateParent
 ---@param X number
----@param Y number
 ---@return nil
 ---@public
 function UIMenuHorizontalOneLineGridPanel:UpdateParent(X)
@@ -118,7 +118,8 @@ function UIMenuHorizontalOneLineGridPanel:UpdateParent(X)
                 end
             end
             self.ParentItem.Base.ParentMenu.OnListChange(self.ParentItem.Base.ParentMenu, self.ParentItem, self.ParentItem._Index)
-            self.ParentItem.Base.OnListChanged(self.ParentItem.Base.ParentMenu, self.ParentItem, self.ParentItem._Index)
+            self.ParentItem.OnListChanged(self.ParentItem.Base.ParentMenu, self.ParentItem, self.ParentItem._Index)
+            self.ParentItem.Base.ActivatedPanel(self.ParentItem.ParentMenu, self.ParentItem, self, { X = X })
         end
     elseif ParentType == "UIMenuItem" then
         self.ParentItem.ActivatedPanel(self.ParentItem.ParentMenu, self.ParentItem, self, { X = X })

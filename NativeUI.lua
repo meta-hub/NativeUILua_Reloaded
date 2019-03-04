@@ -148,19 +148,21 @@ end
 ---CreateHorizontalGridPanel
 ---@param LeftText string
 ---@param RightText string
+---@param RightText number
 ---@return table
 ---@public
-function NativeUI.CreateHorizontalGridPanel(LeftText, RightText)
-    return UIMenuHorizontalOneLineGridPanel.New(LeftText, RightText)
+function NativeUI.CreateHorizontalGridPanel(LeftText, RightText, CirclePositionX)
+    return UIMenuHorizontalOneLineGridPanel.New(LeftText, RightText, CirclePositionX)
 end
 
 ---CreateVerticalGridPanel
 ---@param TopText string
 ---@param BottomText string
+---@param CirclePositionY number
 ---@return table
 ---@public
-function NativeUI.CreateVerticalGridPanel(TopText, BottomText)
-    return UIMenuVerticalOneLineGridPanel.New(TopText, BottomText)
+function NativeUI.CreateVerticalGridPanel(TopText, BottomText, CirclePositionY)
+    return UIMenuVerticalOneLineGridPanel.New(TopText, BottomText, CirclePositionY)
 end
 
 ---CreateColourPanel

@@ -93,9 +93,6 @@ function UIMenuGridPanel:Position(Y)
         self.Text.Bottom:Position(ParentOffsetX + 215.5 + (ParentOffsetWidth / 2), 240 + Y)
         if not self.CircleLocked then
             self.CircleLocked = true
-            print(self.SetCirclePosition.X)
-            print(self.SetCirclePosition.Y)
-
             self:CirclePosition(self.SetCirclePosition.X, self.SetCirclePosition.Y)
         end
     end
