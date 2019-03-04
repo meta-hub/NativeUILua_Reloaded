@@ -34,7 +34,7 @@ function UIMenuGridPanel.New(TopText, LeftText, RightText, BottomText, CirclePos
             Right = UIResText.New(RightText or "Right", 0, 0, 0.35, 255, 255, 255, 255, 0, "Centre"),
             Bottom = UIResText.New(BottomText or "Bottom", 0, 0, 0.35, 255, 255, 255, 255, 0, "Centre"),
         },
-        SetCirclePosition = { X = CirclePositionX, Y = CirclePositionY }
+        SetCirclePosition = { X = CirclePositionX or 0.5, Y = CirclePositionY or 0.5 }
     }
     return setmetatable(_UIMenuGridPanel, UIMenuGridPanel)
 end
