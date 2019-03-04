@@ -137,10 +137,12 @@ end
 ---@param LeftText string
 ---@param RightText string
 ---@param BottomText string
+---@param CirclePositionX number
+---@param CirclePositionY number
 ---@return table
 ---@public
-function NativeUI.CreateGridPanel(TopText, LeftText, RightText, BottomText)
-    return UIMenuGridPanel.New(TopText, LeftText, RightText, BottomText)
+function NativeUI.CreateGridPanel(TopText, LeftText, RightText, BottomText, CirclePositionX, CirclePositionY)
+    return UIMenuGridPanel.New(TopText, LeftText, RightText, BottomText, CirclePositionX, CirclePositionY)
 end
 
 ---CreateHorizontalGridPanel

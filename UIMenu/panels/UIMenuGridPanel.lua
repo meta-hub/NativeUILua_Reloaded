@@ -17,7 +17,8 @@ end
 ---@param BottomText string
 ---@return table
 ---@public
-function UIMenuGridPanel.New(TopText, LeftText, RightText, BottomText)
+function UIMenuGridPanel.New(TopText, LeftText, RightText, BottomText, CirclePositionX, CirclePositionY)
+    print(CirclePositionX)
     local _UIMenuGridPanel = {
         Data = {
             Enabled = true,
@@ -33,6 +34,7 @@ function UIMenuGridPanel.New(TopText, LeftText, RightText, BottomText)
             Right = UIResText.New(RightText or "Right", 0, 0, 0.35, 255, 255, 255, 255, 0, "Centre"),
             Bottom = UIResText.New(BottomText or "Bottom", 0, 0, 0.35, 255, 255, 255, 255, 0, "Centre"),
         },
+        SetCirclePosition = { X = CirclePositionX, Y = CirclePositionY }
     }
     return setmetatable(_UIMenuGridPanel, UIMenuGridPanel)
 end
@@ -91,7 +93,10 @@ function UIMenuGridPanel:Position(Y)
         self.Text.Bottom:Position(ParentOffsetX + 215.5 + (ParentOffsetWidth / 2), 240 + Y)
         if not self.CircleLocked then
             self.CircleLocked = true
-            self:CirclePosition(0.5, 0.5)
+            print(self.SetCirclePosition.X)
+            print(self.SetCirclePosition.Y)
+
+            self:CirclePosition(self.SetCirclePosition.X, self.SetCirclePosition.Y)
         end
     end
 end
