@@ -55,8 +55,8 @@ function UIProgressBarItem.New(Text, X, Y, Heading, R, G, B, A)
     local _UIProgressBarItem = {
         Background = UIResRectangle.New(0, 0, 350, 40, 0, 0, 0, 100),
         Text = UIResText.New(Text or "N/A", 0, 0, 0.35, 255, 255, 255, 255, 0, "Centre"),
-        ProgressBar = UIResRectangle.New(0, 0, 0, 30, 32, 120, 72, 150),
-        Position = { X = 800, Y = 1030 },
+        ProgressBar = UIResRectangle.New(0, 0, 0, 30, R, G, B, A),
+        Position = { X = X, Y = Y },
     }
     return setmetatable(_UIProgressBarItem, UIProgressBarItem)
 end
