@@ -25,7 +25,7 @@ end
 ---@param B number
 ---@param A number
 function UIProgressBarItem.New(Text, X, Y, Heading, R, G, B, A)
-    local X, Y = tonumber(X) or 0, tonumber(Y) or 0
+    local X, Y = tonumber(X) or 800, tonumber(Y) or 1030
     if Heading ~= nil then
         Heading = tonumber(Heading) or 0
     else
