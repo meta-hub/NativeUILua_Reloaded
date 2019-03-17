@@ -43,6 +43,8 @@ Original code / concept
     - [Heritage](https://github.com/iTexZoz/NativeUILua-Reloaded/wiki/UIMenu.Windows.Heritage)
 - Timer bar
   - [Showcase](https://github.com/iTexZoz/NativeUILua-Reloaded/wiki/TimerBar.Showcase)
+- Progress bar
+  - [Showcase](https://github.com/iTexZoz/NativeUILua-Reloaded/wiki/UIProgressBar.Showcase)
 - Pause menu
   - soon
 
