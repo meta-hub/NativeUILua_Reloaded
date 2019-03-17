@@ -63,9 +63,3 @@ client_scripts {
 client_scripts {
     ".test/Native-Danger.lua"
 }
-
---[[
-Only for cross resource
-
-client_script "NativeUI-Shared.lua"
-]]--
