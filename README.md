@@ -4,7 +4,7 @@
 ![LastReleases](https://img.shields.io/github/release/iTexZoz/NativeUILua_Reloaded.svg?label=Last%20releases&style=flat)
 ![License](https://img.shields.io/github/license/iTexZoz/NativeUILua_Reloaded.svg?style=flat)
 
-# You can host re-releases of this API, but ONLY as a FORK created via GitHub. If it's not a forked repo, then the release will be taken down by DMCA request.
+# You can host re-releases of NativeUILua-Reloaded, but ONLY as a FORK created via GitHub. If it's not a forked repo, then the release will be taken down by DMCA request.
 
 - Following a change and for more understanding I decided to remove the fork and to dedicate a repository to this magnificent project that will be named NativeUI Reloaded , previously based on [FrazzIe](https://github.com/FrazzIe) work.
 
