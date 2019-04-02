@@ -1,8 +1,8 @@
 # NativeUILua-Reloaded
 
-![OpenIssue](https://img.shields.io/github/issues/iTexZoz/NativeUILua-Reloaded.svg?style=flat)
-![LastReleases](https://img.shields.io/github/release/iTexZoz/NativeUILua-Reloaded.svg?label=Last%20releases&style=flat)
-![License](https://img.shields.io/github/license/iTexZoz/NativeUILua-Reloaded.svg?style=flat)
+![OpenIssue](https://img.shields.io/github/issues/iTexZoz/NativeUILua_Reloaded.svg?style=flat)
+![LastReleases](https://img.shields.io/github/release/iTexZoz/NativeUILua_Reloaded.svg?label=Last%20releases&style=flat)
+![License](https://img.shields.io/github/license/iTexZoz/NativeUILua_Reloaded.svg?style=flat)
 
 - Following a change and for more understanding I decided to remove the fork and to dedicate a repository to this magnificent project that will be named NativeUI Reloaded , previously based on [FrazzIe](https://github.com/FrazzIe) work.
 
