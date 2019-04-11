@@ -2,7 +2,6 @@
 
 ![OpenIssue](https://img.shields.io/github/issues/iTexZoz/NativeUILua_Reloaded.svg?style=flat)
 ![LastReleases](https://img.shields.io/github/release/iTexZoz/NativeUILua_Reloaded.svg?label=Last%20releases&style=flat)
-![License](https://img.shields.io/github/license/iTexZoz/NativeUILua_Reloaded.svg?style=flat)
 
 # License (custom license)
 
