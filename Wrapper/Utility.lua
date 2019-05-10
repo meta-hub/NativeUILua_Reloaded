@@ -3,18 +3,26 @@
 function GetResolution()
     local W, H = GetActiveScreenResolution()
     if (W / H) > 3.5 then
-        return GetScreenResolution()
-    else
-        return W, H
+        W, H = GetScreenResolution()
     end
+    if W < 1920 then W = 1920 end
+    if H < 1080 then H = 1080 end
+    return W, H
 end
 
 ---FormatXWYH
 ---@param Value number
 ---@param Value2 number
 ---@return table
+--function FormatXWYH(Value, Value2)
+--    return Value / 1920, Value2 / 1080
+--end
 function FormatXWYH(Value, Value2)
-    return Value / 1920, Value2 / 1080
+    local W, H = GetScreenResolution()
+    local AW, AH = GetResolution()
+    local XW = Value/W - ((Value / W) - (Value / ((AW >= 1920) and AW or 1920)))
+    local YH = Value2/H - ((Value2 / H) - (Value2 / ((AH >= 1080) and AH or 1080)))
+    return XW, YH
 end
 
 ---round
@@ -67,10 +75,15 @@ end
 ---@param Width number
 ---@param Height number
 ---@return number
-function IsMouseInBounds(X, Y, Width, Height)
-    local MX, MY = math.round(GetControlNormal(0, 239) * 1920), math.round(GetControlNormal(0, 240) * 1080)
+function IsMouseInBounds(X, Y, Width, Height, DrawOffset)
+    local W, H = GetResolution()
+    local MX, MY = math.round(GetControlNormal(0, 239) * W), math.round(GetControlNormal(0, 240) * H)
     MX, MY = FormatXWYH(MX, MY)
     X, Y = FormatXWYH(X, Y)
+    if DrawOffset then
+        X = X + DrawOffset.X
+        Y = Y + DrawOffset.Y
+    end
     Width, Height = FormatXWYH(Width, Height)
     return (MX >= X and MX <= X + Width) and (MY > Y and MY < Y + Height)
 end
@@ -91,19 +104,6 @@ function TableDump(o)
     else
         return print(tostring(o))
     end
-end
-
----GetSafeZoneBounds
----@return table
-function GetSafeZoneBounds()
-    local SafeSize = GetSafeZoneSize()
-    SafeSize = math.round(SafeSize, 2)
-    SafeSize = (SafeSize * 100) - 90
-    SafeSize = 10 - SafeSize
-
-    local W, H = 1920, 1080
-
-    return { X = math.round(SafeSize * ((W / H) * 5.4)), Y = math.round(SafeSize * 5.4) }
 end
 
 ---Controller

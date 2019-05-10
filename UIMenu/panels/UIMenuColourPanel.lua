@@ -36,7 +36,7 @@ function UIMenuColourPanel.New(Title, Colours)
         RightArrow = Sprite.New("commonmenu", "arrowright", 0, 0, 30, 30),
         SelectedRectangle = UIResRectangle.New(0, 0, 44.5, 8),
         Text = UIResText.New(Title .. " [1 / " .. #Colours .. "]" or "Title" .. " [1 / " .. #Colours .. "]", 0, 0, 0.35, 255, 255, 255, 255, 0, "Centre"),
-        ParentItem = nil,
+        ParentItem = nil
     }
 
     for Index = 1, #Colours do
@@ -188,9 +188,9 @@ end
 ---@return nil
 ---@public
 function UIMenuColourPanel:Functions()
-    local SafeZone = { X = 0, Y = 0 }
+    local DrawOffset = { X = 0, Y = 0}
     if self.ParentItem:SetParentMenu().Settings.ScaleWithSafezone then
-        SafeZone = GetSafeZoneBounds()
+        DrawOffset = self.ParentItem:SetParentMenu().DrawOffset
     end
 
     --@Key Process
@@ -202,19 +202,19 @@ function UIMenuColourPanel:Functions()
     end
 
     --@Mouse Process
-    if IsMouseInBounds(self.LeftArrow.X + SafeZone.X, self.LeftArrow.Y + SafeZone.Y, self.LeftArrow.Width, self.LeftArrow.Height) then
+    if IsMouseInBounds(self.LeftArrow.X, self.LeftArrow.Y, self.LeftArrow.Width, self.LeftArrow.Height, DrawOffset) then
         if IsDisabledControlJustPressed(0, 24) then
             self:GoLeft()
         end
     end
-    if IsMouseInBounds(self.RightArrow.X + SafeZone.X, self.RightArrow.Y + SafeZone.Y, self.RightArrow.Width, self.RightArrow.Height) then
+    if IsMouseInBounds(self.RightArrow.X, self.RightArrow.Y, self.RightArrow.Width, self.RightArrow.Height, DrawOffset) then
         if IsDisabledControlJustPressed(0, 24) then
             self:GoRight()
         end
     end
 
     for Index = 1, #self.Bar do
-        if IsMouseInBounds(self.Bar[Index].X + SafeZone.X, self.Bar[Index].Y + SafeZone.Y, self.Bar[Index].Width, self.Bar[Index].Height) then
+        if IsMouseInBounds(self.Bar[Index].X, self.Bar[Index].Y, self.Bar[Index].Width, self.Bar[Index].Height, DrawOffset) then
             if IsDisabledControlJustPressed(0, 24) then
                 self:CurrentSelection(self.Data.Pagination.Min + Index - 1)
             end

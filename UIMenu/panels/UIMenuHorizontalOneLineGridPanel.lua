@@ -130,21 +130,22 @@ end
 ---@return nil
 ---@public
 function UIMenuHorizontalOneLineGridPanel:Functions()
-    local SafeZone = { X = 0, Y = 0 }
+    local DrawOffset = { X = 0, Y = 0}
     if self.ParentItem:SetParentMenu().Settings.ScaleWithSafezone then
-        SafeZone = GetSafeZoneBounds()
+        DrawOffset = self.ParentItem:SetParentMenu().DrawOffset
     end
-    if IsMouseInBounds(self.Grid.X + 20 + SafeZone.X, self.Grid.Y + 20 + SafeZone.Y, self.Grid.Width - 40, self.Grid.Height - 40) then
+    if IsMouseInBounds(self.Grid.X + 20, self.Grid.Y + 20, self.Grid.Width - 40, self.Grid.Height - 40, DrawOffset) then
         if IsDisabledControlJustPressed(0, 24) then
             if not self.Pressed then
                 self.Pressed = true
                 Citizen.CreateThread(function()
                     self.Audio.Id = GetSoundId()
                     PlaySoundFrontend(self.Audio.Id, self.Audio.Slider, self.Audio.Library, 1)
-                    while IsDisabledControlPressed(0, 24) and IsMouseInBounds(self.Grid.X + 20 + SafeZone.X, self.Grid.Y + 20 + SafeZone.Y, self.Grid.Width - 10, self.Grid.Height - 10) do
+                    while IsDisabledControlPressed(0, 24) and IsMouseInBounds(self.Grid.X + 20, self.Grid.Y + 20, self.Grid.Width - 10, self.Grid.Height - 10, DrawOffset) do
                         Citizen.Wait(0)
-                        local CursorX = math.round(GetControlNormal(0, 239) * 1920) - SafeZone.X - (self.Circle.Width / 2)
-                        local CursorY = math.round(GetControlNormal(0, 240) * 1080) - SafeZone.Y - (self.Circle.Height / 2)
+                        local W, H = GetResolution()
+                        local CursorX = math.round((GetControlNormal(0, 239) - DrawOffset.X) * W) - (self.Circle.Width / 2)
+                        local CursorY = math.round((GetControlNormal(0, 240) - DrawOffset.Y) * H) - (self.Circle.Height / 2)
                         local moveCursorX = (CursorX > (self.Grid.X + 10 + self.Grid.Width - 40)) and (self.Grid.X + 10 + self.Grid.Width - 40) or ((CursorX < (self.Grid.X + 20 - (self.Circle.Width / 2))) and (self.Grid.X + 20 - (self.Circle.Width / 2)) or CursorX)
                         local moveCursorY = (CursorY > (self.Grid.Y + 10 + self.Grid.Height - 120)) and (self.Grid.Y + 10 + self.Grid.Height - 120) or ((CursorY < (self.Grid.Y + 100 - (self.Circle.Height / 2))) and (self.Grid.Y + 100 - (self.Circle.Height / 2)) or CursorY)
                         self.Circle:Position(moveCursorX, moveCursorY)
@@ -154,7 +155,7 @@ function UIMenuHorizontalOneLineGridPanel:Functions()
                     self.Pressed = false
                 end)
                 Citizen.CreateThread(function()
-                    while IsDisabledControlPressed(0, 24) and IsMouseInBounds(self.Grid.X + 20 + SafeZone.X, self.Grid.Y + 20 + SafeZone.Y, self.Grid.Width - 40, self.Grid.Height - 40) do
+                    while IsDisabledControlPressed(0, 24) and IsMouseInBounds(self.Grid.X + 20, self.Grid.Y + 20, self.Grid.Width - 40, self.Grid.Height - 40, DrawOffset) do
                         Citizen.Wait(75)
                         local ResultX = math.round((self.Circle.X - (self.Grid.X + 20) + (self.Circle.Width / 2)) / (self.Grid.Width - 40), 2)
                         self:UpdateParent((((ResultX >= 0.0 and ResultX <= 1.0) and ResultX or ((ResultX <= 0) and 0.0) or 1.0) * 2) - 1)
