@@ -639,7 +639,7 @@ function UIMenu:Visible(bool)
             return
         end
         if self.Settings.ResetCursorOnOpen then
-            local W, H = GetScreenResolution()
+            local W, H = GetActiveScreenResolution()
             SetCursorLocation(W / 2, H / 2)
             SetCursorSprite(1)
         end
@@ -1316,7 +1316,8 @@ function UIMenu:ProcessMouse()
                                 end
                             elseif SubType == "UIMenuProgressItem" then
                                 if IsMouseInBounds(Item.Bar.X, Item.Bar.Y - 12, Item.Data.Max, Item.Bar.Height + 24, self.DrawOffset) then
-                                    Item:CalculateProgress(math.round(GetControlNormal(0, 239) * 1920))
+                                    local CursorX, CursorY = ConvertToPixel(GetControlNormal(0, 239), 0)
+                                    Item:CalculateProgress(CursorX)
                                     self.OnProgressChange(self, Item, Item.Data.Index)
                                     Item.OnProgressChanged(self, Item, Item.Data.Index)
                                     if not Item.Pressed then
@@ -1378,7 +1379,8 @@ function UIMenu:ProcessMouse()
                                     end
                                 elseif SubType == "UIMenuProgressItem" then
                                     if IsMouseInBounds(Item.Bar.X, Item.Bar.Y - 12, Item.Data.Max, Item.Bar.Height + 24, self.DrawOffset) then
-                                        Item:CalculateProgress(math.round(GetControlNormal(0, 239) * 1920))
+                                        local CursorX, CursorY = ConvertToPixel(GetControlNormal(0, 239), 0)
+                                        Item:CalculateProgress(CursorX)
                                         self.OnProgressChange(self, Item, Item.Data.Index)
                                         Item.OnProgressChanged(self, Item, Item.Data.Index)
                                         if not Item.Pressed then

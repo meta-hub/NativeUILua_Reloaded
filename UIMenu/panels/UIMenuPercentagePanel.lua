@@ -145,8 +145,8 @@ function UIMenuPercentagePanel:Functions()
                     PlaySoundFrontend(self.Audio.Id, self.Audio.Slider, self.Audio.Library, 1)
                     while IsDisabledControlPressed(0, 24) and IsMouseInBounds(self.BackgroundBar.X, self.BackgroundBar.Y - 4, self.BackgroundBar.Width, self.BackgroundBar.Height + 8, DrawOffset) do
                         Citizen.Wait(0)
-                        local W, H = GetResolution()
-                        local Progress = (math.round((GetControlNormal(0, 239) - DrawOffset.X) * W)) - self.ActiveBar.X
+                        local Progress, ProgressY = ConvertToPixel(GetControlNormal(0, 239) - DrawOffset.X, 0)
+                        Progress = Progress - self.ActiveBar.X
                         self.ActiveBar:Size(((Progress >= 0 and Progress <= 413) and Progress or ((Progress < 0) and 0 or 413)), self.ActiveBar.Height)
                     end
                     StopSound(self.Audio.Id)
@@ -156,8 +156,8 @@ function UIMenuPercentagePanel:Functions()
                 Citizen.CreateThread(function()
                     while IsDisabledControlPressed(0, 24) and IsMouseInBounds(self.BackgroundBar.X, self.BackgroundBar.Y - 4, self.BackgroundBar.Width, self.BackgroundBar.Height + 8, DrawOffset) do
                         Citizen.Wait(75)
-                        local W, H = GetResolution()
-                        local Progress = (math.round((GetControlNormal(0, 239) - DrawOffset.X) * W)) - self.ActiveBar.X
+                        local Progress, ProgressY = ConvertToPixel(GetControlNormal(0, 239) - DrawOffset.X, 0)
+                        Progress = Progress - self.ActiveBar.X
                         self:UpdateParent(math.round(((Progress >= 0 and Progress <= 413) and Progress or ((Progress < 0) and 0 or 413)) / self.BackgroundBar.Width, 2))
                     end
                 end)

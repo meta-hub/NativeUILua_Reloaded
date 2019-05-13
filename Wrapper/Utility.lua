@@ -20,9 +20,15 @@ end
 function FormatXWYH(Value, Value2)
     local W, H = GetScreenResolution()
     local AW, AH = GetResolution()
-    local XW = Value/W - ((Value / W) - (Value / ((AW >= 1920) and AW or 1920)))
-    local YH = Value2/H - ((Value2 / H) - (Value2 / ((AH >= 1080) and AH or 1080)))
+    local XW = Value/W - ((Value / W) - (Value / AW))
+    local YH = Value2/H - ((Value2 / H) - (Value2 / AH))
     return XW, YH
+end
+
+-- Converts normalized position to pixel position
+function ConvertToPixel(x, y)
+    local AW, AH = GetResolution()
+    return math.round(x * AW), math.round(y * AH)
 end
 
 ---round
