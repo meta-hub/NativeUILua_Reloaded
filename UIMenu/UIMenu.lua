@@ -79,6 +79,7 @@ function UIMenu.New(Title, Subtitle, X, Y, TxtDictionary, TxtName, Heading, R, G
         Subtitle = { ExtraY = 0 },
         WidthOffset = 0,
         Position = { X = X, Y = Y },
+        DrawOffset = { X = 0, Y = 0 },
         Pagination = { Min = 0, Max = 10, Total = 9 },
         PageCounter = {
             isCustom = false,
@@ -147,6 +148,7 @@ function UIMenu.New(Title, Subtitle, X, Y, TxtDictionary, TxtName, Heading, R, G
             MouseControlsEnabled = true,
             MouseEdgeEnabled = true,
             ControlDisablingEnabled = true,
+            DrawOrder = nil,
             Audio = {
                 Library = "HUD_FRONTEND_DEFAULT_SOUNDSET",
                 UpDown = "NAV_UP_DOWN",
@@ -637,7 +639,7 @@ function UIMenu:Visible(bool)
             return
         end
         if self.Settings.ResetCursorOnOpen then
-            local W, H = GetScreenResolution()
+            local W, H = GetActiveScreenResolution()
             SetCursorLocation(W / 2, H / 2)
             SetCursorSprite(1)
         end
@@ -1104,8 +1106,12 @@ function UIMenu:Draw()
         DrawScaleformMovieFullscreen(self.InstructionalScaleform, 255, 255, 255, 255, 0)
     end
     if self.Settings.ScaleWithSafezone then
-        ScreenDrawPositionBegin(76, 84)
-        ScreenDrawPositionRatio(0, 0, 0, 0)
+        SetScriptGfxAlign(76, 84)
+        SetScriptGfxAlignParams(0, 0, 0, 0)
+        if self.Settings.DrawOrder ~= nil then
+            SetScriptGfxDrawOrder(tonumber(self.Settings.DrawOrder))
+        end
+        self.DrawOffset.X, self.DrawOffset.Y = GetScriptGfxPosition(0,0)
     end
     if self.ReDraw then
         self:DrawCalculations()
@@ -1136,7 +1142,7 @@ function UIMenu:Draw()
     end
     if #self.Items == 0 then
         if self.Settings.ScaleWithSafezone then
-            ScreenDrawPositionEnd()
+            ResetScriptGfxAlign()
         end
         return
     end
@@ -1205,8 +1211,7 @@ function UIMenu:Draw()
     end
 
     if self.Settings.ScaleWithSafezone then
-        ScreenDrawPositionEnd()
-
+        ResetScriptGfxAlign()
     end
 end
 
@@ -1229,12 +1234,7 @@ function UIMenu:ProcessMouse()
         return
     end
 
-    local SafeZone = { X = 0, Y = 0 }
     local WindowHeight = self:CalculateWindowHeight()
-    if self.Settings.ScaleWithSafezone then
-        SafeZone = GetSafeZoneBounds()
-    end
-
     local Limit = #self.Items
     local ItemOffset = 0
 
@@ -1244,10 +1244,12 @@ function UIMenu:ProcessMouse()
         Limit = self.Pagination.Max
     end
 
-    if IsMouseInBounds(0, 0, 30, 1080) and self.Settings.MouseEdgeEnabled then
+    local W, H = GetResolution()
+
+    if IsMouseInBounds(0, 0, 30, H) and self.Settings.MouseEdgeEnabled then
         SetGameplayCamRelativeHeading(GetGameplayCamRelativeHeading() + 5)
         SetCursorSprite(6)
-    elseif IsMouseInBounds(1920 - 30, 0, 30, 1080) and self.Settings.MouseEdgeEnabled then
+    elseif IsMouseInBounds(W - 30, 0, 30, H) and self.Settings.MouseEdgeEnabled then
         SetGameplayCamRelativeHeading(GetGameplayCamRelativeHeading() - 5)
         SetCursorSprite(7)
     elseif self.Settings.MouseEdgeEnabled then
@@ -1255,12 +1257,12 @@ function UIMenu:ProcessMouse()
     end
 
     for i = self.Pagination.Min + 1, Limit, 1 do
-        local X, Y = self.Position.X + SafeZone.X, self.Position.Y + 144 - 37 + self.Subtitle.ExtraY + ItemOffset + SafeZone.Y + WindowHeight
+        local X, Y = self.Position.X, self.Position.Y + 144 - 37 + self.Subtitle.ExtraY + ItemOffset + WindowHeight
         local Item = self.Items[i]
         local Type, SubType = Item()
         local Width, Height = 431 + self.WidthOffset, self:CalculateItemHeightOffset(Item)
 
-        if IsMouseInBounds(X, Y, Width, Height) then
+        if IsMouseInBounds(X, Y, Width, Height, self.DrawOffset) then
             Item:Hovered(true)
             if not self.Controls.MousePressed then
                 if IsDisabledControlJustPressed(0, 24) then
@@ -1269,52 +1271,53 @@ function UIMenu:ProcessMouse()
                         self.Controls.MousePressed = true
                         if Item:Selected() and Item:Enabled() then
                             if SubType == "UIMenuListItem" then
-                                if IsMouseInBounds(Item.LeftArrow.X + SafeZone.X, Item.LeftArrow.Y + SafeZone.Y, Item.LeftArrow.Width, Item.LeftArrow.Height) then
+                                if IsMouseInBounds(Item.LeftArrow.X, Item.LeftArrow.Y, Item.LeftArrow.Width, Item.LeftArrow.Height, self.DrawOffset) then
                                     self:GoLeft()
-                                elseif not IsMouseInBounds(Item.RightArrow.X + SafeZone.X, Item.RightArrow.Y + SafeZone.Y, Item.RightArrow.Width, Item.RightArrow.Height) then
+                                elseif not IsMouseInBounds(Item.RightArrow.X, Item.RightArrow.Y, Item.RightArrow.Width, Item.RightArrow.Height, self.DrawOffset) then
                                     self:SelectItem()
                                 end
-                                if IsMouseInBounds(Item.RightArrow.X + SafeZone.X, Item.RightArrow.Y + SafeZone.Y, Item.RightArrow.Width, Item.RightArrow.Height) then
+                                if IsMouseInBounds(Item.RightArrow.X, Item.RightArrow.Y, Item.RightArrow.Width, Item.RightArrow.Height, self.DrawOffset) then
                                     self:GoRight()
-                                elseif not IsMouseInBounds(Item.LeftArrow.X + SafeZone.X, Item.LeftArrow.Y + SafeZone.Y, Item.LeftArrow.Width, Item.LeftArrow.Height) then
+                                elseif not IsMouseInBounds(Item.LeftArrow.X, Item.LeftArrow.Y, Item.LeftArrow.Width, Item.LeftArrow.Height, self.DrawOffset) then
                                     self:SelectItem()
                                 end
                             elseif SubType == "UIMenuSliderItem" then
-                                if IsMouseInBounds(Item.LeftArrow.X + SafeZone.X, Item.LeftArrow.Y + SafeZone.Y, Item.LeftArrow.Width, Item.LeftArrow.Height) then
+                                if IsMouseInBounds(Item.LeftArrow.X, Item.LeftArrow.Y, Item.LeftArrow.Width, Item.LeftArrow.Height, self.DrawOffset) then
                                     self:GoLeft()
-                                elseif not IsMouseInBounds(Item.RightArrow.X + SafeZone.X, Item.RightArrow.Y + SafeZone.Y, Item.RightArrow.Width, Item.RightArrow.Height) then
+                                elseif not IsMouseInBounds(Item.RightArrow.X, Item.RightArrow.Y, Item.RightArrow.Width, Item.RightArrow.Height, self.DrawOffset) then
                                     self:SelectItem()
                                 end
-                                if IsMouseInBounds(Item.RightArrow.X + SafeZone.X, Item.RightArrow.Y + SafeZone.Y, Item.RightArrow.Width, Item.RightArrow.Height) then
+                                if IsMouseInBounds(Item.RightArrow.X, Item.RightArrow.Y, Item.RightArrow.Width, Item.RightArrow.Height, self.DrawOffset) then
                                     self:GoRight()
-                                elseif not IsMouseInBounds(Item.LeftArrow.X + SafeZone.X, Item.LeftArrow.Y + SafeZone.Y, Item.LeftArrow.Width, Item.LeftArrow.Height) then
+                                elseif not IsMouseInBounds(Item.LeftArrow.X, Item.LeftArrow.Y, Item.LeftArrow.Width, Item.LeftArrow.Height, self.DrawOffset) then
                                     self:SelectItem()
                                 end
                             elseif SubType == "UIMenuSliderProgressItem" then
-                                if IsMouseInBounds(Item.LeftArrow.X + SafeZone.X, Item.LeftArrow.Y + SafeZone.Y, Item.LeftArrow.Width, Item.LeftArrow.Height) then
+                                if IsMouseInBounds(Item.LeftArrow.X, Item.LeftArrow.Y, Item.LeftArrow.Width, Item.LeftArrow.Height, self.DrawOffset) then
                                     self:GoLeft()
-                                elseif not IsMouseInBounds(Item.RightArrow.X + SafeZone.X, Item.RightArrow.Y + SafeZone.Y, Item.RightArrow.Width, Item.RightArrow.Height) then
+                                elseif not IsMouseInBounds(Item.RightArrow.X, Item.RightArrow.Y, Item.RightArrow.Width, Item.RightArrow.Height, self.DrawOffset) then
                                     self:SelectItem()
                                 end
-                                if IsMouseInBounds(Item.RightArrow.X + SafeZone.X, Item.RightArrow.Y + SafeZone.Y, Item.RightArrow.Width, Item.RightArrow.Height) then
+                                if IsMouseInBounds(Item.RightArrow.X, Item.RightArrow.Y, Item.RightArrow.Width, Item.RightArrow.Height, self.DrawOffset) then
                                     self:GoRight()
-                                elseif not IsMouseInBounds(Item.LeftArrow.X + SafeZone.X, Item.LeftArrow.Y + SafeZone.Y, Item.LeftArrow.Width, Item.LeftArrow.Height) then
+                                elseif not IsMouseInBounds(Item.LeftArrow.X, Item.LeftArrow.Y, Item.LeftArrow.Width, Item.LeftArrow.Height, self.DrawOffset) then
                                     self:SelectItem()
                                 end
                             elseif SubType == "UIMenuSliderHeritageItem" then
-                                if IsMouseInBounds(Item.LeftArrow.X + SafeZone.X, Item.LeftArrow.Y + SafeZone.Y, Item.LeftArrow.Width, Item.LeftArrow.Height) then
+                                if IsMouseInBounds(Item.LeftArrow.X, Item.LeftArrow.Y, Item.LeftArrow.Width, Item.LeftArrow.Height, self.DrawOffset) then
                                     self:GoLeft()
-                                elseif not IsMouseInBounds(Item.RightArrow.X + SafeZone.X, Item.RightArrow.Y + SafeZone.Y, Item.RightArrow.Width, Item.RightArrow.Height) then
+                                elseif not IsMouseInBounds(Item.RightArrow.X, Item.RightArrow.Y, Item.RightArrow.Width, Item.RightArrow.Height, self.DrawOffset) then
                                     self:SelectItem()
                                 end
-                                if IsMouseInBounds(Item.RightArrow.X + SafeZone.X, Item.RightArrow.Y + SafeZone.Y, Item.RightArrow.Width, Item.RightArrow.Height) then
+                                if IsMouseInBounds(Item.RightArrow.X, Item.RightArrow.Y, Item.RightArrow.Width, Item.RightArrow.Height, self.DrawOffset) then
                                     self:GoRight()
-                                elseif not IsMouseInBounds(Item.LeftArrow.X + SafeZone.X, Item.LeftArrow.Y + SafeZone.Y, Item.LeftArrow.Width, Item.LeftArrow.Height) then
+                                elseif not IsMouseInBounds(Item.LeftArrow.X, Item.LeftArrow.Y, Item.LeftArrow.Width, Item.LeftArrow.Height, self.DrawOffset) then
                                     self:SelectItem()
                                 end
                             elseif SubType == "UIMenuProgressItem" then
-                                if IsMouseInBounds(Item.Bar.X + SafeZone.X, Item.Bar.Y + SafeZone.Y - 12, Item.Data.Max, Item.Bar.Height + 24) then
-                                    Item:CalculateProgress(math.round(GetControlNormal(0, 239) * 1920) - SafeZone.X)
+                                if IsMouseInBounds(Item.Bar.X, Item.Bar.Y - 12, Item.Data.Max, Item.Bar.Height + 24, self.DrawOffset) then
+                                    local CursorX, CursorY = ConvertToPixel(GetControlNormal(0, 239), 0)
+                                    Item:CalculateProgress(CursorX)
                                     self.OnProgressChange(self, Item, Item.Data.Index)
                                     Item.OnProgressChanged(self, Item, Item.Data.Index)
                                     if not Item.Pressed then
@@ -1344,39 +1347,40 @@ function UIMenu:ProcessMouse()
                             PlaySoundFrontend(-1, self.Settings.Audio.Error, self.Settings.Audio.Library, true)
                         end
                         Citizen.Wait(175)
-                        while IsDisabledControlPressed(0, 24) and IsMouseInBounds(_X, _Y, _Width, _Height) do
+                        while IsDisabledControlPressed(0, 24) and IsMouseInBounds(_X, _Y, _Width, _Height, self.DrawOffset) do
                             if Item:Selected() and Item:Enabled() then
                                 if SubType == "UIMenuListItem" then
-                                    if IsMouseInBounds(Item.LeftArrow.X + SafeZone.X, Item.LeftArrow.Y + SafeZone.Y, Item.LeftArrow.Width, Item.LeftArrow.Height) then
+                                    if IsMouseInBounds(Item.LeftArrow.X, Item.LeftArrow.Y, Item.LeftArrow.Width, Item.LeftArrow.Height, self.DrawOffset) then
                                         self:GoLeft()
                                     end
-                                    if IsMouseInBounds(Item.RightArrow.X + SafeZone.X, Item.RightArrow.Y + SafeZone.Y, Item.RightArrow.Width, Item.RightArrow.Height) then
+                                    if IsMouseInBounds(Item.RightArrow.X, Item.RightArrow.Y, Item.RightArrow.Width, Item.RightArrow.Height, self.DrawOffset) then
                                         self:GoRight()
                                     end
                                 elseif SubType == "UIMenuSliderItem" then
-                                    if IsMouseInBounds(Item.LeftArrow.X + SafeZone.X, Item.LeftArrow.Y + SafeZone.Y, Item.LeftArrow.Width, Item.LeftArrow.Height) then
+                                    if IsMouseInBounds(Item.LeftArrow.X, Item.LeftArrow.Y, Item.LeftArrow.Width, Item.LeftArrow.Height, self.DrawOffset) then
                                         self:GoLeft()
                                     end
-                                    if IsMouseInBounds(Item.RightArrow.X + SafeZone.X, Item.RightArrow.Y + SafeZone.Y, Item.RightArrow.Width, Item.RightArrow.Height) then
+                                    if IsMouseInBounds(Item.RightArrow.X, Item.RightArrow.Y, Item.RightArrow.Width, Item.RightArrow.Height, self.DrawOffset) then
                                         self:GoRight()
                                     end
                                 elseif SubType == "UIMenuSliderProgressItem" then
-                                    if IsMouseInBounds(Item.LeftArrow.X + SafeZone.X, Item.LeftArrow.Y + SafeZone.Y, Item.LeftArrow.Width, Item.LeftArrow.Height) then
+                                    if IsMouseInBounds(Item.LeftArrow.X, Item.LeftArrow.Y, Item.LeftArrow.Width, Item.LeftArrow.Height, self.DrawOffset) then
                                         self:GoLeft()
                                     end
-                                    if IsMouseInBounds(Item.RightArrow.X + SafeZone.X, Item.RightArrow.Y + SafeZone.Y, Item.RightArrow.Width, Item.RightArrow.Height) then
+                                    if IsMouseInBounds(Item.RightArrow.X, Item.RightArrow.Y, Item.RightArrow.Width, Item.RightArrow.Height, self.DrawOffset) then
                                         self:GoRight()
                                     end
                                 elseif SubType == "UIMenuSliderHeritageItem" then
-                                    if IsMouseInBounds(Item.LeftArrow.X + SafeZone.X, Item.LeftArrow.Y + SafeZone.Y, Item.LeftArrow.Width, Item.LeftArrow.Height) then
+                                    if IsMouseInBounds(Item.LeftArrow.X, Item.LeftArrow.Y, Item.LeftArrow.Width, Item.LeftArrow.Height, self.DrawOffset) then
                                         self:GoLeft()
                                     end
-                                    if IsMouseInBounds(Item.RightArrow.X + SafeZone.X, Item.RightArrow.Y + SafeZone.Y, Item.RightArrow.Width, Item.RightArrow.Height) then
+                                    if IsMouseInBounds(Item.RightArrow.X, Item.RightArrow.Y, Item.RightArrow.Width, Item.RightArrow.Height, self.DrawOffset) then
                                         self:GoRight()
                                     end
                                 elseif SubType == "UIMenuProgressItem" then
-                                    if IsMouseInBounds(Item.Bar.X + SafeZone.X, Item.Bar.Y + SafeZone.Y - 12, Item.Data.Max, Item.Bar.Height + 24) then
-                                        Item:CalculateProgress(math.round(GetControlNormal(0, 239) * 1920) - SafeZone.X)
+                                    if IsMouseInBounds(Item.Bar.X, Item.Bar.Y - 12, Item.Data.Max, Item.Bar.Height + 24, self.DrawOffset) then
+                                        local CursorX, CursorY = ConvertToPixel(GetControlNormal(0, 239), 0)
+                                        Item:CalculateProgress(CursorX)
                                         self.OnProgressChange(self, Item, Item.Data.Index)
                                         Item.OnProgressChanged(self, Item, Item.Data.Index)
                                         if not Item.Pressed then
@@ -1415,13 +1419,13 @@ function UIMenu:ProcessMouse()
         ItemOffset = ItemOffset + self:CalculateItemHeightOffset(Item)
     end
 
-    local ExtraX, ExtraY = self.Position.X + SafeZone.X, 144 + self:CalculateItemHeight() + self.Position.Y + SafeZone.Y + WindowHeight
+    local ExtraX, ExtraY = self.Position.X, 144 + self:CalculateItemHeight() + self.Position.Y + WindowHeight
 
     if #self.Items <= self.Pagination.Total + 1 then
         return
     end
 
-    if IsMouseInBounds(ExtraX, ExtraY, 431 + self.WidthOffset, 18) then
+    if IsMouseInBounds(ExtraX, ExtraY, 431 + self.WidthOffset, 18, self.DrawOffset) then
         self.Extra.Up:Colour(30, 30, 30, 255)
         if not self.Controls.MousePressed then
             if IsDisabledControlJustPressed(0, 24) then
@@ -1434,7 +1438,7 @@ function UIMenu:ProcessMouse()
                         self:GoUp()
                     end
                     Citizen.Wait(175)
-                    while IsDisabledControlPressed(0, 24) and IsMouseInBounds(_ExtraX, _ExtraY, 431 + self.WidthOffset, 18) do
+                    while IsDisabledControlPressed(0, 24) and IsMouseInBounds(_ExtraX, _ExtraY, 431 + self.WidthOffset, 18, self.DrawOffset) do
                         if #self.Items > self.Pagination.Total + 1 then
                             self:GoUpOverflow()
                         else
@@ -1450,7 +1454,7 @@ function UIMenu:ProcessMouse()
         self.Extra.Up:Colour(0, 0, 0, 200)
     end
 
-    if IsMouseInBounds(ExtraX, ExtraY + 18, 431 + self.WidthOffset, 18) then
+    if IsMouseInBounds(ExtraX, ExtraY + 18, 431 + self.WidthOffset, 18, self.DrawOffset) then
         self.Extra.Down:Colour(30, 30, 30, 255)
         if not self.Controls.MousePressed then
             if IsDisabledControlJustPressed(0, 24) then
@@ -1463,7 +1467,7 @@ function UIMenu:ProcessMouse()
                         self:GoDown()
                     end
                     Citizen.Wait(175)
-                    while IsDisabledControlPressed(0, 24) and IsMouseInBounds(_ExtraX, _ExtraY + 18, 431 + self.WidthOffset, 18) do
+                    while IsDisabledControlPressed(0, 24) and IsMouseInBounds(_ExtraX, _ExtraY + 18, 431 + self.WidthOffset, 18, self.DrawOffset) do
                         if #self.Items > self.Pagination.Total + 1 then
                             self:GoDownOverflow()
                         else
@@ -1559,14 +1563,14 @@ function UIMenu:UpdateScaleform()
 
     PushScaleformMovieFunction(self.InstructionalScaleform, "SET_DATA_SLOT")
     PushScaleformMovieFunctionParameterInt(0)
-    PushScaleformMovieFunctionParameterString(GetControlInstructionalButton(2, 176, 0))
+    PushScaleformMovieMethodParameterButtonName(GetControlInstructionalButton(2, 176, 0))
     PushScaleformMovieFunctionParameterString(GetLabelText("HUD_INPUT2"))
     PopScaleformMovieFunction()
 
     if self.Controls.Back.Enabled then
         PushScaleformMovieFunction(self.InstructionalScaleform, "SET_DATA_SLOT")
         PushScaleformMovieFunctionParameterInt(1)
-        PushScaleformMovieFunctionParameterString(GetControlInstructionalButton(2, 177, 0))
+        PushScaleformMovieMethodParameterButtonName(GetControlInstructionalButton(2, 177, 0))
         PushScaleformMovieFunctionParameterString(GetLabelText("HUD_INPUT3"))
         PopScaleformMovieFunction()
     end
@@ -1578,7 +1582,7 @@ function UIMenu:UpdateScaleform()
             if #self.InstructionalButtons[i] == 2 then
                 PushScaleformMovieFunction(self.InstructionalScaleform, "SET_DATA_SLOT")
                 PushScaleformMovieFunctionParameterInt(count)
-                PushScaleformMovieFunctionParameterString(self.InstructionalButtons[i][1])
+                PushScaleformMovieMethodParameterButtonName(self.InstructionalButtons[i][1])
                 PushScaleformMovieFunctionParameterString(self.InstructionalButtons[i][2])
                 PopScaleformMovieFunction()
                 count = count + 1

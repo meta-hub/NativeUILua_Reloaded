@@ -84,12 +84,13 @@ function UIMenuPercentagePanel:Percentage(Value)
         local Percent = ((Value < 0.0) and 0.0) or ((Value > 1.0) and 1.0 or Value)
         self.ActiveBar:Size(self.BackgroundBar.Width * Percent, self.ActiveBar.Height)
     else
-        local SafeZone = { X = 0, Y = 0 }
+        local DrawOffset = { X = 0, Y = 0}
         if self.ParentItem:SetParentMenu().Settings.ScaleWithSafezone then
-            SafeZone = GetSafeZoneBounds()
+            DrawOffset = self.ParentItem:SetParentMenu().DrawOffset
         end
 
-        local Progress = (math.round(GetControlNormal(0, 239) * 1920) - SafeZone.X) - self.ActiveBar.X
+        local W, H = GetResolution()
+        local Progress = (math.round((GetControlNormal(0, 239) - DrawOffset.X) * W)) - self.ActiveBar.X
         return math.round(((Progress >= 0 and Progress <= 413) and Progress or ((Progress < 0) and 0 or 413)) / self.BackgroundBar.Width, 2)
     end
 end
@@ -131,20 +132,21 @@ end
 ---@return nil
 ---@public
 function UIMenuPercentagePanel:Functions()
-    local SafeZone = { X = 0, Y = 0 }
+    local DrawOffset = { X = 0, Y = 0}
     if self.ParentItem:SetParentMenu().Settings.ScaleWithSafezone then
-        SafeZone = GetSafeZoneBounds()
+        DrawOffset = self.ParentItem:SetParentMenu().DrawOffset
     end
-    if IsMouseInBounds(self.BackgroundBar.X + SafeZone.X, self.BackgroundBar.Y - 4 + SafeZone.Y, self.BackgroundBar.Width, self.BackgroundBar.Height + 8) then
+    if IsMouseInBounds(self.BackgroundBar.X, self.BackgroundBar.Y - 4, self.BackgroundBar.Width, self.BackgroundBar.Height + 8, DrawOffset) then
         if IsDisabledControlJustPressed(0, 24) then
             if not self.Pressed then
                 self.Pressed = true
                 Citizen.CreateThread(function()
                     self.Audio.Id = GetSoundId()
                     PlaySoundFrontend(self.Audio.Id, self.Audio.Slider, self.Audio.Library, 1)
-                    while IsDisabledControlPressed(0, 24) and IsMouseInBounds(self.BackgroundBar.X + SafeZone.X, self.BackgroundBar.Y - 4 + SafeZone.Y, self.BackgroundBar.Width, self.BackgroundBar.Height + 8) do
+                    while IsDisabledControlPressed(0, 24) and IsMouseInBounds(self.BackgroundBar.X, self.BackgroundBar.Y - 4, self.BackgroundBar.Width, self.BackgroundBar.Height + 8, DrawOffset) do
                         Citizen.Wait(0)
-                        local Progress = (math.round(GetControlNormal(0, 239) * 1920) - SafeZone.X) - self.ActiveBar.X
+                        local Progress, ProgressY = ConvertToPixel(GetControlNormal(0, 239) - DrawOffset.X, 0)
+                        Progress = Progress - self.ActiveBar.X
                         self.ActiveBar:Size(((Progress >= 0 and Progress <= 413) and Progress or ((Progress < 0) and 0 or 413)), self.ActiveBar.Height)
                     end
                     StopSound(self.Audio.Id)
@@ -152,9 +154,10 @@ function UIMenuPercentagePanel:Functions()
                     self.Pressed = false
                 end)
                 Citizen.CreateThread(function()
-                    while IsDisabledControlPressed(0, 24) and IsMouseInBounds(self.BackgroundBar.X + SafeZone.X, self.BackgroundBar.Y - 4 + SafeZone.Y, self.BackgroundBar.Width, self.BackgroundBar.Height + 8) do
+                    while IsDisabledControlPressed(0, 24) and IsMouseInBounds(self.BackgroundBar.X, self.BackgroundBar.Y - 4, self.BackgroundBar.Width, self.BackgroundBar.Height + 8, DrawOffset) do
                         Citizen.Wait(75)
-                        local Progress = (math.round(GetControlNormal(0, 239) * 1920) - SafeZone.X) - self.ActiveBar.X
+                        local Progress, ProgressY = ConvertToPixel(GetControlNormal(0, 239) - DrawOffset.X, 0)
+                        Progress = Progress - self.ActiveBar.X
                         self:UpdateParent(math.round(((Progress >= 0 and Progress <= 413) and Progress or ((Progress < 0) and 0 or 413)) / self.BackgroundBar.Width, 2))
                     end
                 end)
