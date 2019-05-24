@@ -59,4 +59,7 @@ Original code / concept
 - Pause menu
   - soon
 
+## Special thank
+- [eR0ot](https://twitter.com/eR0ot) Media previews
+
 ### Thank you for contributing to the progress and well-being of the project 🖤
