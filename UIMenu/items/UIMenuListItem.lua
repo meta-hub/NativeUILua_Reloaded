@@ -40,6 +40,15 @@ function UIMenuListItem.New(Text, Items, Index, Description)
     return setmetatable(_UIMenuListItem, UIMenuListItem)
 end
 
+---UpdateItems
+---@param Items table
+---@public
+function UIMenuListItem:UpdateItems(Items)
+    if #Items > 0 then
+        self.Items = Items
+    end
+end
+
 ---SetParentMenu
 ---@param Menu table
 ---@return table
