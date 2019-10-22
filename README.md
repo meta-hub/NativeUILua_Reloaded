@@ -4,6 +4,10 @@
 ![OpenIssue](https://img.shields.io/github/issues/iTexZoz/NativeUILua_Reloaded.svg?style=flat)
 ![LastReleases](https://img.shields.io/github/release/iTexZoz/NativeUILua_Reloaded.svg?label=Last%20releases&style=flat)
 
+<h3>NativeUILua-Reloaded ported to C# by @manups4e.</h3>
+
+https://github.com/manups4e/NativeUI
+
 # License (custom license)
 
 ### You can use this library in your own resources, you can edit this library if you want to add features. Feel free to PR them.
