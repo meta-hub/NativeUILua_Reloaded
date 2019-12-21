@@ -16,28 +16,28 @@ contributor {
 };
 
 client_scripts {
-    "Wrapper/*.lua",
-    "UIElements/*.lua",
+    "src/Wrapper/*.lua",
+    "src/UIElements/*.lua",
 }
 
 client_scripts {
-    "UIMenu/elements/*.lua",
-    "UIMenu/items/*.lua",
-    "UIMenu/windows/*.lua",
-    "UIMenu/panels/*.lua",
-    "UIMenu/*.lua",
+    "src/UIMenu/elements/*.lua",
+    "src/UIMenu/items/*.lua",
+    "src/UIMenu/windows/*.lua",
+    "src/UIMenu/panels/*.lua",
+    "src/UIMenu/*.lua",
 }
 
 client_scripts {
-    'UITimerBar/*.lua',
-    'UITimerBar/items/*.lua',
+    'src/UITimerBar/*.lua',
+    'src/UITimerBar/items/*.lua',
 }
 
 client_scripts {
-    'UIProgressBar/*.lua',
-    'UIProgressBar/items/*.lua',
+    'src/UIProgressBar/*.lua',
+    'src/UIProgressBar/items/*.lua',
 }
 
 client_scripts {
-    "NativeUI.lua",
+    "src/NativeUI.lua",
 }
