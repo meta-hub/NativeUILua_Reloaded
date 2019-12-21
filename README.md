@@ -6,6 +6,13 @@
 
 <h3>NativeUILua-Reloaded ported to C# by @manups4e.</h3>
 
+New method for use NativeUILua-Reloaded cross-resource
+```lua
+client_scripts {
+    "@NativeUILua_Reloaded/src/NativeUIReloaded.lua",
+}
+```
+
 https://github.com/manups4e/NativeUI
 
 # License (custom license)
