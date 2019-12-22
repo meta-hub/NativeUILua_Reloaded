@@ -15,6 +15,7 @@ contributor {
     'Frazzle'
 };
 
+--[[
 client_scripts {
     "src/Wrapper/*.lua",
     "src/UIElements/*.lua",
@@ -37,7 +38,9 @@ client_scripts {
     'src/UIProgressBar/*.lua',
     'src/UIProgressBar/items/*.lua',
 }
+]]--
 
 client_scripts {
     "src/NativeUI.lua",
+    "src/NativeUIReloaded.lua",
 }
