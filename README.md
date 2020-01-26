@@ -1,4 +1,7 @@
 ![nativeuiluarldmedia](https://picture.dylan-malandain.me/UINativeLuaReloadedFini.png)
+
+# Discord : https://discord.gg/Jjb2c8Q (No support)
+
 # NativeUILua-Reloaded
 
 ![OpenIssue](https://img.shields.io/github/issues/iTexZoz/NativeUILua_Reloaded.svg?style=flat)
