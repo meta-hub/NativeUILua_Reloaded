@@ -14,6 +14,13 @@ function MenuPool.New()
     return setmetatable(_MenuPool, MenuPool)
 end
 
+--Remove
+--@return nil
+--@public
+function MenuPool:Remove()
+    self = nil
+end
+
 ---AddSubMenu
 ---@param Menu table
 ---@param Text string
